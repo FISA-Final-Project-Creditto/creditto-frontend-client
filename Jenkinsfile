@@ -22,7 +22,7 @@ pipeline {
             steps { sh 'npm run build' } // 빌드 산출물 생성
         }
         stage('Test') {
-            steps { sh 'npm test -- --watchAll=false' } // 테스트 실행, 감시 모드 끔(테스트가 끝나지 않으면 빌드가 무한 대기 상태로 멈춤)
+            steps { sh 'npm test -- --watchAll=false' } // 테스트 실행, 감시 모드 끔 -> 테스트가 끝나지 않으면 빌드가 무한 대기 상태로 멈춤
         }
     }
     post {
