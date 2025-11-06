@@ -6,7 +6,6 @@ pipeline {
     }
     environment {
         CI = 'true'
-        NODE_ENV = 'production'
     }
     stages {
         stage('Checkout') {
