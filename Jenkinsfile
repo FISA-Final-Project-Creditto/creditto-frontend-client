@@ -30,10 +30,10 @@ pipeline {
     }
     post {
         success { 
-          archiveArtifacts artifacts: 'build/**', fingerprint: true // 빌드된 파일을 Jenkins에 보관
+          archiveArtifacts artifacts: '.next/**', fingerprint: true // 빌드된 파일을 Jenkins에 보관
           echo 'Build and tests passed successfully!' 
         }
         failure { echo 'Build or tests failed.' }
-        always { cleanWs() }
+        cleanup { cleanWs() }
     }
 }
