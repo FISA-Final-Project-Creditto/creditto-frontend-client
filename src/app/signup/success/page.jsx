@@ -13,11 +13,11 @@ export default function SuccessPage() {
           <p className="text-2xl font-semibold leading-relaxed text-gray-900 text-left">
             가입이 완료되었어요
             <br />
-            <p className="text-lg font-normal text-gray-500 mb-10">
+            <span className="block text-lg font-normal text-gray-500 mb-10">
               creditto의 서비스를 이용하기 위해서 
               <br/>
               인증서 발급이 필요해요
-            </p>
+            </span>
           </p>
           <div>
             <DotLottieReact

@@ -6,13 +6,12 @@ import { useRouter } from "next/navigation";
 export default function LoadingPage() {
   const router = useRouter();
 
-  const autoPage = () => {
-    setTimeout(() => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
       router.push("/signup/success");
     }, 5000);
-  };
-
-  autoPage();
+    return () => clearTimeout(timer);
+  }, [router]);
 
   return (
     <main className="h-[100dvh] flex justify-center items-center bg-[#e5e5e5]">
