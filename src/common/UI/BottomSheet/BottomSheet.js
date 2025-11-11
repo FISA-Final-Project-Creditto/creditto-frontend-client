@@ -18,7 +18,7 @@ export default function BottomSheet({ open, onOpenChange, title, trigger, childr
             {/* 오버레이 */}
             <Dialog.Overlay asChild>
               <motion.div
-                className="fixed inset-0 bg-black/40 z-40"
+                className="fixed inset-0 bg-black/40 z-40 "
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -28,7 +28,7 @@ export default function BottomSheet({ open, onOpenChange, title, trigger, childr
             {/* 바텀 시트 본체 */}
             <Dialog.Content asChild aria-labelledby={labelId}>
               <motion.div
-                className="fixed inset-x-0 bottom-0 z-50 max-h-[80dvh] rounded-t-2xl bg-white
+                className="fixed inset-x-0 bottom-0  z-50 max-h-[80dvh] rounded-t-2xl bg-white
                            shadow-[0_-8px_30px_rgba(0,0,0,0.2)] p-5 flex flex-col "
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}

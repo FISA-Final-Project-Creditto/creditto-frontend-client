@@ -9,11 +9,11 @@ export default function SuccessPage() {
     <main className="h-[100dvh] flex justify-end items-center bg-[#e5e5e5]">
       <div className="w-full max-w-[440px] min-h-[100dvh] mx-auto flex flex-col bg-white">
         <h1 className="text-[22px] font-semibold text-gray-900 mt-17"></h1>
-        <div className="flex-1 px-8 mt-5 ">
+        <div className=" flex-1 px-8 mt-5 ">
           <p className="text-2xl font-semibold leading-relaxed text-gray-900 text-left">
             가입이 완료되었어요
             <br />
-            <span className="block text-lg font-normal text-gray-500 mb-10">
+            <span className="block text-lg font-normal text-gray-500 mb-32">
               creditto의 서비스를 이용하기 위해서 
               <br/>
               인증서 발급이 필요해요

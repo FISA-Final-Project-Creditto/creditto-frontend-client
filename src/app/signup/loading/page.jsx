@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useRouter } from "next/navigation";
 
@@ -21,7 +21,7 @@ export default function LoadingPage() {
           <p className="text-2xl font-semibold leading-relaxed text-gray-900 text-left">
             고객님의 정보를 확인하고 있어요
             <br />
-            <p className="text-lg font-normal text-gray-500 mb-5">
+            <p className="text-lg font-normal text-gray-500 mb-32">
               잠시만 기다려 주세요
             </p>
           </p>
