@@ -41,7 +41,7 @@ export default function PhonePage() {
       : "고객님의 전화번호를 입력해주세요";
 
   const NameField = (
-    <div className="w-full h-[95px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
+    <div className="w-full h-[85px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
       <label className="text-sm text-gray-600 mb-2">이름</label>
       <input
         value={name}
@@ -53,7 +53,7 @@ export default function PhonePage() {
   );
 
   const BirthdayField = (
-    <div className="w-full h-[95px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
+    <div className="w-full h-[85px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
       <label className="text-sm text-gray-600 mb-2">생년월일</label>
       <input
         value={birthday}
@@ -72,7 +72,7 @@ export default function PhonePage() {
   );
 
   const PhoneField = (
-    <div className="w-full h-[95px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
+    <div className="w-full h-[85px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
       <label className="text-sm text-gray-600 mb-2">휴대폰 번호</label>
       <input
         value={phonenumber}

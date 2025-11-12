@@ -125,7 +125,7 @@ export default function PermissionPage() {
 
         <button
           onClick={handleNext}
-            className="w-full h-[73px] bg-[#1A3668] text-white text-[26px] font-semibold flex justify-center items-center"
+            className="w-full h-[90px] bg-[#1A3668] text-white text-[26px] font-semibold flex justify-center items-center"
         >
           다음
         </button>

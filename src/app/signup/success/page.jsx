@@ -28,7 +28,7 @@ export default function SuccessPage() {
           </div>
         </div>
                <button
-            className="w-full h-[73px] bg-[#1A3668] text-white text-[26px] font-semibold flex justify-center items-center"
+            className="w-full h-[90px] bg-[#1A3668] text-white text-[26px] font-semibold flex justify-center items-center"
             onClick={() => router.push("/auth/pw")}>
             인증서 발급하기
           </button>
