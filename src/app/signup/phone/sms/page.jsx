@@ -117,7 +117,7 @@ export default function PhoneCodePage() {
           type="button"
           disabled={!canSubmit}
           onClick={handleSubmit}
-          className={`w-full h-[73px] text-[20px] font-semibold flex items-center justify-center 
+          className={`w-full h-[90px] text-[20px] font-semibold flex items-center justify-center 
             transition-colors
             ${
               canSubmit

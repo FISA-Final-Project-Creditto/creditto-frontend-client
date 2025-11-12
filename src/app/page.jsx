@@ -15,18 +15,22 @@ export default function SplashPage() {
           className="object-fill "
         />
 
+
+
         <div className="relative z-10">
-          <div className="w-full h-[73px] cursor-pointer flex justify-center items-center text-gray-300 underline text-lg font-medium"
+          <div className="w-full h-[90px] cursor-pointer flex justify-center items-center text-gray9000 underline text-lg "
           onClick={(e)=>{
+            // 이벤트 버블링 
             e.stopPropagation();
           router.push('/signup/permission')}}>
             회원가입
           </div>
-          <button
-            className="w-full h-[73px] bg-[#1A3668] text-white text-[26px] font-semibold flex justify-center items-center"
-            onClick={() => router.push("/auth/pw")}>
+          <div
+            className="cursor-pointer w-full h-[90px] bg-[#190668] text-white text-[26px] font-medium flex justify-center items-center"
+            onClick={() => router.push("/main")}>
+              {/* 임시 라우터임  */}
             로그인
-          </button>
+          </div>
         </div>
       </div>
     </main>

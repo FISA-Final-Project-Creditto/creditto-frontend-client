@@ -103,7 +103,7 @@ export default function AgreePage() {
 
         <button
           disabled={!checked.terms1 || !checked.terms2 || !checked.terms3}
-          className={`w-full h-[73px] text-[22px] font-semibold flex justify-center items-center transition-colors
+          className={`w-full h-[90px] text-[22px] font-semibold flex justify-center items-center transition-colors
             ${
               checked.terms1 && checked.terms2 && checked.terms3
                 ? "bg-[#1A3668] text-white"
