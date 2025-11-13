@@ -6,8 +6,11 @@ import StepProgressBar from "../components/StepProgressbar";
 import DatePicker from "./components/DatePicker";
 import { useState } from "react";
 import BottomBar from "../../components/BottomBar";
+import { useRouter } from "next/navigation";
 
 export default function TypePage() {
+  const router = useRouter();
+
   // 송금 유형 정보값 상태 관리
   const [formData, setFormData] = useState({
     transferMethod: "", // 송금 방식
@@ -236,7 +239,10 @@ export default function TypePage() {
             </div>
           </form>
         </section>
-        <BottomBar label="다음" />
+        <BottomBar
+          label="다음"
+          onClick={() => router.push("/send/information/remittance")}
+        />
       </section>
     </main>
   );
