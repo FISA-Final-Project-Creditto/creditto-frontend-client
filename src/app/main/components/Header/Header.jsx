@@ -7,6 +7,6 @@ export default function Header() {
           <div className="w-9 h-10"></div>
           <img src="/logo/logo.png" className="w-[177px]" />
           <Hambuger />
-        </div>
+         </div>
   )
 }

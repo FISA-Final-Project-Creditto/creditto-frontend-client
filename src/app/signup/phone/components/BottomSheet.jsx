@@ -53,12 +53,11 @@ export default function TestBottomSheetPage() {
           onOpenChange={setOpen}
           title="휴대폰 본인확인 약관"
           trigger={
-            <button
-              className="w-full h-[90px] bg-[#1A3668] text-white text-[22px]  font-semibold
-                         flex items-center justify-center active:scale-95 transition"
-            >
-              다음
-            </button>
+            <div className="w-full  h-[118px]  flex justify-center">
+              <button className="cursor-pointer w-[90%] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white">
+                다음
+              </button>
+            </div>
           }
         >
           {/* BottomSheet 안 내용 */}
