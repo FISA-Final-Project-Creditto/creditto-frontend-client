@@ -10,8 +10,10 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { CircleProgress } from "./ProgressAnimation";
+import { useRouter } from "next/navigation";
 
 function CarouselDemo() {
+   const router = useRouter();
   return (
     <Carousel className="w-full h-[190px]">
       <CarouselContent>
@@ -22,7 +24,7 @@ function CarouselDemo() {
             className="w-full cursor-pointer flex justify-center items-center text-gray-300  text-lg font-medium"
             onClick={(e) => {
               e.stopPropagation();
-              router.push("");
+              router.push("/credit/first");
             }}
           >
             신용 점수 &gt;
