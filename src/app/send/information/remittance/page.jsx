@@ -1,18 +1,21 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
 import StepProgressBar from "../components/StepProgressbar";
-import { useState } from "react";
 import BottomBar from "../../components/BottomBar";
 
 export default function RemittancePage() {
-  // 수취인 정보값 상태 관리
+  const router = useRouter();
+
+  // 송금인 정보값 상태 관리
   const [formData, setFormData] = useState({
-    name: "", // 수취인 이름
-    country: "", // 수취인 국적
-    city: "", // 수취인 거주 도시
-    detailedAddr: "", // 상세 주소
+    name: "", // 송금인 이름
+    country: "", // 송금인 국적
+    city: "", // 송금인 거주 도시
+    address: "", // 주소
   });
 
   // 폼 유효성 검사
@@ -20,7 +23,16 @@ export default function RemittancePage() {
     formData.name.trim() !== "" &&
     formData.country.trim() !== "" &&
     formData.city.trim() !== "" &&
-    formData.detailedAddr.trim() !== "";
+    formData.address.trim() !== "";
+
+  // formData 상태값 업데이트
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   // 폼 제출
   const handleSubmit = (e) => {
@@ -30,18 +42,11 @@ export default function RemittancePage() {
         ...formData,
       };
       console.log("작성된 폼", submissionData);
+
+      router.push("/send/information/recipient"); // 수취인 페이지로 이동
     } else {
       console.log("모든 입력 칸이 채워져야 됩니다");
     }
-  };
-
-  // formData 상태값 업데이트
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
   };
 
   return (
@@ -86,7 +91,7 @@ export default function RemittancePage() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="대문자로 입력해주세요"
-                className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-[#86909C] placeholder:text-[#86909C] focus:outline-none"
+                className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
               />
             </div>
 
@@ -100,7 +105,9 @@ export default function RemittancePage() {
                   name="country"
                   value={formData.country}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-[#86909C] focus:outline-none"
+                  className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-[#86909C] focus:outline-none ${
+                    formData.country === "" ? "text-[#86909C]" : "text-black"
+                  }`}
                 >
                   <option value="">국적을 선택하세요</option>
                   <option value="US">미국(USA)</option>
@@ -122,22 +129,22 @@ export default function RemittancePage() {
                 value={formData.city}
                 onChange={handleChange}
                 placeholder="거주 도시를 입력하세요"
-                className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-[#86909C] placeholder:text-[#86909C] focus:outline-none"
+                className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
               />
             </div>
 
             {/* 상세 주소 */}
             <div className="flex flex-col items-start">
               <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                상세 주소 (Detailed Address)
+                주소 (Address)
               </label>
               <input
                 type="text"
-                name="detailedAddr"
-                value={formData.detailedAddr}
+                name="address"
+                value={formData.address}
                 onChange={handleChange}
-                placeholder="상세 주소를 입력하세요"
-                className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-[#86909C] placeholder:text-[#86909C] focus:outline-none"
+                placeholder="주소를 입력하세요"
+                className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
               />
             </div>
           </form>
