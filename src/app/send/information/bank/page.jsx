@@ -1,11 +1,12 @@
 "use client";
 
-import { ChevronDown, SquareMinus, SquarePlus } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
 import StepProgressBar from "../components/StepProgressbar";
 import BottomBar from "../../components/BottomBar";
+import Modal from "./components/Modal";
 
 // 국가별 은행 목록
 const BANK_OPTIONS = {
@@ -29,6 +30,8 @@ const BANK_OPTIONS = {
 export default function BankPage() {
   const router = useRouter();
 
+  const [modalStatus, setModalStatus] = useState(false);
+
   // 수취인 정보값 상태 관리
   const [formData, setFormData] = useState({
     country: "", // 수취 은행 국가
@@ -46,6 +49,11 @@ export default function BankPage() {
 
   const selectedBankList = BANK_OPTIONS[formData.country] || [];
 
+  // 모달의 상태 변경
+  const onChangeModalStatus = () => {
+    setModalStatus(!modalStatus);
+  };
+
   // 폼 제출
   const handleSubmit = (e) => {
     e.preventDefault(); // 페이지 새로고침 방지
@@ -54,7 +62,8 @@ export default function BankPage() {
         ...formData,
       };
       console.log("작성된 폼", submissionData);
-      router.push("/send/information/bank");
+
+      setModalStatus(!modalStatus);
     } else {
       console.log("모든 입력 칸이 채워져야 됩니다");
     }
@@ -214,6 +223,10 @@ export default function BankPage() {
                 />
               </form>
             </section>
+
+            {modalStatus && (
+              <Modal title="해외 자동 송금" setModal={onChangeModalStatus} />
+            )}
           </section>
         </main>
       </div>
