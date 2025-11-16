@@ -1,6 +1,12 @@
+'use client'
+
+import { useRouter } from "next/navigation";
+
 export default function LoanCard() {
+  const router =  useRouter();
   return (
-    <div className="cursor-pointer relative w-[170px] h-[75px] bg-[#E8ECFF] rounded-xl overflow-hidden">
+    <div className="cursor-pointer relative w-[170px] h-[75px] bg-[#E8ECFF] rounded-xl overflow-hidden"
+    onClick={()=>{router.push("/loan")}}>
       {/* 텍스트 영역 */}
       <div className="absolute left-4 top-1/2 -translate-y-1/2">
         <h2 className="text-[16px] font-bold text-black leading-tight">대출 상품 추천</h2>
