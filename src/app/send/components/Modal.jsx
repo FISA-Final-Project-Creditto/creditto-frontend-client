@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const Modal = ({ title, setModal }) => {
+const Modal = ({ title, message, onClose, onConfirm }) => {
   const router = useRouter();
 
   // 모달 내부를 눌렀을 때 모달이 꺼지는 것을 방지
@@ -20,10 +20,17 @@ const Modal = ({ title, setModal }) => {
     };
   }, []);
 
+  const handleConfirm = () => {
+    if (onConfirm) {
+      onConfirm();
+    }
+    onClose(); // Confirm 후 모달 닫기
+  };
+
   return (
     <div
       id="모달 외부"
-      onClick={setModal}
+      onClick={onClose}
       className="fixed inset-0 flex justify-center px-[1.5rem] items-center w-full h-full bg-gray-500/50"
     >
       <main
@@ -36,9 +43,7 @@ const Modal = ({ title, setModal }) => {
             {title}
           </h2>
           <div className="text-left">
-            해외 자동 송금 서비스를 신청하시겠습니까? <br />
-            예를 클릭하실 경우 앞서 산출한 우대환율이 <br />
-            적용됩니다.
+            {message}
           </div>
         </section>
         {/* 버튼 영역 */}
@@ -46,7 +51,7 @@ const Modal = ({ title, setModal }) => {
           {/* 아니요 */}
           <button
             className="w-full h-[2.875rem] bg-[#F2F3F5] text-[#1A3668] text-[0.875rem] font-bold rounded-bl-[12px]"
-            onClick={setModal}
+            onClick={onClose}
           >
             아니요
           </button>
@@ -54,7 +59,7 @@ const Modal = ({ title, setModal }) => {
           {/* 예 */}
           <button
             className="w-full h-[2.875rem] bg-[#1A3668] text-white text-[0.875rem] font-bold rounded-br-[12px]"
-            onClick={() => router.push("/send/term")}
+            onClick={handleConfirm}
           >
             예
           </button>

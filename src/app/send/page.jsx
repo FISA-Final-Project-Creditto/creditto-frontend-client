@@ -5,7 +5,7 @@ import CardCarousel from "./components/CardCarousel";
 import SendBtn from "./components/SendBtn";
 import { useRouter } from "next/navigation";
 
-export default function ScanPage() {
+export default function SendPage() {
   const router = useRouter();
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -31,7 +31,10 @@ export default function ScanPage() {
             title="정기 해외 송금 신청"
             onClick={() => router.push("/send/choose")}
           />
-          <SendBtn title="정기 해외 송금 내역 조회" />
+          <SendBtn
+            title="정기 해외 송금 내역 조회"
+            onClick={() => router.push("/send/history")}
+          />
           <SendBtn title="정기 해외 송금 취소⋅변경" />
         </div>
       </div>

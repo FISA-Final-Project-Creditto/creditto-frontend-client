@@ -11,7 +11,7 @@ export default function CompletePage() {
   const router = useRouter();
 
   return (
-    <main className="min-h-dvh flex flex-col bg-white">
+    <div className="min-h-dvh flex flex-col bg-white">
       <header>
         <Header />
       </header>
@@ -50,6 +50,6 @@ export default function CompletePage() {
           isActive={true}
         />
       </footer>
-    </main>
+    </div>
   );
 }

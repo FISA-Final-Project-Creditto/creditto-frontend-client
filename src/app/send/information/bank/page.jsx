@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
 import StepProgressBar from "../components/StepProgressbar";
 import BottomBar from "../../components/BottomBar";
-import Modal from "./components/Modal";
+import Modal from "../../components/Modal";
 
 // 국가별 은행 목록
 const BANK_OPTIONS = {
@@ -30,7 +30,7 @@ const BANK_OPTIONS = {
 export default function BankPage() {
   const router = useRouter();
 
-  const [modalStatus, setModalStatus] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 수취인 정보값 상태 관리
   const [formData, setFormData] = useState({
@@ -49,11 +49,6 @@ export default function BankPage() {
 
   const selectedBankList = BANK_OPTIONS[formData.country] || [];
 
-  // 모달의 상태 변경
-  const onChangeModalStatus = () => {
-    setModalStatus(!modalStatus);
-  };
-
   // 폼 제출
   const handleSubmit = (e) => {
     e.preventDefault(); // 페이지 새로고침 방지
@@ -63,7 +58,7 @@ export default function BankPage() {
       };
       console.log("작성된 폼", submissionData);
 
-      setModalStatus(!modalStatus);
+      setIsModalOpen(!isModalOpen);
     } else {
       console.log("모든 입력 칸이 채워져야 됩니다");
     }
@@ -224,8 +219,15 @@ export default function BankPage() {
               </form>
             </section>
 
-            {modalStatus && (
-              <Modal title="해외 자동 송금" setModal={onChangeModalStatus} />
+            {isModalOpen && (
+              <Modal
+                title="해외 자동 송금"
+                message="해외 자동 송금 서비스를 신청하시겠습니까?
+                ‘예'를 클릭하실 경우 앞서 산출한 우대환율이 
+                적용됩니다."
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={() => router.push("/send/result")}
+              />
             )}
           </section>
         </main>
