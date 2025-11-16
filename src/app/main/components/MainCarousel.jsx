@@ -13,20 +13,20 @@ import { CircleProgress } from "./ProgressAnimation";
 import { useRouter } from "next/navigation";
 
 function CarouselDemo() {
-   const router = useRouter();
+  const router = useRouter();
   return (
     <Carousel className="w-full h-[190px]">
       <CarouselContent>
         {/* ✅ 첫 번째 슬라이드 */}
 
-        <CarouselItem >
-          <div
-            className="w-full cursor-pointer flex justify-center items-center text-gray-300  text-lg font-medium"
-            onClick={(e) => {
-              e.stopPropagation();
-              router.push("/credit/first");
-            }}
-          >
+        <CarouselItem
+        className="cursor-pointer"
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push("/credit/first");
+          }}
+        >
+          <div className="w-full cursor-pointer flex justify-center items-center text-gray-300  text-lg font-medium">
             신용 점수 &gt;
           </div>
           <div>
@@ -39,14 +39,13 @@ function CarouselDemo() {
                   size={120}
                   strokeWidth={6}
                 />
-           
               </CardContent>
             </Card>
           </div>
         </CarouselItem>
 
         <CarouselItem>
-               <div
+          <div
             className="w-full cursor-pointer flex justify-center items-center text-gray-300  text-lg font-medium"
             onClick={(e) => {
               e.stopPropagation();
@@ -63,7 +62,6 @@ function CarouselDemo() {
                   alt="완료"
                   className="w-[220px] h-full  mt-4"
                 />
-         
               </CardContent>
             </Card>
           </div>
