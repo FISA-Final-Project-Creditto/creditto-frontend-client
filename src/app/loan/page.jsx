@@ -11,7 +11,7 @@ export default function LoanPage() {
         showBack={true}
         showHamburger={false}
       />
-      <div className="w-full h-10 px-5 mt-10">
+      <div className="w-full h-10  ">
         <div className="text-2xl text-center font-semibold">대출 상품</div>
       </div>
       <div className=" w-full flex justify-center items-center">

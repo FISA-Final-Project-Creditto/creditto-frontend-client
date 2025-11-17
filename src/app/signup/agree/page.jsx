@@ -37,7 +37,7 @@ export default function AgreePage() {
   return (
     <>
      <AppHeader title="약관 동의" show={true} showHamburger={true} />
-      <div className="flex-1 px-8 pt-16 pb-10 text-left">
+      <div className="flex-1 px-5 pt-16 pb-10 text-left">
         {/* 전체 동의 */}
            
         <label
@@ -117,10 +117,10 @@ export default function AgreePage() {
           ))}
         </ul>
       </div>
-      <div className="w-full  h-[118px]  flex justify-center">
+      <div className="w-full  h-[128px]  flex justify-center">
             <button
         disabled={!checked.terms1 || !checked.terms2 || !checked.terms3}
-        className={`w-[90%] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg
+        className={`w-full h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg
             ${
               checked.terms1 && checked.terms2 && checked.terms3
                 ? "bg-[#1A3668] text-white cursor-pointer"

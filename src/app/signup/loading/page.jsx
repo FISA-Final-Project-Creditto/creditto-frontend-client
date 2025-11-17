@@ -17,7 +17,7 @@ export default function LoadingPage() {
     <>
 
       <h1 className="text-[22px] font-semibold text-gray-900 mt-17"></h1>
-      <div className="flex-1 px-8 mt-5 ">
+      <div className="flex-1 px-3 mt-5 ">
         <p className="text-2xl font-semibold leading-relaxed text-gray-900 text-left">
           고객님의 정보를 확인하고 있어요
           <br />

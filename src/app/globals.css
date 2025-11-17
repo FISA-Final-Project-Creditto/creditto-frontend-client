@@ -46,9 +46,7 @@
 }
 /* 기존 body 스타일 삭제하고 이 정도만 남기기 */
 html, body {
-  overflow: hidden;
   overscroll-behavior: none;
-  touch-action: none;
 }
 
 body {
@@ -62,8 +60,8 @@ body {
   box-sizing: border-box;
   font-family: "Pretendard", system-ui, sans-serif;
   font-weight: 400; /* Regular 추가 */
-  /* padding-left: 1.5rem;
-  padding-right: 1.5rem; */
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 @keyframes fade-in-up {

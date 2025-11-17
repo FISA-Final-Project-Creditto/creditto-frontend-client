@@ -63,7 +63,7 @@ export default function PhoneCodePage() {
   <>
         {/* 상단 내용 */}
         <AppHeader title="문자 인증" show={true} showHamburger={true} />
-        <div className="flex-1 px-8 mt-5 pb-10">
+        <div className="flex-1 px-5 mt-5 pb-10">
    
 
           <p className="text-[22px] font-semibold leading-relaxed text-gray-900 text-left mb-10">
@@ -111,12 +111,12 @@ export default function PhoneCodePage() {
         </div>
 
         {/* 하단 버튼 */}
-<div className="w-full  h-[118px]  flex justify-center">
+<div className="w-full  h-[128px]  flex justify-center">
    <button
           type="button"
           disabled={!canSubmit}
           onClick={handleSubmit}
-        className={`cursor-poitner w-[90%] h-[60px] text-[22px] font-semibold flex justify-center items-center  rounded-lg
+        className={`cursor-poitner w-full h-[60px] text-[22px] font-semibold flex justify-center items-center  rounded-lg
             transition-colors
             ${
               canSubmit

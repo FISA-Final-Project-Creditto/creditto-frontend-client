@@ -3,7 +3,7 @@ import React from "react";
 export default function GoExchangeButton() {
   return (
     <div className="w-full h-[122px]  flex justify-end items-center flex-col">
-      <div className="w-[90%] h-[100px] bg-white rounded-xl flex justify-around items-center flex-row">
+      <div className="w-full h-[100px] bg-white rounded-xl flex justify-around items-center flex-row">
         <div>
           <h2 className="text-[18px] font-bold text-black leading-tight text-left">
             환율 그래프

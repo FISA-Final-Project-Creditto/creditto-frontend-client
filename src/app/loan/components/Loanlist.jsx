@@ -44,15 +44,15 @@ const DUMMY_LOANS = [
 export default function Loanlist() {
     const router =useRouter();
   return (
-    <div className="w-full px-4">
+    <div className="w-full ">
       {DUMMY_LOANS.map((loan) => (
         <div
           key={loan.id}
-          className="flex items-center justify-between p-4 bg-white border-b border-gray-200 hover:shadow-md transition cursor-pointer"
+          className="flex items-center justify-between p-3 bg-white border-b border-gray-200 hover:shadow-md transition cursor-pointer"
           onClick={()=>{router.push(`/loan/${loan.id}`)}}
         >
           {/* 좌측: 로고, 상품명, 설명 */}
-          <div className="flex items-start gap-3 flex-1 text-left">
+          <div className="flex items-start gap-4 flex-1 text-left">
             {/* 로고 */}
             <div className="shrink-0 w-12 h-12 rounded-full bg-linear-to-br  flex items-center justify-center text-white text-lg font-semibold">
               <img src={loan.logo}/>

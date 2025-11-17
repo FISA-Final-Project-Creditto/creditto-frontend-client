@@ -54,7 +54,7 @@ export default function TestBottomSheetPage() {
           title="휴대폰 본인확인 약관"
           trigger={
             <div className="w-full  h-[118px]  flex justify-center">
-              <button className="cursor-pointer w-[90%] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white">
+              <button className="cursor-pointer w-full h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white">
                 다음
               </button>
             </div>

@@ -13,7 +13,7 @@ export default function MainPage() {
       <div className="w-full max-w-[440px] min-h-dvh mx-auto justify-start flex flex-col bg-white">
         <Header />
 
-        <div className="ml-5">
+        <div>
           <p className="text-[17px] font-bold text-gray-900 text-left">
             환영합니다
             <br />
@@ -23,14 +23,14 @@ export default function MainPage() {
           </p>
         </div>
 
-        <div className=" px-8  flex justify-start flex-col items-center ">
+        <div className=" px-5  flex justify-start flex-col items-center ">
           <CarouselDemo />
         </div>
 
-      <div className="flex justify-evenly items-start text-left w-full h-[100px]">
+      <div className="flex justify-between items-start text-left w-full h-[100px] px-5 gap-5">
           <LoanButton />
           <Remittance />
-    </div>
+      </div>
         <div className="w-full flex-1 bg-[#F3F6FB] flex overflow-auto rounded-3xl">
           <MoneyExchange />
         </div> 

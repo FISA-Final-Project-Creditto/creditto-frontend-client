@@ -1,12 +1,12 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
-import Header from "../../components/Header";
 import StepProgressBar from "../components/StepProgressbar";
 import DatePicker from "./components/DatePicker";
 import { useState } from "react";
 import BottomBar from "../../components/BottomBar";
 import { useRouter } from "next/navigation";
+import AppHeader from "@/src/common/AppHeader/AppHeader";
 
 // 요일
 const DAYS = [
@@ -112,15 +112,16 @@ export default function TypePage() {
   };
 
   return (
-    <main>
-      {/* 상단 바 */}
-      <Header />
+  <main>
+        {/* 상단 바 */}
+      <AppHeader title="접근 권한" show={true} showHamburger={true} />
 
       {/* 프로그레스 바 */}
       <StepProgressBar current={1} total={4} />
 
       <section className="flex flex-col gap-[2.188rem] mt-4">
-        <h1 className="text-left text-[1.563rem] font-bold">
+
+         <h1 className="text-left text-[1.563rem] font-bold">
           <span className="text-[#1A3668]">해외 송금</span> 기본 정보를
           <br />
           입력해주세요
@@ -128,7 +129,7 @@ export default function TypePage() {
 
         <hr className="border-t border-[#E5E6EB]" />
 
-        <section className="flex flex-col gap-6">
+       <section className="flex flex-col gap-6"> 
           <h2 className="text-left text-[1.563rem] text-[#1A3668] font-bold">
             송금 유형
           </h2>
@@ -137,12 +138,10 @@ export default function TypePage() {
             소액 송금 (USD 기준 5천불 이하)
           </h3>
 
-          {/* 입력칸 */}
           <form
             onSubmit={handleSubmit}
             className="flex flex-col gap-[1.875rem]"
           >
-            {/* 송금 계좌 */}
             <div className="flex flex-col items-start">
               <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
                 송금 계좌
@@ -157,7 +156,6 @@ export default function TypePage() {
               />
             </div>
 
-            {/* 수취 통화 코드 */}
             <div className="flex flex-col items-start">
               <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
                 수취 통화 코드
@@ -184,7 +182,6 @@ export default function TypePage() {
               </div>
             </div>
 
-            {/* 송금 통화 코드 */}
             <div className="flex flex-col items-start">
               <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
                 송금 통화 코드
@@ -212,7 +209,6 @@ export default function TypePage() {
               </div>
             </div>
 
-            {/* 외화 거래 금액 */}
             <div className="flex flex-col items-start">
               <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
                 외화 거래 금액
@@ -227,7 +223,6 @@ export default function TypePage() {
               />
             </div>
 
-            {/* 송금 주기 */}
             <div className="flex flex-col items-start">
               <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
                 송금 주기
@@ -249,7 +244,6 @@ export default function TypePage() {
               </div>
             </div>
 
-            {/* 송금 주기 상세 */}
             <div className="flex flex-col items-start">
               <label className="block text-sm font-semibold text-[#4E5969] mb-[6px]">
                 송금 주기 상세
@@ -281,7 +275,6 @@ export default function TypePage() {
               </div>
             </div>
 
-            {/* 송금 시작일 */}
             <div className="flex flex-col items-start">
               <label className="block text-sm font-semibold text-[#4E5969] mb-[6px]">
                 송금 시작일
@@ -294,7 +287,7 @@ export default function TypePage() {
           </form>
         </section>
         <BottomBar label="다음" onClick={handleSubmit} isActive={isFormValid} />
-      </section>
+      </section> 
     </main>
   );
 }

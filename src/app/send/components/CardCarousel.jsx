@@ -87,10 +87,10 @@ export default function CardCarousel() {
   };
 
   return (
-    <div className="relative flex-1 pb-12">
+    <div className="relative pb-5">
       <div
         ref={carouselRef}
-        className="flex gap-4 overflow-x-hidden h-[380px] cursor-grab active:cursor-grabbing"
+        className="flex gap-4 overflow-x-hidden h-[340px] cursor-grab active:cursor-grabbing"
         style={{ perspective: "1000px" }} // 원근감
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}

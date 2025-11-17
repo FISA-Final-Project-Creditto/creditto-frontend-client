@@ -3,6 +3,7 @@
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import BottomBar from "../../send/components/BottomBar";
 
 export default function PermissionPage() {
   const router = useRouter();
@@ -124,16 +125,8 @@ export default function PermissionPage() {
           </ul>
         </div>
 
-             <div className="w-full  h-[118px]  flex justify-center">
-            <button
-        className="cursor-pointer w-[90%] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white"
-        onClick={() => {
-          handleNext()
-        }}
-      >
-        다음
-      </button>
-      </div>
+              <BottomBar label="다음" onClick={()=>{router.push('/signup/agree')}} isActive={true} />
+      
 </>
   );
 }

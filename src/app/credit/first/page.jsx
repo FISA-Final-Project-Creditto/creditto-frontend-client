@@ -4,8 +4,9 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Emoji from "../components/Emoji";
 import BottomSheet from "@/src/common/UI/BottomSheet/BottomSheet";
+import BottomBar from "../../send/components/BottomBar";
 
-export default function CreditFirst() {
+export default function () {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   return (
@@ -38,7 +39,7 @@ export default function CreditFirst() {
           <span>다양한 혜택을 느낄 수 있어요</span>
         </div>
 
-        <div className="w-full flex flex-col justify-center mt-auto mb-14 px-4">
+        <div className="w-full flex flex-col justify-center mt-auto  ">
           <div
             className="w-full h-20 cursor-pointer flex justify-center items-center text-[#86909C] underline text-lg "
             onClick={(e) => {
@@ -49,12 +50,13 @@ export default function CreditFirst() {
           >
             연동없이 바로 조회하기
           </div>
-          <div
-            className="cursor-pointer w-full max-w-[440px] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white"
-            onClick={() => setOpen(true)}
-          >
-            해외계좌 조회하기
-          </div>
+              <BottomBar
+            label="해외 계좌 조회하기"
+            onClick={() => {
+              router.push("/credit/foregin_account");
+            }}
+            isActive={true}
+          />
         </div>
         
         <BottomSheet open={open} onOpenChange={setOpen} title="신용도 확인 및 활용 동의">

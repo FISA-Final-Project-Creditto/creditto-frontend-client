@@ -28,7 +28,7 @@ export default function SuccessPage() {
           </div>
         </div>
         <div className="w-full  h-[118px]  flex justify-center items-end">
-          <div className="cursor-pointer w-[90%] h-[60px] text-sm font-semibold flex justify-center items-center  text-[#86909C]   underline"
+          <div className="cursor-pointer w-full h-[60px] text-sm font-semibold flex justify-center items-center  text-[#86909C]   underline"
             onClick=
             {(e) => {
               // 이벤트 버블링
@@ -38,8 +38,8 @@ export default function SuccessPage() {
             > 다음에 할게요
           </div>
         </div>
-        <div className="w-full  h-[118px]  flex justify-center">
-          <button className="cursor-pointer w-[90%] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white">
+        <div className="w-full  h-[128px]  flex justify-center">
+          <button className="cursor-pointer w-full h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white">
             인증서 발급하기
           </button>
         </div>

@@ -4,17 +4,17 @@ import Header from "./components/Header";
 import CardCarousel from "./components/CardCarousel";
 import SendBtn from "./components/SendBtn";
 import { useRouter } from "next/navigation";
+import AppHeader from "@/src/common/AppHeader/AppHeader";
 
 export default function SendPage() {
   const router = useRouter();
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <>
       {/* 헤더 */}
-      <Header />
+      <AppHeader title="해외 송금" show={true} showBack={true} showHamburger={false}/>
 
-      <div className="flex-1 flex flex-col">
         {/* 타이틀 */}
-        <div className="pt-8 pb-12">
+        <div className="">
           <h2 className="text-[26px] font-bold text-black text-center leading-relaxed">
             <span className="text-[#405881]">정기 해외 송금</span> 등록하고
             <br />
@@ -26,7 +26,7 @@ export default function SendPage() {
         <CardCarousel />
 
         {/* Action Buttons */}
-        <div className="pb-8 space-y-4">
+        <div className=" space-y-4 ">
           <SendBtn
             title="정기 해외 송금 신청"
             onClick={() => router.push("/send/choose")}
@@ -37,7 +37,6 @@ export default function SendPage() {
           />
           <SendBtn title="정기 해외 송금 취소⋅변경" />
         </div>
-      </div>
-    </div>
+    </>
   );
 }

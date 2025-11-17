@@ -1,6 +1,11 @@
+'use client'
+import { useRouter } from "next/navigation";
+
 export default function RemittanceCard() {
+  const router = useRouter();
   return (
-    <div className="cursor-pointer relative w-[170px] h-[75px] bg-[#E3EFFE] rounded-xl overflow-hidden">
+    <div className="cursor-pointer relative flex-1 h-[75px] bg-[#E3EFFE] rounded-xl overflow-hidden"
+    onClick={()=>{router.push('/send')}}>
       {/* 텍스트 영역 */}
       <div className="absolute left-4 top-1/2 -translate-y-1/2">
         <h2 className="text-[16px] font-bold text-black leading-tight">해외 송금</h2>
