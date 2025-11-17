@@ -1,5 +1,6 @@
 "use client";
 import BottomSheet from "@/src/app/signup/phone/components/BottomSheet";
+import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
@@ -41,25 +42,25 @@ export default function PhonePage() {
       : "고객님의 전화번호를 입력해주세요";
 
   const NameField = (
-    <div className="w-full h-[95px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
-      <label className="text-sm text-gray-600 mb-2">이름</label>
+    <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
+      <label className="text-sm text-gray-600">이름</label>
       <input
         value={name}
         type="text"
-        className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[22px] pb-1"
+        className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[20px] pb-1"
         onChange={(e) => setName(e.target.value)}
       />
     </div>
   );
 
   const BirthdayField = (
-    <div className="w-full h-[95px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
-      <label className="text-sm text-gray-600 mb-2">생년월일</label>
+    <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
+      <label className="text-sm text-gray-600 ">생년월일</label>
       <input
         value={birthday}
         type="text"
         placeholder="YYYYMMDD"
-        className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[22px] pb-1"
+        className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[20px] pb-1"
         onChange={(e) => setBirthDay(e.target.value)}
         onInput={(e) => {
           if (e.target.value.length > 8) {
@@ -72,13 +73,13 @@ export default function PhonePage() {
   );
 
   const PhoneField = (
-    <div className="w-full h-[95px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
-      <label className="text-sm text-gray-600 mb-2">휴대폰 번호</label>
+    <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
+      <label className="text-sm text-gray-600 ">휴대폰 번호</label>
       <input
         value={phonenumber}
         type="text"
         placeholder="010-0000-0000"
-        className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[22px] pb-1 tracking-wider"
+        className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[20px] pb-1 tracking-wider"
         onInput={(e) => {
           // 1️⃣ 숫자만 남기기
           let value = e.target.value.replace(/[^0-9]/g, "");
@@ -102,11 +103,9 @@ export default function PhonePage() {
 
   return (
     <main className="h-[100dvh] flex justify-center bg-[#e5e5e5]">
-      <div className="w-full max-w-[440px] min-h-[100dvh] mx-auto flex flex-col bg-white">
-        <h1 className="text-[22px] text-center font-medium  text-gray-900 mt-15">
-          본인 확인
-        </h1>
-        <div className="flex-1 px-8 pt-16 pb-10 text-left space-y-6">
+      <div className="w-full max-w-[440px] min-h-[100dvh] mx-auto flex  flex-col bg-white">
+            <AppHeader title="본인 인증" show={true} showHamburger={true} showBack={true} />
+        <div className="flex-1 px-8 pt-8 pb-10 text-left space-y-6">
           {/* 상단 문구 */}
 
           <h1

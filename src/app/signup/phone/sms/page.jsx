@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import AppHeader from "@/src/common/AppHeader/AppHeader";
 
 export default function PhoneCodePage() {
   const router = useRouter();
@@ -59,12 +60,9 @@ export default function PhoneCodePage() {
   };
 
   return (
-    <main className="h-[100dvh] flex justify-center bg-[#e5e5e5]">
-      <div className="w-full max-w-[440px] min-h-[100dvh] mx-auto flex flex-col bg-white">
+  <>
         {/* 상단 내용 */}
-               <h1 className="text-[22px] font-semibold text-gray-900 mt-15">
-            본인 확인
-          </h1>
+        <AppHeader title="문자 인증" show={true} showHamburger={true} />
         <div className="flex-1 px-8 mt-5 pb-10">
    
 
@@ -113,11 +111,12 @@ export default function PhoneCodePage() {
         </div>
 
         {/* 하단 버튼 */}
-        <button
+<div className="w-full  h-[118px]  flex justify-center">
+   <button
           type="button"
           disabled={!canSubmit}
           onClick={handleSubmit}
-          className={`w-full h-[73px] text-[20px] font-semibold flex items-center justify-center 
+        className={`cursor-poitner w-[90%] h-[60px] text-[22px] font-semibold flex justify-center items-center  rounded-lg
             transition-colors
             ${
               canSubmit
@@ -127,7 +126,10 @@ export default function PhoneCodePage() {
         >
           인증하기
         </button>
+        
       </div>
-    </main>
+        
+       
+</>
   );
 }
