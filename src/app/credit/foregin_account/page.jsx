@@ -4,7 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import PassportCountryGrid from "./components/PassportCountryGrid";
 
-export default function page() {
+export default function ForeginPage() {
   const router = useRouter();
 
   const handleSelect = (country) => {
