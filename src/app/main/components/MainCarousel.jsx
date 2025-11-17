@@ -20,7 +20,7 @@ function CarouselDemo() {
         {/* ✅ 첫 번째 슬라이드 */}
 
         <CarouselItem
-        className="cursor-pointer"
+          className="cursor-pointer"
           onClick={(e) => {
             e.stopPropagation();
             router.push("/credit/first");
@@ -44,14 +44,13 @@ function CarouselDemo() {
           </div>
         </CarouselItem>
 
-        <CarouselItem>
-          <div
-            className="w-full cursor-pointer flex justify-center items-center text-gray-300  text-lg font-medium"
-            onClick={(e) => {
-              e.stopPropagation();
-              router.push("");
-            }}
-          >
+        <CarouselItem
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push("/account/connection");
+          }}
+        >
+          <div className="w-full cursor-pointer flex justify-center items-center text-gray-300  text-lg font-medium">
             계좌 연결 &gt;
           </div>
           <div className="">
