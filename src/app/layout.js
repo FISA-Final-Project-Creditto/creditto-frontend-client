@@ -7,19 +7,16 @@ export default function RootLayout({ children }) {
     <html lang="ko">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#ffffff"/>
-        
+        <meta name="theme-color" content="#ffffff" />
       </head>
-      
+
       <body className="font-Pretendard">
         <main className="h-[100dvh] flex justify-center items-center bg-[#e5e5e5]">
           <div className="w-full max-w-[440px] min-h-[100dvh] mx-auto justify-start flex flex-col bg-white">
-
-        {children}
-       
-        </div>
-         </main>
-        </body>
+            {children}
+          </div>
+        </main>
+      </body>
     </html>
   );
 }

@@ -1,7 +1,7 @@
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import React from "react";
 
-export default function page() {
+export default function LoanDetailPage() {
   return (
     <>
       <div className="h-dvh flex flex-col">

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Emoji from "../components/Emoji";
 import BottomSheet from "@/src/common/UI/BottomSheet/BottomSheet";
 
-export default function page() {
+export default function CreditFirst() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   return (
