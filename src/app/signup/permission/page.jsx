@@ -1,5 +1,6 @@
 'use client';
 
+import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -65,8 +66,8 @@ export default function PermissionPage() {
   }
 
   return (
-    <main className="h-[100dvh] flex justify-center bg-[#e5e5e5]">
-      <div className="w-full max-w-[440px] min-h-[100dvh] mx-auto flex flex-col bg-white ">
+        <>
+             <AppHeader title="접근 권한" show={true} showHamburger={true} />
         <div className="flex-1 px-8 pt-16 pb-10 text-left">
           <h1 className="text-2xl font-bold leading-snug">
             서비스 이용을 위해
@@ -123,13 +124,16 @@ export default function PermissionPage() {
           </ul>
         </div>
 
-        <button
-          onClick={handleNext}
-            className="w-full h-[90px] bg-[#1A3668] text-white text-[26px] font-semibold flex justify-center items-center"
-        >
-          다음
-        </button>
+             <div className="w-full  h-[118px]  flex justify-center">
+            <button
+        className="cursor-pointer w-[90%] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white"
+        onClick={() => {
+          handleNext()
+        }}
+      >
+        다음
+      </button>
       </div>
-    </main>
+</>
   );
 }
