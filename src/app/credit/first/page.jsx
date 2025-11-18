@@ -40,16 +40,16 @@ export default function () {
         </div>
 
         <div className="w-full flex flex-col justify-center mt-auto  ">
-          <div
-            className="w-full h-20 cursor-pointer flex justify-center items-center text-[#86909C] underline text-lg "
+          <h3
+            className="w-full h-10 cursor-pointer flex justify-center items-center text-[#86909C] underline text-lg "
             onClick={(e) => {
               // 이벤트 버블링
-              e.stopPropagation();
+              // e.stopPropagation();
               router.push("/signup/permission");
             }}
           >
             연동없이 바로 조회하기
-          </div>
+          </h3>
               <BottomBar
             label="해외 계좌 조회하기"
             onClick={() => {

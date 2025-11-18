@@ -16,15 +16,13 @@ function CarouselDemo() {
   const router = useRouter();
   return (
     <Carousel className="w-full h-[190px]">
+     
       <CarouselContent>
         {/* ✅ 첫 번째 슬라이드 */}
 
         <CarouselItem
           className="cursor-pointer"
-          onClick={(e) => {
-            e.stopPropagation();
-            router.push("/credit/first");
-          }}
+         
         >
           <div className="w-full cursor-pointer flex justify-center items-center text-gray-300  text-lg font-medium">
             신용 점수 &gt;
@@ -34,7 +32,7 @@ function CarouselDemo() {
               <CardContent className="flex flex-col items-center justify-center ">
                 <p className="text-sm font-medium">Creditto 점수</p>
                 <CircleProgress
-                  value={50}
+                  value={80}
                   maxValue={100}
                   size={120}
                   strokeWidth={6}
@@ -64,11 +62,17 @@ function CarouselDemo() {
               </CardContent>
             </Card>
           </div>
+          
         </CarouselItem>
+      
       </CarouselContent>
 
       {/* 캐러셀 버튼 */}
+   
+     
+          
     </Carousel>
+    
   );
 }
 

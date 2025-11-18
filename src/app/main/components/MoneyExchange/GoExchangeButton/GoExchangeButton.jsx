@@ -2,10 +2,10 @@ import React from "react";
 
 export default function GoExchangeButton() {
   return (
-    <div className="w-full h-[122px]  flex justify-end items-center flex-col">
-      <div className="w-full h-[100px] bg-white rounded-xl flex justify-around items-center flex-row">
+    <div className="w-full h-[122px]  flex justify-end items-center flex-col ">
+      <div className="w-full h-[100px] bg-white rounded-xl flex justify-around items-center flex-row px-5 text-left">
         <div>
-          <h2 className="text-[18px] font-bold text-black leading-tight text-left">
+          <h2 className=" font-bold text-black leading-tight text-left">
             환율 그래프
           </h2>
           <p className="font-medium text-[14px] text-gray-500 mt-1">

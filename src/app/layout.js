@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
 
       <body className="font-Pretendard">
         <main className="flex justify-center bg-[#e5e5e5]">
-          <div className="w-full max-w-[440px] min-h-screen mx-auto flex flex-col bg-white overflow-y-auto">
+          <div className="w-full max-w-[440px] min-h-screen mx-auto flex flex-col bg-white overflow-y-auto px-6 ">
             {children}
           </div>
         </main>

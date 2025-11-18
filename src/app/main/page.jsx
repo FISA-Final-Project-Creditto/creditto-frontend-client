@@ -1,11 +1,10 @@
 "use client";
 import React from "react";
-import Hambuger from "./components/Hambuger";
 import { CarouselDemo } from "./components/MainCarousel";
 import LoanButton from "./components/LoanButton";
-import Remittance from "./components/Remittance";
 import MoneyExchange from "./components/MoneyExchange/MoneyExchange";
 import Header from "./components/Header/Header";
+import CreditCard from "./components/CreditButton";
 
 export default function MainPage() {
   return (
@@ -14,7 +13,7 @@ export default function MainPage() {
         <Header />
 
         <div>
-          <p className="text-[17px] font-bold text-gray-900 text-left">
+          <p className="text-xl font-bold text-gray-900 text-left">
             환영합니다
             <br />
             <span className="text-gray-500">
@@ -23,13 +22,13 @@ export default function MainPage() {
           </p>
         </div>
 
-        <div className=" px-5  flex justify-start flex-col items-center ">
+        <div className=" px-5  flex justify-start flex-col items-center bg-">
           <CarouselDemo />
         </div>
 
       <div className="flex justify-between items-start text-left w-full h-[100px] px-5 gap-5">
           <LoanButton />
-          <Remittance />
+          <CreditCard />
       </div>
         <div className="w-full flex-1 bg-[#F3F6FB] flex overflow-auto rounded-3xl">
           <MoneyExchange />
