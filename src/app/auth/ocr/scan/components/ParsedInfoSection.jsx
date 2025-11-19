@@ -1,6 +1,5 @@
 "use client";
 
-import BottomBar from "../../components/BottomBar";
 import InfoDisplayField from "./InfoDisplayField";
 
 export default function ParsedInfoSection({ parsedData }) {
@@ -32,14 +31,6 @@ export default function ParsedInfoSection({ parsedData }) {
           value={parsedData?.authority ?? ""}
         />
       </div>
-
-      <footer>
-        <BottomBar
-          label="확인"
-          onClick={() => router.push("/auth/info")}
-          isActive={true}
-        />
-      </footer>
     </div>
   );
 }

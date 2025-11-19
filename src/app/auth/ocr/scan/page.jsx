@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import UploadBox from "./components/UploadBox";
 import ScanPreview from "./components/ScanPreview";
 import axios from "axios";
 import { parseAlienRegistration } from "../utils/parseAlienRegistration";
 import { useRouter } from "next/navigation";
 import ParsedInfoSection from "./components/ParsedInfoSection";
+import BottomBar from "../components/BottomBar";
 
 // axios를 사용하여 OCR API 호출
 const requestOCR = async (file) => {
@@ -176,9 +177,38 @@ export default function ScanPage() {
 
       {/* 분석된 등록증 정보 */}
       {ocrState.parsedData && (
-        <section className="mt-8">
-          <ParsedInfoSection parsedData={ocrState.parsedData} />
-        </section>
+        <>
+          <section className="mt-8">
+            <ParsedInfoSection parsedData={ocrState.parsedData} />
+          </section>
+
+          <footer>
+            <BottomBar
+              label="확인"
+              onClick={() => {
+                let url = "/auth/info"; // 신원정보 확인 페이지 링크
+                const params = new URLSearchParams();
+
+                // 외국인등록증 URL이 있으면 params에 저장
+                if (preview) {
+                  params.append("previewUrl", preview);
+                }
+
+                // parsedData안의 nationality 값이 있으면 params에 저장
+                if (ocrState.parsedData && ocrState.parsedData.nationality) {
+                  params.append("nationality", ocrState.parsedData.nationality);
+                }
+
+                // params를 문자열로 변환 후 url에 덧붙인 후 이동
+                if (params.toString()) {
+                  url += `?${params.toString()}`;
+                }
+                router.push(url);
+              }}
+              isActive={true}
+            />
+          </footer>
+        </>
       )}
     </main>
   );
