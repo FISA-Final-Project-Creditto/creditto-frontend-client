@@ -43,18 +43,20 @@ export default function AuthStepPage() {
   };
 
   return (
-    <section className="min-h-dvh bg-white flex flex-col pt-[100px] pb-[calc(68px+24px+env(safe-area-inset-bottom))]">
+    <main className="min-h-dvh bg-white flex flex-col items-start pt-[100px] pb-[calc(68px+24px+env(safe-area-inset-bottom))]">
       {/* 인증서 발급 안내 */}
       <h1 className="text-[1.375rem] font-semibold text-[#000] mb-[35px]">
         인증서 발급은 아래 순서로 진행돼요
       </h1>
 
       {/* 단계 */}
-      <Step title="비대면 실명확인" subtitle="외국인 등록증을 준비해주세요" />
-      <Step
-        title="간편 비밀번호 설정"
-        subtitle="6자리 간편 비밀번호를 설정합니다."
-      />
+      <section className="flex- flex-col gap-[3.125rem]">
+        <Step title="비대면 실명확인" subtitle="외국인 등록증을 준비해주세요" />
+        <Step
+          title="간편 비밀번호 설정"
+          subtitle="6자리 간편 비밀번호를 설정합니다."
+        />
+      </section>
 
       {/* 하단 고정 버튼 */}
       <BottomBar label="인증서 발급하기" onClick={() => setOpen(true)} />
@@ -111,6 +113,6 @@ export default function AuthStepPage() {
           </button>
         </center>
       </BottomSheet>
-    </section>
+    </main>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import BottomBar from "../components/BottomBar";
+import BottomBar from "../ocr/components/BottomBar";
 
 export default function SuccessPage() {
   return (
@@ -23,7 +23,7 @@ export default function SuccessPage() {
         className="mx-auto"
       />
 
-      <BottomBar label="시작하기" />
+      <BottomBar label="시작하기" isActive={true} />
     </div>
   );
 }

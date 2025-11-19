@@ -1,25 +1,14 @@
 "use client";
 
-export default function BottomBar({ label, onClick }) {
+export default function BottomBar({ label, onClick, isActive = false }) {
+  const buttonClasses = `
+    w-full h-[55px] text-[22px] bottom-0 mt-10 font-semibold flex justify-center items-center transition-colors rounded-lg
+    ${isActive ? "bg-[#1A3668] text-white" : "bg-[#99A6BC] text-white"}
+  `;
+
   return (
-    <div
-      className="
-        fixed inset-x-0 bottom-0 z-50
-        pb-[max(16px,env(safe-area-inset-bottom))]  /* iPhone 안전영역 */
-      "
-    >
-      <button
-        onClick={onClick}
-        className="
-          w-screen h-[4.688rem]
-          rounded-3xl
-          rounded-none
-          bg-[#1A3668] text-white text-[1.125rem] font-semibold
-          active:opacity-90
-        "
-      >
-        {label}
-      </button>
-    </div>
+    <button className={buttonClasses} onClick={onClick} disabled={!isActive}>
+      {label}
+    </button>
   );
 }
