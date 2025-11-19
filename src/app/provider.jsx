@@ -1,9 +1,8 @@
-'use client';
+"use client";
 
-import { Provider } from 'react-redux';
-import { useState } from 'react';
-import { makeStore } from '../store/store';
-
+import { Provider } from "react-redux";
+import { useState } from "react";
+import { makeStore } from "../store/store";
 
 export default function Providers({ children, preloadedState }) {
   const [store] = useState(() => makeStore(preloadedState));

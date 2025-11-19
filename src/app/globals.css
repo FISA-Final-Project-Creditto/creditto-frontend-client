@@ -45,7 +45,8 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 /* 기존 body 스타일 삭제하고 이 정도만 남기기 */
-html, body {
+html,
+body {
   overflow: hidden;
   overscroll-behavior: none;
   touch-action: none;
@@ -176,4 +177,3 @@ body {
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
-
