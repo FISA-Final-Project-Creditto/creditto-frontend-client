@@ -3,22 +3,22 @@
 import { useState } from "react";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import BottomBar from "../ocr/components/BottomBar";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import InfoInput from "./components/InfoInput";
 import Image from "next/image";
+import { useSelector } from "react-redux";
 
 export default function InfoInputPage() {
-  // ScanPage에서 전달받은 params로 이미지 링크와 국적 추출
-  const searchParams = useSearchParams();
-  const previewUrl = searchParams.get("previewUrl");
-  const initialNationality = searchParams.get("nationality");
+  // Redux 스토어에서 OCR 데이터(이미지, 국적) 가져오기
+  const { imageData: previewUrl, nationality: initialNationality } =
+    useSelector((state) => state.ocr);
 
   const [formData, setFormData] = useState({
     name: "홍길동",
     birthDate: "",
     registrationNumber: "123456 - 1234567",
     phoneNumber: "3412-6179", // 010- 제외한 부분
-    nationality: initialNationality,
+    nationality: initialNationality || "", // 스토어에 국적이 없으면 빈 문자열
   });
 
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function InfoInputPage() {
   const handleChange = (field, value) => {
     let formattedValue = value;
 
-    // 생년월일 형식(yyyy-mm-dd)대로 입력
+    // 생년월일 형식(yyyy-mm-dd)
     if (field === "birthDate") {
       const cleaned = value.replace(/\D/g, "").slice(0, 8);
       if (cleaned.length > 6) {
@@ -41,7 +41,7 @@ export default function InfoInputPage() {
       }
     }
 
-    // 전화번호 형식(010-0000-0000)대로 입력(010은 고정)
+    // 전화번호 형식(010-0000-0000) → 뒤 8자리만 관리
     if (field === "phoneNumber") {
       const cleaned = value.replace(/\D/g, "").slice(0, 8);
       if (cleaned.length > 4) {
@@ -51,7 +51,7 @@ export default function InfoInputPage() {
       }
     }
 
-    // 상태값 업데이트
+    // 공통 상태 업데이트
     setFormData((prev) => ({ ...prev, [field]: formattedValue }));
   };
 
@@ -92,9 +92,7 @@ export default function InfoInputPage() {
           title="이름"
           inputMode=""
           value={formData.name}
-          onChange={(e) =>
-            setFormData((prev) => ({ ...prev, name: e.target.value }))
-          }
+          onChange={(e) => handleChange("name", e.target.value)}
         />
 
         {/* 생년월일 */}
@@ -110,12 +108,7 @@ export default function InfoInputPage() {
           title="외국인등록번호"
           inputMode="numeric"
           value={formData.registrationNumber}
-          onChange={(e) =>
-            setFormData((prev) => ({
-              ...prev,
-              registrationNumber: e.target.value,
-            }))
-          }
+          onChange={(e) => handleChange("registrationNumber", e.target.value)}
         />
 
         {/* 전화번호 */}
@@ -132,9 +125,7 @@ export default function InfoInputPage() {
           title="국가 / 지역"
           inputMode=""
           value={formData.nationality}
-          onChange={(e) =>
-            setFormData((prev) => ({ ...prev, nationality: e.target.value }))
-          }
+          onChange={(e) => handleChange("nationality", e.target.value)}
         />
       </div>
 

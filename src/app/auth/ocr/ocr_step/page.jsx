@@ -50,7 +50,7 @@ export default function AuthStepPage() {
       </h1>
 
       {/* 단계 */}
-      <section className="flex- flex-col gap-[3.125rem]">
+      <section className="flex flex-col gap-[1.875rem]">
         <Step title="비대면 실명확인" subtitle="외국인 등록증을 준비해주세요" />
         <Step
           title="간편 비밀번호 설정"
@@ -59,7 +59,11 @@ export default function AuthStepPage() {
       </section>
 
       {/* 하단 고정 버튼 */}
-      <BottomBar label="인증서 발급하기" onClick={() => setOpen(true)} />
+      <BottomBar
+        label="인증서 발급하기"
+        onClick={() => setOpen(true)}
+        isActive={true}
+      />
 
       {/* 바텀시트 */}
       <BottomSheet open={open} onOpenChange={handleOpenChange}>

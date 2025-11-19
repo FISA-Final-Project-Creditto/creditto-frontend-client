@@ -20,7 +20,7 @@ export default function InfoInput({
           value={value}
           onChange={onChange}
           placeholder={
-            title == "생년월일" ? "생년월일을 입력해주세요(8자리)" : ""
+            title === "생년월일" ? "생년월일을 입력해주세요(8자리)" : ""
           }
           className="flex-grow text-lg font-semibold text-black placeholder:text-[#86909C] placeholder:font-medium outline-none bg-transparent"
         />

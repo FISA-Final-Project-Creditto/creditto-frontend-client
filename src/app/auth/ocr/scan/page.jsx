@@ -8,6 +8,10 @@ import { parseAlienRegistration } from "../utils/parseAlienRegistration";
 import { useRouter } from "next/navigation";
 import ParsedInfoSection from "./components/ParsedInfoSection";
 import BottomBar from "../components/BottomBar";
+import { useDispatch } from "react-redux";
+import { setOcrData } from "@/src/store/features/ocr/ocrSlice";
+
+const DOCUMENT_TYPE_ALIEN_CARD = "Alien Registration Card"; // 외국인등록증 상수로 선언
 
 // axios를 사용하여 OCR API 호출
 const requestOCR = async (file) => {
@@ -38,19 +42,10 @@ export default function ScanPage() {
     error: null, // OCR 분석 실패
     data: null, // 원본 OCR 응답
     parsedData: null, // 파싱된 OCR 데이터
-    // parsedData: {
-    //   alienRegNum: "123456-7890123",
-    //   name: "JOHN DOE",
-    //   sex: "MALE",
-    //   nationality: "USA",
-    //   ssueDateIso: "2023-01-01",
-    //   issueDateRaw: "2023.01.01",
-    //   visaType: "F-4",
-    //   authority: "MINISTRY OF JUSTICE",
-    // }, // 테스트 위해 임시 데이터 주입
   });
 
   const router = useRouter();
+  const dispatch = useDispatch();
 
   // 언마운트 시 URL 해제
   useEffect(() => {
@@ -103,7 +98,7 @@ export default function ScanPage() {
 
       // 외국인등록증인지 아닌지 여부 확인
       const idtype = image?.idCard?.result?.idtype ?? null;
-      const isCorrectDocument = idtype === "Alien Registration Card";
+      const isCorrectDocument = idtype === DOCUMENT_TYPE_ALIEN_CARD;
 
       if (!isCorrectDocument) {
         // 문서 판별 실패
@@ -120,6 +115,14 @@ export default function ScanPage() {
       } else {
         // 문서 판별 성공 → 파싱 실행
         const parsed = parseAlienRegistration(ocrData);
+
+        // Redux 스토어에 데이터 저장
+        dispatch(
+          setOcrData({
+            imageData: url,
+            nationality: parsed.nationality,
+          })
+        );
 
         setOcrState({
           isPending: false,
@@ -185,26 +188,7 @@ export default function ScanPage() {
           <footer>
             <BottomBar
               label="확인"
-              onClick={() => {
-                let url = "/auth/info"; // 신원정보 확인 페이지 링크
-                const params = new URLSearchParams();
-
-                // 외국인등록증 URL이 있으면 params에 저장
-                if (preview) {
-                  params.append("previewUrl", preview);
-                }
-
-                // parsedData안의 nationality 값이 있으면 params에 저장
-                if (ocrState.parsedData && ocrState.parsedData.nationality) {
-                  params.append("nationality", ocrState.parsedData.nationality);
-                }
-
-                // params를 문자열로 변환 후 url에 덧붙인 후 이동
-                if (params.toString()) {
-                  url += `?${params.toString()}`;
-                }
-                router.push(url);
-              }}
+              onClick={() => router.push("/auth/info")}
               isActive={true}
             />
           </footer>

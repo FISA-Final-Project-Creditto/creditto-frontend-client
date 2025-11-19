@@ -1,6 +1,6 @@
 export default function Step({ title, subtitle }) {
   return (
-    <div className="flex items-center gap-[0.9375rem] mb-[35px]">
+    <div className="flex items-center gap-[0.9375rem]">
       <div className="w-10 h-10 rounded-full bg-[#E5E6EB]" />
       <div className="flex flex-col items-start">
         <p className="font-semibold text-[1.125rem] text-[#000000]">{title}</p>

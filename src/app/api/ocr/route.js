@@ -19,7 +19,7 @@ export async function OPTIONS() {
 
 export async function POST(request) {
   try {
-    // ───────── 1. 요청에서 파일 추출 ─────────
+    // 요청에서 파일 추출
     const formData = await request.formData();
     const file = formData.get("file");
 
@@ -30,7 +30,7 @@ export async function POST(request) {
       );
     }
 
-    // ───────── 2. 환경 변수 확인 ─────────
+    // 환경 변수 확인
     const invokeUrl = process.env.NAVER_CLOVA_OCR_INVOKE_URL;
     const secretKey = process.env.NAVER_CLOVA_OCR_SECRET_KEY;
 
@@ -42,7 +42,7 @@ export async function POST(request) {
       );
     }
 
-    // ───────── 3. 파일 → base64 인코딩 ─────────
+    // 파일 → base64 인코딩
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const base64Image = buffer.toString("base64");
@@ -72,7 +72,7 @@ export async function POST(request) {
       );
     }
 
-    // ───────── 4. Naver Document OCR(JSON) 요청 바디 ─────────
+    // Naver Document OCR(JSON) 요청 바디
     const requestBody = {
       version: "V2",
       requestId: `req-${Date.now()}`,
@@ -86,7 +86,7 @@ export async function POST(request) {
       ],
     };
 
-    // ───────── 5. Naver OCR API 호출 (axios + application/json) ─────────
+    // Naver OCR API 호출 (axios + application/json)
     const response = await axios.post(invokeUrl, requestBody, {
       headers: {
         "Content-Type": "application/json",
@@ -94,9 +94,7 @@ export async function POST(request) {
       },
     });
 
-    // console.log("OCR images값:", response.data.images);
-    // console.log("OCR idCard값:", response.data.images[0].idCard);
-    console.log("OCR ac값:", response.data.images[0].idCard.result.ac);
+    console.log("OCR 성공 응답값:", response.data);
 
     return NextResponse.json(response.data, {
       status: 200,

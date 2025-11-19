@@ -43,7 +43,7 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
           router.push("/auth/loading");
         } else {
           // 실패 → 리셋
-          alert("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
+          // ✅ TODO: 에러 메세지가 UI에 표시되도록 개선
           setPin("");
           setIsShaking(true);
           setFirstPin(null);

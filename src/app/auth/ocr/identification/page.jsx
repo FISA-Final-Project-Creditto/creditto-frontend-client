@@ -60,7 +60,11 @@ export default function IDPage() {
       />
 
       {/* 하단 버튼 */}
-      <BottomBar label="외국인등록증 가져오기" onClick={handleBottomBarClick} />
+      <BottomBar
+        label="외국인등록증 가져오기"
+        onClick={handleBottomBarClick}
+        isActive={true}
+      />
     </div>
   );
 }
