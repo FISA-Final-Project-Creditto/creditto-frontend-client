@@ -7,10 +7,10 @@ import Remittance from "./components/Remittance";
 import MoneyExchange from "./components/MoneyExchange/MoneyExchange";
 import Header from "./components/Header/Header";
 
-export default function page() {
+export default function MainPage() {
   return (
-    <main className="h-[100dvh] flex justify-center items-center bg-[#e5e5e5]">
-      <div className="w-full max-w-[440px] min-h-[100dvh] mx-auto justify-start flex flex-col bg-white">
+    <main className="h-dvh flex justify-center items-center bg-[#e5e5e5]">
+      <div className="w-full max-w-[440px] min-h-dvh mx-auto justify-start flex flex-col bg-white">
         <Header />
 
         <div className="ml-5">

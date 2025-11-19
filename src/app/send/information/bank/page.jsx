@@ -1,0 +1,237 @@
+"use client";
+
+import { ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Header from "../../components/Header";
+import StepProgressBar from "../components/StepProgressbar";
+import BottomBar from "../../components/BottomBar";
+import Modal from "../../components/Modal";
+
+// 국가별 은행 목록
+const BANK_OPTIONS = {
+  US: [
+    { name: "JP모건 체이스", code: "JPMCUS33" },
+    { name: "뱅크 오브 아메리카", code: "BOFAUS3N" },
+    { name: "웰스 파고", code: "WFBIUS6S" },
+  ],
+  CHN: [
+    { name: "교통은행", code: "COMMCNSH" },
+    { name: "중국은행", code: "BKCHCNBJ" },
+    { name: "중국농업은행", code: "ABOCCNBJ" },
+  ],
+  JPN: [
+    { name: "미쓰비시UFJ은행", code: "BOTKJPJT" },
+    { name: "미쓰이스미토모은행", code: "SMBCJPJT" },
+    { name: "미즈호은행", code: "MHCBJPJT" },
+  ],
+};
+
+export default function BankPage() {
+  const router = useRouter();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 수취인 정보값 상태 관리
+  const [formData, setFormData] = useState({
+    country: "", // 수취 은행 국가
+    bankname: "", // 은행명
+    bankcode: "", // 은행 코드
+    accountno: "", // 계좌 번호
+  });
+
+  // 폼 유효성 검사
+  const isFormValid =
+    formData.country.trim() !== "" &&
+    formData.bankname.trim() !== "" &&
+    formData.bankcode.trim() !== "" &&
+    formData.accountno.trim() !== "";
+
+  const selectedBankList = BANK_OPTIONS[formData.country] || [];
+
+  // 폼 제출
+  const handleSubmit = (e) => {
+    e.preventDefault(); // 페이지 새로고침 방지
+    if (isFormValid) {
+      const submissionData = {
+        ...formData,
+      };
+      console.log("작성된 폼", submissionData);
+
+      setIsModalOpen(!isModalOpen);
+    } else {
+      console.log("모든 입력 칸이 채워져야 됩니다");
+    }
+  };
+
+  // formData 상태값 업데이트
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // 은행 선택 시 은행명 + 코드 동시 업데이트
+  const handleBankChange = (e) => {
+    const { value } = e.target; // value를 은행명으로 사용
+    const bank = selectedBankList.find((b) => b.name === value);
+
+    setFormData((prev) => ({
+      ...prev,
+      bankname: value,
+      bankcode: bank?.code || "",
+    }));
+  };
+
+  return (
+    <div className="flex min-h-dvh justify-center bg-[#e5e5e5]">
+      <div className="w-full max-w-[440px] min-h-dvh mx-auto flex flex-col bg-white">
+        {/* 상단 바 + 프로그레스 바 */}
+        <header className="pt-[env(safe-area-inset-top)]">
+          {/* 상단 바 */}
+          <Header />
+
+          {/* 프로그레스 바 */}
+          <StepProgressBar current={4} total={4} />
+        </header>
+
+        {/* 메인 컨텐츠 영역 */}
+        <main className="flex-1 pt-4 pb-6 overflow-y-auto">
+          <section className="flex flex-col gap-[2.188rem]">
+            <h1 className="text-left text-[1.563rem] font-bold">
+              <span className="text-[#1A3668]">해외 송금</span> 기본 정보를
+              <br />
+              입력해주세요
+            </h1>
+
+            <hr className="border-t border-[#E5E6EB]" />
+
+            <section className="flex flex-col gap-6">
+              <h2 className="text-left text-[1.563rem] text-[#1A3668] font-bold">
+                해외 은행 정보 입력
+              </h2>
+
+              <h3 className="text-left text-[1.125rem] text-black font-semibold">
+                입금하시려는 해외 은행 정보를 <br />
+                입력해 주세요
+              </h3>
+
+              {/* 입력칸 */}
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-[1.875rem]"
+              >
+                {/* 국가 */}
+                <div className="flex flex-col items-start">
+                  <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
+                    국가 (Country)
+                  </label>
+                  <div className="relative w-full">
+                    <select
+                      name="country"
+                      value={formData.country}
+                      onChange={handleChange}
+                      className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none
+    ${formData.country === "" ? "text-[#86909C]" : "text-black"}`}
+                    >
+                      <option value="">은행이 위치한 국가를 선택하세요</option>
+                      <option value="US">미국(USA)</option>
+                      <option value="CHN">중국(CHINA)</option>
+                      <option value="JPN">일본(JAPAN)</option>
+                    </select>
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+
+                {/* 수취 은행명 + 은행 코드 */}
+                <div className="flex flex-col items-start">
+                  <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
+                    은행명 (Bank Name)
+                  </label>
+
+                  <div className="flex w-full gap-2 items-center">
+                    {/* 은행명 셀렉트 */}
+                    <div className="relative flex-1">
+                      <select
+                        name="bankname"
+                        value={formData.bankname}
+                        onChange={handleBankChange}
+                        className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
+                          formData.bankname === ""
+                            ? "text-[#86909C]"
+                            : "text-black"
+                        }`}
+                      >
+                        <option value="">
+                          {selectedBankList.length > 0
+                            ? "은행명을 선택하세요"
+                            : "국가를 먼저 선택하세요"}
+                        </option>
+
+                        {selectedBankList.map((bank) => (
+                          <option key={bank.code} value={bank.name}>
+                            {bank.name}
+                          </option>
+                        ))}
+                      </select>
+                      {selectedBankList.length > 0 ? (
+                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86909C] pointer-events-none" />
+                      ) : (
+                        " "
+                      )}
+                    </div>
+
+                    {/* 은행 코드 표시 */}
+                    <div
+                      className={`min-w-[120px] px-3 py-3 bg-[#F7F8FA] border border-dashed border-[#E5E6EB] text-[0.875rem] text-[#4E5969] text-center ${
+                        formData.bankcode === ""
+                          ? "text-[#86909C]"
+                          : "text-black"
+                      }`}
+                    >
+                      {formData.bankcode || "은행 코드"}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 계좌 번호 (Account Code) */}
+                <div className="flex flex-col items-start">
+                  <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
+                    계좌 번호 (Account NO.)
+                  </label>
+                  <input
+                    type="text"
+                    name="accountno"
+                    value={formData.accountno}
+                    onChange={handleChange}
+                    placeholder="계좌번호를 입력하세요"
+                    className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
+                  />
+                </div>
+
+                <BottomBar
+                  label="다음"
+                  onClick={handleSubmit}
+                  isActive={isFormValid}
+                />
+              </form>
+            </section>
+
+            {isModalOpen && (
+              <Modal
+                title="해외 자동 송금"
+                message="해외 자동 송금 서비스를 신청하시겠습니까?
+                ‘예'를 클릭하실 경우 앞서 산출한 우대환율이 
+                적용됩니다."
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={() => router.push("/send/result")}
+              />
+            )}
+          </section>
+        </main>
+      </div>
+    </div>
+  );
+}
