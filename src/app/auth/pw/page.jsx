@@ -2,23 +2,58 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import SecurePinKeyboard from "./components/SecurePinKeyboard";
+import dynamic from "next/dynamic";
+const SecurePinKeyboard = dynamic(
+  () => import("./components/SecurePinKeyboard"),
+  { ssr: false } // 키보드는 클라이언트에서만 렌더 → hydration 에러 방지
+);
 
 export default function SecurePage({ length = 6, onComplete, onChange }) {
   const [pin, setPin] = useState(""); // 현재 입력된 비밀번호 상태
+  const [firstPin, setFirstPin] = useState(null); // 1차에 입력한 비밀번호
+  const [step, setStep] = useState(1); // 1단계/2단계 체크
+  const [isShaking, setIsShaking] = useState(false); // 흔들기 여부
+  const [shuffleToken, setShuffleToken] = useState(1); // 키보드 섞기 트리거용 토큰
+
   const hiddenInputRef = useRef(null); // 숨겨진 input (포커스 트랩용)
   const router = useRouter();
 
+  // 6자리 완료 시 1차 or 2차 처리
   const emitChange = useCallback(
     (v) => {
       setPin(v);
-      onChange?.(v);
-      if (v.length === length) {
-        onComplete?.(v);
-        router.push("/auth/loading"); // ✅ 6자리 입력 완료 시 이동
+
+      // 아직 6자리가 안 됐으면 업데이트만
+      if (v.length < length) return;
+
+      // ① 첫 번째 입력 완료
+      if (step === 1) {
+        setFirstPin(v); // 첫 PIN 저장
+        setStep(2); // 두 번째 입력으로 전환
+        setPin(""); // 입력창 초기화
+
+        setShuffleToken((t) => t + 1);
+        return;
+      }
+
+      // ② 두 번째 입력 완료 → 첫 입력과 비교
+      if (step === 2) {
+        if (v === firstPin) {
+          // 성공
+          router.push("/auth/loading");
+        } else {
+          // 실패 → 리셋
+          alert("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
+          setPin("");
+          setIsShaking(true);
+          setFirstPin(null);
+          setStep(1);
+        }
+
+        setShuffleToken((t) => t + 1);
       }
     },
-    [length, onChange, onComplete, router]
+    [length, step, firstPin, router]
   );
 
   // 키보드에서 숫자 버튼 클릭 시 실행
@@ -94,6 +129,7 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
             onClick={() => hiddenInputRef.current?.focus()}
             role="group"
             aria-label="비밀번호 자리수"
+            onAnimationEnd={() => setIsShaking(false)} // 애니메이션 끝나면 흔들기 상태 해제
           >
             {Array.from({ length }).map((_, i) => (
               <span
@@ -117,6 +153,7 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
         onDigit={onDigit}
         onBackspace={onBackspace}
         onClear={onClear}
+        shuffleToken={shuffleToken}
       />
     </section>
   );

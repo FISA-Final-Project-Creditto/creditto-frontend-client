@@ -7,7 +7,7 @@ export default function LoadingPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const t = setTimeout(() => router.push("/auth/ocr/success"), 5000);
+    const t = setTimeout(() => router.push("/auth/success"), 5000);
     return () => clearTimeout(t);
   }, [router]);
 

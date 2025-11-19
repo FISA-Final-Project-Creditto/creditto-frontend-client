@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useMemo } from "react";
 
 // 0~9 배열을 무작위 순서로 변경
 function shuffle(arr) {
@@ -16,19 +16,26 @@ function shuffle(arr) {
 
 export default function SecurePinKeyboard({
   accentHex = "#1A3668",
-  shuffleOnEveryPress = true,
+  shuffleOnEveryPress = false, // 기본값을 false로 (한 자리마다 섞지 않기)
   onDigit,
   onBackspace,
   onClear,
+  shuffleToken, // 🔹 SecurePage에서 내려주는 토큰
 }) {
-  // 초기 렌더링 시 0~9 숫자를 무작위로 섞음
-  const [digits, setDigits] = useState(() => shuffle("0123456789".split("")));
+  // shuffleToken이 바뀔 때마다 새로운 배열을 계산 (파생 상태)
+  const digits = useMemo(() => {
+    const base = "0123456789".split("");
+    if (shuffleToken == null) return base;
+    return shuffle(base);
+  }, [shuffleToken]);
 
   // 숫자 버튼 클릭 시 상위 컴포넌트에 숫자 전달
-  // 설정값에 따라 매번 키 순서를 재섞음
+  // 필요하면 옵션으로 "입력할 때마다 섞기"도 가능하게 유지
   const press = (d) => {
     onDigit?.(d);
-    if (shuffleOnEveryPress) setDigits((cur) => shuffle(cur));
+    if (shuffleOnEveryPress) {
+      setDigits((cur) => shuffle(cur));
+    }
   };
 
   return (
