@@ -5,6 +5,7 @@ const initialState = {
   birthdate: null, // 생년월일
   phoneNumber: null, // 전화번호
   address: null, // 주소
+  externalUserId: null,
 };
 
 export const UserSlice = createSlice({

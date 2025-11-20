@@ -20,7 +20,7 @@ export default function InfoInputPage() {
 
   const [formData, setFormData] = useState({
     name: userData.name ?? "",
-    birthDate: userData.birthdate ?? "", // userSlice의 'birthdate' 사용
+    birthDate: userData.birthdate ?? "",
     registrationNumber: ocrData.alienRegNum ?? "",
     phoneNumber: userData.phoneNumber ?? "",
     address: userData.address ?? "",
@@ -72,15 +72,7 @@ export default function InfoInputPage() {
     setFormData((prev) => ({ ...prev, [field]: formattedValue }));
   };
 
-  // TODO: 추후에 수정
   const handleSubmit = async () => {
-    // 변경된 주소 데이터를 Redux 스토어에 저장
-    dispatch(
-      setUserData({
-        address: formData.address,
-      })
-    );
-
     try {
       const matched = countryCodes.find((c) => c.name === formData.nationality);
 
@@ -91,12 +83,29 @@ export default function InfoInputPage() {
         countryCode: matched?.countryCode ?? "KOR",
         phoneNo: formData.phoneNumber, // phoneNumber를 phoneNo로 변경
         address: formData.address,
+        // name: "이우리",
+        // birthDate: "2001-01-12",
+        // countryCode: "KOR",
+        // phoneNo: "010-2001-0102", // phoneNumber를 phoneNo로 변경
+        // address: "서울특별시 송파구",
       };
 
       const res = await registerUser(data);
+      console.log("data: ", data);
+
+      dispatch(
+        setUserData({
+          name: formData.name,
+          birthDate: formData.birthDate,
+          phoneNumber: formData.phoneNumber,
+          address: formData.address,
+          externalUserId: res.data.externalUserId,
+        })
+      );
 
       if (res && res.code == 200) {
         router.push("/auth/pw");
+        // console.log("성공");
       }
     } catch (error) {
       console.error("Failed to register user:", error);
