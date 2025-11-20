@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
 import StepProgressBar from "../components/StepProgressbar";
 import BottomBar from "../../components/BottomBar";
+import AppHeader from "@/src/common/AppHeader/AppHeader";
 
 export default function RecipientPage() {
   const router = useRouter();
@@ -117,12 +118,18 @@ export default function RecipientPage() {
         {/* 상단 바 + 프로그레스 바 */}
         <header className="pt-[env(safe-area-inset-top)]">
           {/* 상단 바 */}
-          <Header />
+          <AppHeader
+                 title="해외 송금"
+                 show={true}
+                 showHamburger={false}
+                 showBack={true}
+               />
 
           {/* 프로그레스 바 */}
-          <StepProgressBar current={3} total={4} />
+        
         </header>
-
+        <div className="px-5">
+  <StepProgressBar current={3} total={4} />
         {/* 메인 컨텐츠 영역 */}
         <main className="flex-1 pt-4 pb-6 overflow-y-auto">
           <section className="flex flex-col gap-[2.188rem]">
@@ -227,15 +234,17 @@ export default function RecipientPage() {
                   </div>
                 </div>
 
-                <BottomBar
-                  label="다음"
-                  onClick={handleSubmit}
-                  isActive={isFormValid}
-                />
+               
               </form>
             </section>
           </section>
         </main>
+        </div>
+         <BottomBar
+                  label="다음"
+                  onClick={handleSubmit}
+                  isActive={isFormValid}
+                />
       </div>
     </div>
   );

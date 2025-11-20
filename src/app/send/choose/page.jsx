@@ -6,6 +6,7 @@ import { US, CN, JP } from "country-flag-icons/react/3x2";
 import { Check } from "lucide-react";
 import BottomBar from "../components/BottomBar";
 import { useRouter } from "next/navigation";
+import AppHeader from "@/src/common/AppHeader/AppHeader";
 
 export default function ChooseCountryPage() {
   const [selectedCountry, setSelectedCountry] = useState(""); // 기본 선택값 없음
@@ -14,10 +15,10 @@ export default function ChooseCountryPage() {
   return (
     <div>
       <header>
-        <Header />
+      <AppHeader title="해외 송금" show={true} showHamburger={false} showBack={true} />
       </header>
 
-      <section className="flex flex-col gap-[2.188rem]">
+      <section className="flex flex-col gap-[2.188rem] px-5">
         <h1 className="text-left mt-[3.75rem] text-[1.563rem] font-bold">
           <span className="text-[#1A3668]">해외 송금</span> 국가를
           <br />

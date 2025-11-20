@@ -4,15 +4,21 @@ import Header from "./components/Header";
 import CardCarousel from "./components/CardCarousel";
 import SendBtn from "./components/SendBtn";
 import { useRouter } from "next/navigation";
+import AppHeader from "@/src/common/AppHeader/AppHeader";
 
 export default function SendPage() {
   const router = useRouter();
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* 헤더 */}
-      <Header />
+       <AppHeader
+              title="해외 송금"
+              show={true}
+              showHamburger={false}
+              showBack={true}
+            />
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col px-5">
         {/* 타이틀 */}
         <div className="pt-8 pb-12">
           <h2 className="text-[26px] font-bold text-black text-center leading-relaxed">
