@@ -1,13 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
-import counterReducer from "./features/counter/counterSlice";
-import ocrReducer from "./features/ocr/ocrSlice";
+import counter from "./features/counter/counterSlice";
+import ocr from "./features/ocr/ocrSlice";
 
-export const store = configureStore({
-  reducer: {
-    counter: counterReducer,
-    ocr: ocrReducer,
-  },
-  devTools: process.env.NODE_ENV !== "production",
-});
+export function makeStore(preloadedState) {
+  return configureStore({
+    reducer: {
+      counter,
+      ocr,
 
-export default store;
+    },
+    preloadedState,
+    devTools: process.env.NODE_ENV !== "production",
+  });
+}
