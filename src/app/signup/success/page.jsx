@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useRouter } from "next/navigation";
@@ -29,23 +30,28 @@ export default function SuccessPage() {
           </div>
         </div>
         <div className="w-full  h-[118px]  flex justify-center items-end">
-          <div className="cursor-pointer w-[90%] h-[60px] text-sm font-semibold flex justify-center items-center  text-[#86909C]   underline"
-            onClick=
-            {(e) => {
+          <div
+            className="cursor-pointer w-[90%] h-[60px] text-sm font-semibold flex justify-center items-center  text-[#86909C]   underline"
+            onClick={(e) => {
               // 이벤트 버블링
               e.stopPropagation();
               router.push("/");
             }}
-            > 다음에 할게요
+          >
+            {" "}
+            다음에 할게요
           </div>
         </div>
-   <footer>
-        <BottomBar
-          label="인증서 발급하기"
-          // onClick={()=>{router.push('/auth/ocr')}}
-          isActive={true}
-        />
-      </footer>
+
+        <footer>
+          <BottomBar
+            label="인증서 발급하기"
+            onClick={() => {
+              router.push("/auth/ocr/ocr_step");
+            }}
+            isActive={true}
+          />
+        </footer>
       </div>
     </main>
   );
