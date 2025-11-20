@@ -1,5 +1,6 @@
 // src/app/layout.js  (혹은 app/layout.js)
 
+import { ReduxProvider } from "../store/ReduxProvider";
 import "./globals.css";
 import Providers from "./provider";
 
