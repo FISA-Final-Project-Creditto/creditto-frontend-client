@@ -48,7 +48,7 @@ export default function Loanlist() {
       {DUMMY_LOANS.map((loan) => (
         <div
           key={loan.id}
-          className="flex items-center justify-between p-4 bg-white border-b border-gray-200 hover:shadow-md transition cursor-pointer"
+          className="flex items-center justify-between p-2 bg-white border-b border-gray-200 hover:shadow-md transition cursor-pointer mb-2"
           onClick={()=>{router.push(`/loan/${loan.id}`)}}
         >
           {/* 좌측: 로고, 상품명, 설명 */}

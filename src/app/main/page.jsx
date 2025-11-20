@@ -6,35 +6,34 @@ import LoanButton from "./components/LoanButton";
 import Remittance from "./components/Remittance";
 import MoneyExchange from "./components/MoneyExchange/MoneyExchange";
 import Header from "./components/Header/Header";
+import Credit from "../maine/components/Credit/Credit";
+import RoundedIconTabs from "./components/Tabs";
+import FunctionButton from "./components/FunctionButton/FunctionButton";
+import Money from "../maine/components/Money/Money";
 
 export default function MainPage() {
   return (
-    <main className="h-dvh flex justify-center items-center bg-[#e5e5e5]">
-      <div className="w-full max-w-[440px] min-h-dvh mx-auto justify-start flex flex-col bg-white">
-        <Header />
+    <>
+      <Header />
+      <main className="">
 
-        <div className="ml-5">
-          <p className="text-[17px] font-bold text-gray-900 text-left">
-            환영합니다
-            <br />
-            <span className="text-gray-500">
-              <span className="text-[#2E5796]">정용준</span>님
-            </span>
-          </p>
+
+        <div className="px-5 mt-2">
+           <Money />
+          <RoundedIconTabs />
+          <FunctionButton />
+        </div>
+        <div className="px-5 mt-5 ">
+          <div>
+           
+            
+          </div>
         </div>
 
-        <div className=" px-8  flex justify-start flex-col items-center ">
-          <CarouselDemo />
-        </div>
-
-      <div className="flex justify-evenly items-start text-left w-full h-[100px]">
-          <LoanButton />
-          <Remittance />
-    </div>
         <div className="w-full flex-1 bg-[#F3F6FB] flex overflow-auto rounded-3xl">
           <MoneyExchange />
-        </div> 
-      </div>
-    </main>
+        </div>
+      </main>
+    </>
   );
 }
