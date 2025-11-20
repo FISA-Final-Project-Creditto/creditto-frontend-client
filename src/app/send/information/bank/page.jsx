@@ -7,6 +7,7 @@ import Header from "../../components/Header";
 import StepProgressBar from "../components/StepProgressbar";
 import BottomBar from "../../components/BottomBar";
 import Modal from "../../components/Modal";
+import AppHeader from "@/src/common/AppHeader/AppHeader";
 
 // 국가별 은행 목록
 const BANK_OPTIONS = {
@@ -91,146 +92,150 @@ export default function BankPage() {
         {/* 상단 바 + 프로그레스 바 */}
         <header className="pt-[env(safe-area-inset-top)]">
           {/* 상단 바 */}
-          <Header />
+          <AppHeader
+            title="해외 송금"
+            show={true}
+            showHamburger={false}
+            showBack={true}
+          />
 
           {/* 프로그레스 바 */}
-          <StepProgressBar current={4} total={4} />
         </header>
+        <div className="px-5">
+          <StepProgressBar current={4} total={4} />
+          {/* 메인 컨텐츠 영역 */}
 
-        {/* 메인 컨텐츠 영역 */}
-        <main className="flex-1 pt-4 pb-6 overflow-y-auto">
-          <section className="flex flex-col gap-[2.188rem]">
-            <h1 className="text-left text-[1.563rem] font-bold">
-              <span className="text-[#1A3668]">해외 송금</span> 기본 정보를
-              <br />
-              입력해주세요
-            </h1>
+          <main className="flex-1 pt-4 pb-6 overflow-y-auto">
+            <section className="flex flex-col gap-[2.188rem]">
+              <h1 className="text-left text-[1.563rem] font-bold">
+                <span className="text-[#1A3668]">해외 송금</span> 기본 정보를
+                <br />
+                입력해주세요
+              </h1>
 
-            <hr className="border-t border-[#E5E6EB]" />
+              <hr className="border-t border-[#E5E6EB]" />
 
-            <section className="flex flex-col gap-6">
-              <h2 className="text-left text-[1.563rem] text-[#1A3668] font-bold">
-                해외 은행 정보 입력
-              </h2>
+              <section className="flex flex-col gap-6">
+                <h2 className="text-left text-[1.563rem] text-[#1A3668] font-bold">
+                  해외 은행 정보 입력
+                </h2>
 
-              <h3 className="text-left text-[1.125rem] text-black font-semibold">
-                입금하시려는 해외 은행 정보를 <br />
-                입력해 주세요
-              </h3>
+                <h3 className="text-left text-[1.125rem] text-black font-semibold">
+                  입금하시려는 해외 은행 정보를 <br />
+                  입력해 주세요
+                </h3>
 
-              {/* 입력칸 */}
-              <form
-                onSubmit={handleSubmit}
-                className="flex flex-col gap-[1.875rem]"
-              >
-                {/* 국가 */}
-                <div className="flex flex-col items-start">
-                  <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                    국가 (Country)
-                  </label>
-                  <div className="relative w-full">
-                    <select
-                      name="country"
-                      value={formData.country}
-                      onChange={handleChange}
-                      className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none
-    ${formData.country === "" ? "text-[#86909C]" : "text-black"}`}
-                    >
-                      <option value="">은행이 위치한 국가를 선택하세요</option>
-                      <option value="US">미국(USA)</option>
-                      <option value="CHN">중국(CHINA)</option>
-                      <option value="JPN">일본(JAPAN)</option>
-                    </select>
-                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-                  </div>
-                </div>
-
-                {/* 수취 은행명 + 은행 코드 */}
-                <div className="flex flex-col items-start">
-                  <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                    은행명 (Bank Name)
-                  </label>
-
-                  <div className="flex w-full gap-2 items-center">
-                    {/* 은행명 셀렉트 */}
-                    <div className="relative flex-1">
+                {/* 입력칸 */}
+                <form
+                  onSubmit={handleSubmit}
+                  className="flex flex-col gap-[1.875rem]"
+                >
+                  {/* 국가 */}
+                  <div className="flex flex-col items-start">
+                    <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
+                      국가 (Country)
+                    </label>
+                    <div className="relative w-full">
                       <select
-                        name="bankname"
-                        value={formData.bankname}
-                        onChange={handleBankChange}
-                        className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
-                          formData.bankname === ""
+                        name="country"
+                        value={formData.country}
+                        onChange={handleChange}
+                        className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none
+    ${formData.country === "" ? "text-[#86909C]" : "text-black"}`}
+                      >
+                        <option value="">
+                          은행이 위치한 국가를 선택하세요
+                        </option>
+                        <option value="US">미국(USA)</option>
+                        <option value="CHN">중국(CHINA)</option>
+                        <option value="JPN">일본(JAPAN)</option>
+                      </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  {/* 수취 은행명 + 은행 코드 */}
+                  <div className="flex flex-col items-start">
+                    <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
+                      은행명 (Bank Name)
+                    </label>
+
+                    <div className="flex w-full gap-2 items-center">
+                      {/* 은행명 셀렉트 */}
+                      <div className="relative flex-1">
+                        <select
+                          name="bankname"
+                          value={formData.bankname}
+                          onChange={handleBankChange}
+                          className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
+                            formData.bankname === ""
+                              ? "text-[#86909C]"
+                              : "text-black"
+                          }`}
+                        >
+                          <option value="">
+                            {selectedBankList.length > 0
+                              ? "은행명을 선택하세요"
+                              : "국가를 먼저 선택하세요"}
+                          </option>
+
+                          {selectedBankList.map((bank) => (
+                            <option key={bank.code} value={bank.name}>
+                              {bank.name}
+                            </option>
+                          ))}
+                        </select>
+                        {selectedBankList.length > 0 ? (
+                          <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86909C] pointer-events-none" />
+                        ) : (
+                          " "
+                        )}
+                      </div>
+
+                      {/* 은행 코드 표시 */}
+                      <div
+                        className={`min-w-[120px] px-3 py-3 bg-[#F7F8FA] border border-dashed border-[#E5E6EB] text-[0.875rem] text-[#4E5969] text-center ${
+                          formData.bankcode === ""
                             ? "text-[#86909C]"
                             : "text-black"
                         }`}
                       >
-                        <option value="">
-                          {selectedBankList.length > 0
-                            ? "은행명을 선택하세요"
-                            : "국가를 먼저 선택하세요"}
-                        </option>
-
-                        {selectedBankList.map((bank) => (
-                          <option key={bank.code} value={bank.name}>
-                            {bank.name}
-                          </option>
-                        ))}
-                      </select>
-                      {selectedBankList.length > 0 ? (
-                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86909C] pointer-events-none" />
-                      ) : (
-                        " "
-                      )}
-                    </div>
-
-                    {/* 은행 코드 표시 */}
-                    <div
-                      className={`min-w-[120px] px-3 py-3 bg-[#F7F8FA] border border-dashed border-[#E5E6EB] text-[0.875rem] text-[#4E5969] text-center ${
-                        formData.bankcode === ""
-                          ? "text-[#86909C]"
-                          : "text-black"
-                      }`}
-                    >
-                      {formData.bankcode || "은행 코드"}
+                        {formData.bankcode || "은행 코드"}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* 계좌 번호 (Account Code) */}
-                <div className="flex flex-col items-start">
-                  <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                    계좌 번호 (Account NO.)
-                  </label>
-                  <input
-                    type="text"
-                    name="accountno"
-                    value={formData.accountno}
-                    onChange={handleChange}
-                    placeholder="계좌번호를 입력하세요"
-                    className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
-                  />
-                </div>
+                  {/* 계좌 번호 (Account Code) */}
+                  <div className="flex flex-col items-start">
+                    <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
+                      계좌 번호 (Account NO.)
+                    </label>
+                    <input
+                      type="text"
+                      name="accountno"
+                      value={formData.accountno}
+                      onChange={handleChange}
+                      placeholder="계좌번호를 입력하세요"
+                      className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
+                    />
+                  </div>
+                </form>
+              </section>
 
-                <BottomBar
-                  label="다음"
-                  onClick={handleSubmit}
-                  isActive={isFormValid}
-                />
-              </form>
-            </section>
-
-            {isModalOpen && (
-              <Modal
-                title="해외 자동 송금"
-                message="해외 자동 송금 서비스를 신청하시겠습니까?
+              {isModalOpen && (
+                <Modal
+                  title="해외 자동 송금"
+                  message="해외 자동 송금 서비스를 신청하시겠습니까?
                 ‘예'를 클릭하실 경우 앞서 산출한 우대환율이 
                 적용됩니다."
-                onClose={() => setIsModalOpen(false)}
-                onConfirm={() => router.push("/send/result")}
-              />
-            )}
-          </section>
-        </main>
+                  onClose={() => setIsModalOpen(false)}
+                  onConfirm={() => router.push("/send/result")}
+                />
+              )}
+            </section>
+          </main>
+        </div>
+        <BottomBar label="다음" onClick={handleSubmit} isActive={isFormValid} />
       </div>
     </div>
   );

@@ -1,8 +1,12 @@
+'use client'
 import React from "react";
 import RealTimeExchange from "./RealTimeExchange/RealTimeExchange";
 import GoExchangeButton from "./GoExchangeButton/GoExchangeButton";
+import GradientSparkleButton from "@/src/app/maine/components/Send/SendButton";
+import { useRouter } from "next/navigation";
 
 export default function MoneyExchange() {
+  const router = useRouter();
   return (
     <div className="w-full h-[346px] bg-[#F3F6FB] flex flex-col justify-start items-center">
       <div className="w-full h-[83px] font-bold text-[26px] text-[#2E5796] text-left flex items-center px-7 ">
@@ -10,8 +14,9 @@ export default function MoneyExchange() {
       </div>
       <RealTimeExchange />
       <GoExchangeButton />
-      <div className="w-[90%] h-[78px]  flex justify-end  flex-col">
-        <div className="bg-[#002057] flex justify-center items-center w-full h-[50px] text-[20px] text-white font-bold rounded-xl">환전 신청하러 가기</div>
+      <div className="w-full h-[50px]  flex justify-center items-center flex flex-col mt-5 px-5">
+        {/* <div className="bg-[#002057] flex justify-center items-center w-full h-[50px] text-[20px] text-white font-bold rounded-xl">환전 신청하러 가기</div> */}
+        <GradientSparkleButton onClick={()=>{router.push("/send")}}/>
       </div>
     </div>
   );

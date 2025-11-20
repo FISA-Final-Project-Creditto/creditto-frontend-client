@@ -2,6 +2,7 @@
 import React from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useRouter } from "next/navigation";
+import BottomBar from "../../send/components/BottomBar";
 
 export default function SuccessPage() {
   const router = useRouter();
@@ -9,7 +10,7 @@ export default function SuccessPage() {
     <main className="h-[100dvh] flex justify-end items-center bg-[#e5e5e5]">
       <div className="w-full max-w-[440px] min-h-[100dvh] mx-auto flex flex-col bg-white">
         <h1 className="text-[22px] font-semibold text-gray-900 mt-17"></h1>
-        <div className=" flex-1 px-8 mt-5 ">
+        <div className=" flex-1 px-10 pt-16 pb-10">
           <p className="text-2xl font-semibold leading-relaxed text-gray-900 text-left">
             가입이 완료되었어요
             <br />
@@ -38,11 +39,13 @@ export default function SuccessPage() {
             > 다음에 할게요
           </div>
         </div>
-        <div className="w-full  h-[118px]  flex justify-center">
-          <button className="cursor-pointer w-[90%] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white">
-            인증서 발급하기
-          </button>
-        </div>
+   <footer>
+        <BottomBar
+          label="인증서 발급하기"
+          // onClick={()=>{router.push('/auth/ocr')}}
+          isActive={true}
+        />
+      </footer>
       </div>
     </main>
   );

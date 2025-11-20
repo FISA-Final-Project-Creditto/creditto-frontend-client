@@ -6,6 +6,7 @@ import CreditScoreBanner from "./components/CreditPointBanner";
 import BottomBar from "../components/BottomBar";
 import Term from "../components/Term";
 import { useRouter } from "next/navigation";
+import AppHeader from "@/src/common/AppHeader/AppHeader";
 
 export default function CompletePage() {
   const router = useRouter();
@@ -13,9 +14,14 @@ export default function CompletePage() {
   return (
     <div className="min-h-dvh flex flex-col bg-white">
       <header>
-        <Header />
+        <AppHeader
+          title="해외 송금"
+          show={true}
+          showHamburger={false}
+          showBack={true}
+        />
       </header>
-
+<div className="px-5">
       <section className="flex flex-col gap-[2.188rem]">
         <h1 className="text-left mt-[3.438rem] text-[1.563rem] text-[#1A3668] font-bold">
           신청이 완료되었습니다
@@ -41,7 +47,7 @@ export default function CompletePage() {
         {/* 약관 동의 */}
         <Term />
       </section>
-
+</div>
       {/* 하단 버튼 */}
       <footer>
         <BottomBar
