@@ -163,7 +163,7 @@ export default function TestBottomSheetPage({ name, birthday, phoneNumber }) {
                 dispatch(
                   setUserData({
                     name: name,
-                    birthday: birthday,
+                    birthdate: birthday,
                     phoneNumber: phoneNumber,
                   })
                 );

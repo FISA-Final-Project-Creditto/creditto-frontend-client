@@ -12,4 +12,5 @@ export const countryCodes = [
   { name: "영국", countryCode: "GBR" },
   { name: "말레이시아", countryCode: "MYS" },
   { name: "인도네시아", countryCode: "IDN" },
+  { name: "がはこと", countryCode: "UTO" },
 ];

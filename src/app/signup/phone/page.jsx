@@ -59,14 +59,26 @@ export default function PhonePage() {
       <input
         value={birthday}
         type="text"
-        placeholder="YYYYMMDD"
+        placeholder="YYYY-MM-DD"
         className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[20px] pb-1"
         onChange={(e) => setBirthDay(e.target.value)}
         onInput={(e) => {
-          if (e.target.value.length > 8) {
-            e.target.value = e.target.value.slice(0, 8);
+          let value = e.target.value.replace(/\D/g, "");
+          if (value.length > 8) {
+            value = value.slice(0, 8); // 최대 8자리로 제한
           }
-          setBirthDay(e.target.value);
+
+          // YYYY-MM-DD 형식
+          if (value.length > 6) {
+            value = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(
+              6
+            )}`;
+          } else if (value.length > 4) {
+            value = `${value.slice(0, 4)}-${value.slice(4)}`;
+          }
+
+          e.target.value = value;
+          setBirthDay(value);
         }}
       />
     </div>
@@ -104,7 +116,12 @@ export default function PhonePage() {
   return (
     <main className="h-[100dvh] flex justify-center bg-[#e5e5e5]">
       <div className="w-full max-w-[440px] min-h-[100dvh] mx-auto flex  flex-col bg-white">
-            <AppHeader title="본인 인증" show={true} showHamburger={true} showBack={true} />
+        <AppHeader
+          title="본인 인증"
+          show={true}
+          showHamburger={true}
+          showBack={true}
+        />
         <div className="flex-1 px-8 pt-8 pb-10 text-left space-y-6">
           {/* 상단 문구 */}
 
@@ -143,7 +160,11 @@ export default function PhonePage() {
         {step === 3 && (
           <>
             {/* 새로 생기는 전화번호 필드가 위에서 애니메이션으로 등장 */}
-            <BottomSheet />
+            <BottomSheet
+              name={name}
+              birthday={birthday}
+              phoneNumber={phonenumber}
+            />
           </>
         )}
       </div>

@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  name: null,
-  birthdate: null,
-  phoneNumber: null,
-  address: null,
+  name: null, // 이름
+  birthdate: null, // 생년월일
+  phoneNumber: null, // 전화번호
+  address: null, // 주소
 };
 
 export const UserSlice = createSlice({

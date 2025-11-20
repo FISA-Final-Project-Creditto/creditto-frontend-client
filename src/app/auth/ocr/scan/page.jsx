@@ -48,8 +48,6 @@ export default function ScanPage() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const matched = countryCodes.find((c) => c.name === parsed.nationality);
-
   // 언마운트 시 URL 해제
   useEffect(() => {
     return () => {
@@ -124,7 +122,7 @@ export default function ScanPage() {
           setOcrData({
             imageData: url,
             nationality: parsed.nationality,
-            countryCode: matched?.countryCode ?? null,
+            alienRegNum: parsed.alienRegNum,
           })
         );
 

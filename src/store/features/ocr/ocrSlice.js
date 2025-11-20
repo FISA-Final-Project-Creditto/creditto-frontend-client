@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  imageData: null,
-  nationality: null,
-  countryCode: null,
+  imageData: null, // 외국인등록증 이미지 링크
+  nationality: null, // 국적
+  alienRegNum: null, // 외국인 등록번호
 };
 
 export const ocrSlice = createSlice({
