@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   imageData: null,
   nationality: null,
+  countryCode: null,
 };
 
 export const ocrSlice = createSlice({
@@ -13,8 +14,7 @@ export const ocrSlice = createSlice({
       state.imageData = action.payload;
     },
     setOcrData: (state, action) => {
-      state.imageData = action.payload.imageData;
-      state.nationality = action.payload.nationality;
+      Object.assign(state, action.payload);
     },
   },
 });

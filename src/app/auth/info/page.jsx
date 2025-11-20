@@ -6,22 +6,26 @@ import BottomBar from "../ocr/components/BottomBar";
 import { useRouter } from "next/navigation";
 import InfoInput from "./components/InfoInput";
 import Image from "next/image";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserData } from "@/src/store/features/signup/userSlice";
 
 export default function InfoInputPage() {
-  // Redux 스토어에서 OCR 데이터(이미지, 국적) 가져오기
+  // Redux 스토어에서 ocr과 user 데이터 가져오기
   const { imageData: previewUrl, nationality: initialNationality } =
     useSelector((state) => state.ocr);
+  const { name, birthDate, phoneNumber } = useSelector((state) => state.user);
 
   const [formData, setFormData] = useState({
-    name: "홍길동",
-    birthDate: "",
+    name: name ?? "",
+    birthDate: birthDate ?? "",
     registrationNumber: "123456 - 1234567",
-    phoneNumber: "3412-6179", // 010- 제외한 부분
+    phoneNumber: phoneNumber ?? "", // 010- 제외한 부분
+    address: "",
     nationality: initialNationality || "", // 스토어에 국적이 없으면 빈 문자열
   });
 
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const handleChange = (field, value) => {
     let formattedValue = value;
@@ -57,11 +61,17 @@ export default function InfoInputPage() {
 
   // 전화번호와 생년월일 전달
   // TODO: 추후에 수정
-  const handleSubmit = () => {
-    const fullPhoneNumber = `010-${formData.phoneNumber}`;
-    const dataToSubmit = { ...formData, phoneNumber: fullPhoneNumber };
-    console.log("Form submitted:", dataToSubmit);
+  const handleSubmit = async () => {
+    // const fullPhoneNumber = `010-${formData.phoneNumber}`;
+    // const dataToSubmit = { ...formData, phoneNumber: fullPhoneNumber };
+    // console.log("Form submitted:", dataToSubmit);
 
+    // 주소를 Redux 스토어에 저장
+    dispatch(
+      setUserData({
+        address: address,
+      })
+    );
     router.push("/auth/pw");
   };
 
@@ -120,9 +130,18 @@ export default function InfoInputPage() {
           onChange={(e) => handleChange("phoneNumber", e.target.value)}
         />
 
+        {/* 국내체류지 */}
+        {/* ✅ TODO: 추후에 카카오 API 적용 */}
+        <InfoInput
+          title="주소"
+          inputMode=""
+          value={formData.address}
+          onChange={(e) => handleChange("address", e.target.value)}
+        />
+
         {/* 국가 / 지역 */}
         <InfoInput
-          title="국가 / 지역"
+          title="체류지역"
           inputMode=""
           value={formData.nationality}
           onChange={(e) => handleChange("nationality", e.target.value)}

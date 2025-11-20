@@ -10,6 +10,7 @@ import ParsedInfoSection from "./components/ParsedInfoSection";
 import BottomBar from "../components/BottomBar";
 import { useDispatch } from "react-redux";
 import { setOcrData } from "@/src/store/features/ocr/ocrSlice";
+import { countryCodes } from "@/src/app/constants/countryCode";
 
 const DOCUMENT_TYPE_ALIEN_CARD = "Alien Registration Card"; // 외국인등록증 상수로 선언
 
@@ -46,6 +47,8 @@ export default function ScanPage() {
 
   const router = useRouter();
   const dispatch = useDispatch();
+
+  const matched = countryCodes.find((c) => c.name === parsed.nationality);
 
   // 언마운트 시 URL 해제
   useEffect(() => {
@@ -121,6 +124,7 @@ export default function ScanPage() {
           setOcrData({
             imageData: url,
             nationality: parsed.nationality,
+            countryCode: matched?.countryCode ?? null,
           })
         );
 

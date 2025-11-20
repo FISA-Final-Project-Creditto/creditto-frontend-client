@@ -9,8 +9,11 @@ export default function InfoInput({
 }) {
   // 타이틀별 placeholder 문구
   const placeholders = {
+    이름: "이름을 대문자로 입력해주세요",
     생년월일: "생년월일을 입력해주세요(8자리)",
+    외국인등록번호: "",
     주소: "외국인등록증에 기재된 주소를 입력해주세요",
+    체류지역: "체류지역을 입력해주세요",
   };
 
   return (
