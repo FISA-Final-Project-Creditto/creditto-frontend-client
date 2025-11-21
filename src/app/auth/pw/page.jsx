@@ -4,18 +4,18 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useSelector } from "react-redux";
-import { issueCertificate } from "@/src/app/api/axios";
+import api, { issueCertificate } from "../../api/axios";
+
 const SecurePinKeyboard = dynamic(
   () => import("./components/SecurePinKeyboard"),
   { ssr: false } // 키보드는 클라이언트에서만 렌더 → hydration 에러 방지
 );
 
-export default function SecurePage({ length = 6, onComplete, onChange }) {
+export default function SecurePage({ length = 6, serialNumber }) { // serialNumber prop 추가
   
   const settingMode = useSelector((state) => state.simplepw.settingMode);
   const loginMode = useSelector((state) => state.simplepw.loginMode);
-  console.log("setting" ,settingMode);
-  console.log("login", loginMode);
+
   
 
   const [pin, setPin] = useState(""); // 현재 입력된 비밀번호 상태
@@ -32,7 +32,7 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
 
   // 6자리 완료 시 1차 or 2차 처리
   const emitChange = useCallback(
-    (v) => {
+    async(v) => {
       setPin(v);
 
       // 아직 6자리가 안 됐으면 업데이트만
@@ -50,11 +50,46 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
           return;
         }
 
-      // ② 두 번째 입력 완료 → 첫 입력과 비교
+   // ② 두 번째 입력 완료 → 첫 입력과 비교
       if (step === 2) {
         if (v === firstPin) {
           // 성공
-          router.push("/auth/loading");
+          // 인증서 발급 API 호출
+          try {
+            const data = {
+              externalUserId: userData.externalUserId,
+              name: userData.name,
+              birthDate: userData.birthDate,
+              phoneNo: userData.phoneNumber,
+              simplePassword: v,
+            };
+
+            const res = await issueCertificate(data);
+            // 성공 시
+            if (res && res.code === 200) {
+              // 1. loadingpage로 이동
+              router.push("/auth/loading");
+              // console.log("성공");
+
+              // 2. serialNumber를 저장해두기 (httpOnly 쿠키)
+              try {
+                await fetch("/api/serial_cookie", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ serialNumber: res.data.serialNumber }),
+                });
+              } catch (cookieError) {
+                console.error(
+                  "Failed to set serial number cookie:",
+                  cookieError
+                );
+              }
+            }
+          } catch (error) {
+            console.error("Failed to issue certificate:", error);
+          }
         } else {
           // 실패 → 리셋
           // ✅ TODO: 에러 메세지가 UI에 표시되도록 개선
@@ -66,8 +101,9 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
 
         setShuffleToken((t) => t + 1);
       }
+      }
     },
-    [length, step, firstPin, router]
+    [length, step, firstPin, router, settingMode]
   );
 
   // 키보드에서 숫자 버튼 클릭 시 실행
@@ -96,6 +132,46 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
     emitChange(pin);
   }, [pin, emitChange]);
 
+  // 로그인 모드에서 PIN 6자리가 입력되면 로그인 시도
+  useEffect(() => {
+    const attemptLogin = async () => {
+      try {
+        console.log("🔵 [로그인] 입력된 비밀번호로 로그인 시도:", pin);
+        // const serialNumber = getCookie("serialNumber"); // 삭제: 클라이언트에서 httpOnly 쿠키 접근 불가
+        if (!serialNumber) {
+          setErrorMessage("인증서 정보를 찾을 수 없습니다.");
+          setIsShaking(true);
+          return;
+        }
+
+        const params = new URLSearchParams();
+        params.append("grant_type", "certificate");
+        params.append("certificate_serial", serialNumber);
+        params.append("simple_password", pin);
+        params.append("client_id", process.env.NEXT_PUBLIC_CLIENT_ID);
+        params.append("client_secret", process.env.NEXT_PUBLIC_CLIENT_SECRET);
+
+        const response = await api.post("/oauth2/token", params);
+
+        if (response.data?.access_token) {
+          console.log("✅ [로그인] 성공");
+          router.push("/main"); // 성공 시 메인 페이지로 이동
+        }
+        // api.post에서 4xx, 5xx 에러는 catch 블록으로 빠짐
+      } catch (error) {
+        console.error("❌ [로그인] 요청 실패 또는 비밀번호 불일치:", error);
+        setPin("");
+        setIsShaking(true);
+        setErrorMessage("비밀번호가 올바르지 않거나 오류가 발생했습니다.");
+      }
+    };
+
+    // 로그인 모드이고, pin이 6자리가 되었을 때만 실행
+    if (loginMode && pin.length === length) {
+      attemptLogin();
+    }
+  }, [pin, length, loginMode, router, serialNumber]); // 의존성 배열에 serialNumber 추가
+
   // 붙여넣기/복사/자르기 차단
   useEffect(() => {
     const el = hiddenInputRef.current;
@@ -114,8 +190,7 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
   // 물리 키보드 입력 처리 (숫자/백스페이스/엔터)
   const onPhysicalKey = (e) => {
     e.preventDefault();
-    if (e.key === "Backspace") return onBackspace();
-    if (e.key === "Enter" && pin.length === length) return onComplete?.(pin);
+    if (e.key === "Backspace") return onBackspace();    
     if (/^[0-9]$/.test(e.key)) return onDigit(e.key);
   };
 

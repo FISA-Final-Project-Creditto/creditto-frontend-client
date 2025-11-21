@@ -6,12 +6,12 @@ import { useRouter } from "next/navigation";
 export default function LoadingPage() {
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     router.push("/signup/success");
-  //   }, 5000);
-  //   return () => clearTimeout(timer);
-  // }, [router]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.push("/signup/success");
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [router]);
 
   return (
     <>
