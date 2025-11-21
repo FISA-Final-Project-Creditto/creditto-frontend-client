@@ -3,10 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import BottomSheet from "../../../../common/UI/BottomSheet/BottomSheet";
+import { useDispatch } from "react-redux";
+import { setUserData } from "@/src/store/features/signup/userSlice";
 
-export default function TestBottomSheetPage() {
+export default function TestBottomSheetPage({ name, birthday, phoneNumber }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
 
   // 약관 체크 상태
   const [checked, setChecked] = useState({
@@ -155,6 +158,16 @@ export default function TestBottomSheetPage() {
               onClick={() => {
                 if (!isRequiredAllChecked) return;
                 setOpen(false);
+
+                // 본인 인증에서 작성한 이름, 생년월일, 전화번호를 Redux 스토어에 저장
+                dispatch(
+                  setUserData({
+                    name: name,
+                    birthdate: birthday,
+                    phoneNumber: phoneNumber,
+                  })
+                );
+
                 router.push("/signup/phone/sms");
               }}
             >

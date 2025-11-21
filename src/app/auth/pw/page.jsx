@@ -3,6 +3,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { useSelector } from "react-redux";
+import { issueCertificate } from "@/src/app/api/axios";
 const SecurePinKeyboard = dynamic(
   () => import("./components/SecurePinKeyboard"),
   { ssr: false } // 키보드는 클라이언트에서만 렌더 → hydration 에러 방지
@@ -18,9 +20,11 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
   const hiddenInputRef = useRef(null); // 숨겨진 input (포커스 트랩용)
   const router = useRouter();
 
+  const userData = useSelector((state) => state.user); // Redux 스토어에서 userSlice 필드들 가져옴
+
   // 6자리 완료 시 1차 or 2차 처리
   const emitChange = useCallback(
-    (v) => {
+    async (v) => {
       setPin(v);
 
       // 아직 6자리가 안 됐으면 업데이트만
@@ -40,7 +44,42 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
       if (step === 2) {
         if (v === firstPin) {
           // 성공
-          router.push("/auth/loading");
+          // 인증서 발급 API 호출
+          try {
+            const data = {
+              externalUserId: userData.externalUserId,
+              name: userData.name,
+              birthDate: userData.birthDate,
+              phoneNo: userData.phoneNumber,
+              simplePassword: v,
+            };
+
+            const res = await issueCertificate(data);
+            // 성공 시
+            if (res && res.code === 200) {
+              // 1. loadingpage로 이동
+              router.push("/auth/loading");
+              // console.log("성공");
+
+              // 2. serialNumber를 저장해두기 (httpOnly 쿠키)
+              try {
+                await fetch("/api/serial_cookie", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ serialNumber: res.data.serialNumber }),
+                });
+              } catch (cookieError) {
+                console.error(
+                  "Failed to set serial number cookie:",
+                  cookieError
+                );
+              }
+            }
+          } catch (error) {
+            console.error("Failed to issue certificate:", error);
+          }
         } else {
           // 실패 → 리셋
           // ✅ TODO: 에러 메세지가 UI에 표시되도록 개선
@@ -53,7 +92,17 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
         setShuffleToken((t) => t + 1);
       }
     },
-    [length, step, firstPin, router]
+    [
+      length,
+      step,
+      firstPin,
+      userData.externalUserId,
+      userData.name,
+      userData.birthDate,
+      userData.phoneNumber,
+      router,
+    ]
+    // [length, step, firstPin]
   );
 
   // 키보드에서 숫자 버튼 클릭 시 실행

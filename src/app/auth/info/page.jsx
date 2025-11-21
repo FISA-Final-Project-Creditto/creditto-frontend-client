@@ -6,22 +6,29 @@ import BottomBar from "../ocr/components/BottomBar";
 import { useRouter } from "next/navigation";
 import InfoInput from "./components/InfoInput";
 import Image from "next/image";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserData } from "@/src/store/features/signup/userSlice";
+import { registerUser } from "@/src/app/api/axios";
+import { countryCodes } from "../../constants/countryCode";
 
 export default function InfoInputPage() {
-  // Redux 스토어에서 OCR 데이터(이미지, 국적) 가져오기
-  const { imageData: previewUrl, nationality: initialNationality } =
-    useSelector((state) => state.ocr);
+  // Redux 스토어에서 ocr과 user 데이터 전체를 가져오기
+  const { imageData: previewUrl, ...ocrData } = useSelector(
+    (state) => state.ocr
+  );
+  const userData = useSelector((state) => state.user);
 
   const [formData, setFormData] = useState({
-    name: "홍길동",
-    birthDate: "",
-    registrationNumber: "123456 - 1234567",
-    phoneNumber: "3412-6179", // 010- 제외한 부분
-    nationality: initialNationality || "", // 스토어에 국적이 없으면 빈 문자열
+    name: userData.name ?? "",
+    birthDate: userData.birthdate ?? "",
+    registrationNumber: ocrData.alienRegNum ?? "",
+    phoneNumber: userData.phoneNumber ?? "",
+    address: userData.address ?? "",
+    nationality: ocrData.nationality ?? "",
   });
 
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const handleChange = (field, value) => {
     let formattedValue = value;
@@ -41,11 +48,21 @@ export default function InfoInputPage() {
       }
     }
 
-    // 전화번호 형식(010-0000-0000) → 뒤 8자리만 관리
+    // 전화번호 형식(010-0000-0000)
     if (field === "phoneNumber") {
-      const cleaned = value.replace(/\D/g, "").slice(0, 8);
-      if (cleaned.length > 4) {
-        formattedValue = `${cleaned.slice(0, 4)}-${cleaned.slice(4)}`;
+      let cleaned = value.replace(/\D/g, ""); // Remove non-digits
+      if (cleaned.length > 11) {
+        cleaned = cleaned.slice(0, 11); // Limit to 11 digits
+      }
+
+      // Format as 010-XXXX-XXXX
+      if (cleaned.length > 7) {
+        formattedValue = `${cleaned.slice(0, 3)}-${cleaned.slice(
+          3,
+          7
+        )}-${cleaned.slice(7)}`;
+      } else if (cleaned.length > 3) {
+        formattedValue = `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
       } else {
         formattedValue = cleaned;
       }
@@ -55,14 +72,44 @@ export default function InfoInputPage() {
     setFormData((prev) => ({ ...prev, [field]: formattedValue }));
   };
 
-  // 전화번호와 생년월일 전달
-  // TODO: 추후에 수정
-  const handleSubmit = () => {
-    const fullPhoneNumber = `010-${formData.phoneNumber}`;
-    const dataToSubmit = { ...formData, phoneNumber: fullPhoneNumber };
-    console.log("Form submitted:", dataToSubmit);
+  const handleSubmit = async () => {
+    try {
+      const matched = countryCodes.find((c) => c.name === formData.nationality);
 
-    router.push("/auth/pw");
+      // API 요청을 위해 formData의 키를 API 사양에 맞게 조정
+      const data = {
+        name: formData.name,
+        birthDate: formData.birthDate,
+        countryCode: matched?.countryCode ?? "KOR",
+        phoneNo: formData.phoneNumber, // phoneNumber를 phoneNo로 변경
+        address: formData.address,
+        // name: "이우리",
+        // birthDate: "2001-01-12",
+        // countryCode: "KOR",
+        // phoneNo: "010-2001-0102", // phoneNumber를 phoneNo로 변경
+        // address: "서울특별시 송파구",
+      };
+
+      const res = await registerUser(data);
+      console.log("data: ", data);
+
+      dispatch(
+        setUserData({
+          name: formData.name,
+          birthDate: formData.birthDate,
+          phoneNumber: formData.phoneNumber,
+          address: formData.address,
+          externalUserId: res.data.externalUserId,
+        })
+      );
+
+      if (res && res.code == 200) {
+        router.push("/auth/pw");
+        // console.log("성공");
+      }
+    } catch (error) {
+      console.error("Failed to register user:", error);
+    }
   };
 
   return (
@@ -115,14 +162,22 @@ export default function InfoInputPage() {
         <InfoInput
           title="전화번호"
           inputMode="numeric"
-          prefix="010-"
           value={formData.phoneNumber}
           onChange={(e) => handleChange("phoneNumber", e.target.value)}
         />
 
+        {/* 국내체류지 */}
+        {/* ✅ TODO: 추후에 카카오 API 적용 */}
+        <InfoInput
+          title="주소"
+          inputMode=""
+          value={formData.address}
+          onChange={(e) => handleChange("address", e.target.value)}
+        />
+
         {/* 국가 / 지역 */}
         <InfoInput
-          title="국가 / 지역"
+          title="체류지역"
           inputMode=""
           value={formData.nationality}
           onChange={(e) => handleChange("nationality", e.target.value)}
