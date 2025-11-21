@@ -8,7 +8,7 @@ import InfoInput from "./components/InfoInput";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "@/src/store/features/signup/userSlice";
-import { registerUser } from "@/src/lib/axios";
+import { registerUser } from "@/src/app/api/axios";
 import { countryCodes } from "../../constants/countryCode";
 
 export default function InfoInputPage() {

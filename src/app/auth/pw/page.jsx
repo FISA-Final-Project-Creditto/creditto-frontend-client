@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useSelector } from "react-redux";
-import { issueCertificate } from "@/src/lib/axios";
+import { issueCertificate } from "@/src/app/api/axios";
 const SecurePinKeyboard = dynamic(
   () => import("./components/SecurePinKeyboard"),
   { ssr: false } // 키보드는 클라이언트에서만 렌더 → hydration 에러 방지
