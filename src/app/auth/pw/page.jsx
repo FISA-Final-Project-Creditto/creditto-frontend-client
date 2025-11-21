@@ -11,10 +11,18 @@ const SecurePinKeyboard = dynamic(
 );
 
 export default function SecurePage({ length = 6, onComplete, onChange }) {
+  
+  const settingMode = useSelector((state) => state.simplepw.settingMode);
+  const loginMode = useSelector((state) => state.simplepw.loginMode);
+  console.log("setting" ,settingMode);
+  console.log("login", loginMode);
+  
+
   const [pin, setPin] = useState(""); // 현재 입력된 비밀번호 상태
   const [firstPin, setFirstPin] = useState(null); // 1차에 입력한 비밀번호
   const [step, setStep] = useState(1); // 1단계/2단계 체크
   const [isShaking, setIsShaking] = useState(false); // 흔들기 여부
+  const [errorMessage, setErrorMessage] = useState(""); // 에러 메시지 상태
   const [shuffleToken, setShuffleToken] = useState(1); // 키보드 섞기 트리거용 토큰
 
   const hiddenInputRef = useRef(null); // 숨겨진 input (포커스 트랩용)
@@ -24,62 +32,29 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
 
   // 6자리 완료 시 1차 or 2차 처리
   const emitChange = useCallback(
-    async (v) => {
+    (v) => {
       setPin(v);
 
       // 아직 6자리가 안 됐으면 업데이트만
       if (v.length < length) return;
 
-      // ① 첫 번째 입력 완료
-      if (step === 1) {
-        setFirstPin(v); // 첫 PIN 저장
-        setStep(2); // 두 번째 입력으로 전환
-        setPin(""); // 입력창 초기화
-
-        setShuffleToken((t) => t + 1);
-        return;
-      }
+      // [분기] 비밀번호 설정 모드
+      if (settingMode) {
+        // ① 첫 번째 입력 완료
+        if (step === 1) {
+          setFirstPin(v); // 첫 PIN 저장
+          setStep(2); // 두 번째 입력으로 전환
+          setPin(""); // 입력창 초기화
+          setErrorMessage(""); // 에러 메시지 초기화
+          setShuffleToken((t) => t + 1);
+          return;
+        }
 
       // ② 두 번째 입력 완료 → 첫 입력과 비교
       if (step === 2) {
         if (v === firstPin) {
           // 성공
-          // 인증서 발급 API 호출
-          try {
-            const data = {
-              externalUserId: userData.externalUserId,
-              name: userData.name,
-              birthDate: userData.birthDate,
-              phoneNo: userData.phoneNumber,
-              simplePassword: v,
-            };
-
-            const res = await issueCertificate(data);
-            // 성공 시
-            if (res && res.code === 200) {
-              // 1. loadingpage로 이동
-              router.push("/auth/loading");
-              // console.log("성공");
-
-              // 2. serialNumber를 저장해두기 (httpOnly 쿠키)
-              try {
-                await fetch("/api/serial_cookie", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({ serialNumber: res.data.serialNumber }),
-                });
-              } catch (cookieError) {
-                console.error(
-                  "Failed to set serial number cookie:",
-                  cookieError
-                );
-              }
-            }
-          } catch (error) {
-            console.error("Failed to issue certificate:", error);
-          }
+          router.push("/auth/loading");
         } else {
           // 실패 → 리셋
           // ✅ TODO: 에러 메세지가 UI에 표시되도록 개선
@@ -92,38 +67,34 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
         setShuffleToken((t) => t + 1);
       }
     },
-    [
-      length,
-      step,
-      firstPin,
-      userData.externalUserId,
-      userData.name,
-      userData.birthDate,
-      userData.phoneNumber,
-      router,
-    ]
-    // [length, step, firstPin]
+    [length, step, firstPin, router]
   );
 
   // 키보드에서 숫자 버튼 클릭 시 실행
   const onDigit = useCallback(
     (d) => {
       if (pin.length >= length) return;
-      emitChange(pin + d);
+      if (errorMessage) setErrorMessage(""); // 숫자 입력 시 에러 메시지 제거
+      setPin(pin + d);
     },
-    [pin, length, emitChange]
+    [pin, length, errorMessage]
   );
 
   // 마지막 입력 숫자 제거
   const onBackspace = useCallback(() => {
     if (!pin.length) return;
-    emitChange(pin.slice(0, -1));
-  }, [pin, emitChange]);
+    setPin(pin.slice(0, -1));
+  }, [pin]);
 
   // 전체 입력된 비밀번호 초기화
   const onClear = useCallback(() => {
-    emitChange("");
-  }, [emitChange]);
+    setPin("");
+  }, []);
+
+  // pin 상태가 변경될 때마다 emitChange 호출
+  useEffect(() => {
+    emitChange(pin);
+  }, [pin, emitChange]);
 
   // 붙여넣기/복사/자르기 차단
   useEffect(() => {
@@ -150,9 +121,10 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
 
   return (
     <section
-      className="min-h-dvh flex flex-col pt-[6.25rem] pb-[calc(24px+env(safe-area-inset-bottom))] bg-white"
+      className="min-h-dvh flex flex-col pt-[6.25rem]  bg-white"
       onContextMenu={(e) => e.preventDefault()}
     >
+      
       {/* 숨겨진 입력(포커스 트랩) */}
       <input
         ref={hiddenInputRef}
@@ -164,13 +136,31 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
       />
       {/* 상단: 타이틀/서브타이틀/인디케이터 */}
       <div>
-        <h1 className="text-[1.375rem] font-medium text-black leading-snug mb-[1.875rem]">
-          인증서 로그인을 위한
-          <br />
-          간편 비밀번호를 설정합니다
-        </h1>
+        {settingMode && (
+          <h1 className="text-[1.375rem] font-medium text-black leading-snug mb-[1.875rem]">
+            인증서 로그인을 위한
+            <br />
+            간편 비밀번호를 설정합니다
+          </h1>
+        )}
         <div className="flex flex-col items-center ">
-          <p className="text-[#4E5969] mt-6">6자리 비밀번호를 입력하세요</p>
+          {loginMode && (
+            <p className="text-[#4E5969] mt-6">
+              간편 비밀번호 6자리를 입력하세요
+            </p>
+          )}
+          {settingMode && step === 1 && (
+            <p className="text-[#4E5969] mt-6">
+              사용할 간편 비밀번호 6자리를 입력하세요
+            </p>
+          )}
+
+          {step === 2 && !errorMessage && (
+            <p className="text-[#4E5969] text-sm mt-1">확인을 위해 한번 더 입력해주세요.</p>
+          )}
+          {errorMessage && (
+            <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+          )}
 
           {/* PIN 인디케이터 */}
           <div
@@ -192,7 +182,9 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
               />
             ))}
           </div>
+          
         </div>
+        
       </div>
 
       <div className="flex-1" onClick={() => hiddenInputRef.current?.focus()} />

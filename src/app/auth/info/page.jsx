@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import BottomBar from "../ocr/components/BottomBar";
@@ -7,6 +6,7 @@ import { useRouter } from "next/navigation";
 import InfoInput from "./components/InfoInput";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
+<<<<<<< Updated upstream
 import { setUserData } from "@/src/store/features/signup/userSlice";
 import { registerUser } from "@/src/app/api/axios";
 import { countryCodes } from "../../constants/countryCode";
@@ -17,6 +17,18 @@ export default function InfoInputPage() {
     (state) => state.ocr
   );
   const userData = useSelector((state) => state.user);
+=======
+import { settingMode } from "@/src/store/features/simplepw/simplepwSlice";
+
+export default function InfoInputPage() {
+  //버튼 상태로 pw 구분
+  const dispatch = useDispatch();
+  const mode = useSelector((state) => state.simplepw.settingMode);
+
+  // Redux 스토어에서 OCR 데이터(이미지, 국적) 가져오기
+  const { imageData: previewUrl, nationality: initialNationality } =
+    useSelector((state) => state.ocr);
+>>>>>>> Stashed changes
 
   const [formData, setFormData] = useState({
     name: userData.name ?? "",
@@ -72,9 +84,19 @@ export default function InfoInputPage() {
     setFormData((prev) => ({ ...prev, [field]: formattedValue }));
   };
 
+<<<<<<< Updated upstream
   const handleSubmit = async () => {
     try {
       const matched = countryCodes.find((c) => c.name === formData.nationality);
+=======
+  // 전화번호와 생년월일 전달
+  // TODO: 추후에 수정
+  const handleSubmit = () => {
+    const fullPhoneNumber = `010-${formData.phoneNumber}`;
+    const dataToSubmit = { ...formData, phoneNumber: fullPhoneNumber };
+    console.log("Form submitted:", dataToSubmit);
+    dispatch(settingMode(true));
+>>>>>>> Stashed changes
 
       // API 요청을 위해 formData의 키를 API 사양에 맞게 조정
       const data = {
