@@ -44,7 +44,7 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
       if (step === 2) {
         if (v === firstPin) {
           // 성공
-          // ✅ TODO: 인증서 발급 API 호출
+          // 인증서 발급 API 호출
           try {
             const data = {
               externalUserId: userData.externalUserId,
@@ -61,10 +61,24 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
               router.push("/auth/loading");
               // console.log("성공");
 
-              // 2. serialNumber를 저장해두기
+              // 2. serialNumber를 저장해두기 (httpOnly 쿠키)
+              try {
+                await fetch("/api/serial_cookie", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ serialNumber: res.data.serialNumber }),
+                });
+              } catch (cookieError) {
+                console.error(
+                  "Failed to set serial number cookie:",
+                  cookieError
+                );
+              }
             }
           } catch (error) {
-            console.error("Failed to register user:", error);
+            console.error("Failed to issue certificate:", error);
           }
         } else {
           // 실패 → 리셋

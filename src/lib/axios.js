@@ -43,6 +43,7 @@ export const registerUser = async (userData) => {
 export const issueCertificate = async (requestBody) => {
   try {
     const response = await api.post("/api/certificate/issue", requestBody);
+    console.log("인증서 발급 API 성공 응답값:", response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
