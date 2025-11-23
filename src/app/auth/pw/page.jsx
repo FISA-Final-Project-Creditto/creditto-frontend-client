@@ -57,23 +57,31 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
             const res = await issueCertificate(data);
             // 성공 시
             if (res && res.code === 200) {
-              // 1. loadingpage로 이동
-              router.push("/auth/loading");
-              // console.log("성공");
-
-              // 2. serialNumber를 저장해두기 (httpOnly 쿠키)
+              // 1. serialNumber를 서버에 저장하고 UUID를 받아옴
               try {
-                await fetch("/api/serial_cookie", {
+                const sessionResponse = await fetch("/api/signup", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify({ serialNumber: res.data.serialNumber }),
                 });
-              } catch (cookieError) {
+
+                if (!sessionResponse.ok) {
+                  throw new Error("세션 생성에 실패하였습니다.");
+                }
+
+                const { uuid } = await sessionResponse.json(); // 세션 생성에 성공하면 uuid(key값) 반환
+
+                // 생성된 UUID를 localStorage에 저장
+                localStorage.setItem("session_key", uuid);
+
+                // loadingpage로 이동
+                router.push("/auth/loading");
+              } catch (sessionError) {
                 console.error(
-                  "Failed to set serial number cookie:",
-                  cookieError
+                  "세션 생성과 UUID 저장에 실패하였습니다.",
+                  sessionError
                 );
               }
             }
