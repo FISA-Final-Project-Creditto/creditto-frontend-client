@@ -58,35 +58,36 @@ export default function SecurePage({ length = 6, onComplete, onChange }) {
             // 성공 시
             if (res && res.code === 200) {
               // 1. serialNumber를 서버에 저장하고 UUID를 받아옴
-              try {
-                const sessionResponse = await fetch("/api/signup", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({ serialNumber: res.data.serialNumber }),
-                });
 
-                if (!sessionResponse.ok) {
-                  throw new Error("세션 생성에 실패하였습니다.");
-                }
+              // ✅ TODO: 시간 남으면 인증서 ID를 세션에 담고 가져오는 방식 구현하기
+              // try {
+              //   const sessionResponse = await fetch("/api/signup", {
+              //     method: "POST",
+              //     headers: {
+              //       "Content-Type": "application/json",
+              //     },
+              //     body: JSON.stringify({ serialNumber: res.data.serialNumber }),
+              //   });
+              //   if (!sessionResponse.ok) {
+              //     throw new Error("세션 생성에 실패하였습니다.");
+              //   }
+              //   const { uuid } = await sessionResponse.json(); // 세션 생성에 성공하면 uuid(key값) 반환
+              //   // 생성된 UUID를 localStorage에 저장
+              //   localStorage.setItem("session_key", uuid);
+              //   // loadingpage로 이동
+              //   router.push("/auth/loading");
+              // } catch (sessionError) {
+              //   console.error(
+              //     "세션 생성과 UUID 저장에 실패하였습니다.",
+              //     sessionError
+              //   );
+              // }
 
-                const { uuid } = await sessionResponse.json(); // 세션 생성에 성공하면 uuid(key값) 반환
-
-                // 생성된 UUID를 localStorage에 저장
-                localStorage.setItem("session_key", uuid);
-
-                // loadingpage로 이동
-                router.push("/auth/loading");
-              } catch (sessionError) {
-                console.error(
-                  "세션 생성과 UUID 저장에 실패하였습니다.",
-                  sessionError
-                );
-              }
+              router.push("/auth/loading");
             }
           } catch (error) {
-            console.error("Failed to issue certificate:", error);
+            // console.error("Failed to issue certificate:", error);
+            console.error("회원가입 실패:", error);
           }
         } else {
           // 실패 → 리셋
