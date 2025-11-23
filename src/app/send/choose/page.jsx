@@ -6,38 +6,21 @@ import BottomBar from "../components/BottomBar";
 import { useRouter } from "next/navigation";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import clsx from "clsx";
-import { useDispatch } from "react-redux";
-import { setSelectedCountry } from "@/src/store/features/send/sendSlice";
 
 export default function ChooseCountryPage() {
-  const [selectedCountry, setSelectedCountryState] = useState(""); // 로컬 state
+  const [selectedCountry, setSelectedCountry] = useState(""); // 기본 선택값 없음
   const router = useRouter();
-  const dispatch = useDispatch();
-
-  // 국가 선택 핸들러
-  const handleSelectCountry = (code) => {
-    setSelectedCountryState(code);
-  };
-
-  // 선택 버튼 클릭 시 실행
-  const handleSubmit = () => {
-    if (!selectedCountry) return;
-
-    // Redux에 저장
-    dispatch(setSelectedCountry(selectedCountry));
-
-    // 다음 페이지 이동
-    router.push("/send/information/type");
-  };
 
   return (
     <div>
-      <AppHeader
-        title="해외 송금"
-        show={true}
-        showHamburger={false}
-        showBack={true}
-      />
+      <header>
+        <AppHeader
+          title="해외 송금"
+          show={true}
+          showHamburger={false}
+          showBack={true}
+        />
+      </header>
 
       <main className="flex flex-col gap-[2.188rem] px-5">
         <section>
@@ -57,14 +40,14 @@ export default function ChooseCountryPage() {
           <button
             className="flex w-full items-center justify-between"
             type="button"
-            onClick={() => handleSelectCountry("US")}
+            onClick={() => setSelectedCountry("US")}
           >
             <div
               className={clsx(
                 "w-full flex items-center gap-10 border px-3 py-3 rounded-lg",
                 selectedCountry === "US"
                   ? "border-[#4485EE]"
-                  : "border-[#C9CDD4]"
+                  : " border-[#C9CDD4]"
               )}
             >
               <US className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
@@ -81,20 +64,20 @@ export default function ChooseCountryPage() {
           <button
             className="flex w-full items-center justify-between"
             type="button"
-            onClick={() => handleSelectCountry("CN")}
+            onClick={() => setSelectedCountry("CN")}
           >
             <div
               className={clsx(
                 "w-full flex items-center gap-10 border px-3 py-3 rounded-lg",
                 selectedCountry === "CN"
                   ? "border-[#4485EE]"
-                  : "border-[#C9CDD4]"
+                  : " border-[#C9CDD4]"
               )}
             >
               <CN className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
               <div className="flex flex-col items-start justify-center">
                 <span className=" text-[18px] font-semibold text-[#1F2329]">
-                  중국 CNY
+                  중국 CHY
                 </span>
                 <span className="text-sm font-medium text-[#86909C]">위안</span>
               </div>
@@ -105,14 +88,14 @@ export default function ChooseCountryPage() {
           <button
             className="flex w-full items-center justify-between"
             type="button"
-            onClick={() => handleSelectCountry("JP")}
+            onClick={() => setSelectedCountry("JP")}
           >
             <div
               className={clsx(
                 "w-full flex items-center gap-10 border px-3 py-3 rounded-lg",
                 selectedCountry === "JP"
                   ? "border-[#4485EE]"
-                  : "border-[#C9CDD4]"
+                  : " border-[#C9CDD4]"
               )}
             >
               <JP className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
@@ -129,11 +112,13 @@ export default function ChooseCountryPage() {
 
       {/* 하단 버튼 */}
       <footer className="pt-20">
-        <BottomBar
-          label="선택"
-          onClick={handleSubmit}
-          isActive={!!selectedCountry}
-        />
+        {selectedCountry !== "" && (
+          <BottomBar
+            label="선택"
+            onClick={() => router.push("/send/information/type")}
+            isActive={true}
+          />
+        )}
       </footer>
     </div>
   );
