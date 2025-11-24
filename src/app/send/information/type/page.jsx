@@ -8,7 +8,7 @@ import BottomBar from "../../components/BottomBar";
 import { useRouter } from "next/navigation";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useDispatch, useSelector } from "react-redux";
-import { setTypeData } from "@/src/store/features/send/sendSlice";
+import { setReceivedCurrency } from "@/src/store/features/send/sendSlice";
 
 // 요일
 const DAYS = [
@@ -118,13 +118,14 @@ export default function TypePage() {
     e.preventDefault();
 
     if (isFormValid) {
-      const submissionData = {
-        ...formData,
-        sendAmount: formData.sendAmount.replace(/,/g, ""),
-        accountNO: formData.accountNO.replace(/-/g, ""),
-      };
+      // const submissionData = {
+      //   ...formData,
+      //   sendAmount: formData.sendAmount.replace(/,/g, ""),
+      //   accountNO: formData.accountNO.replace(/-/g, ""),
+      // };
 
-      dispatch(setTypeData(formData.receiveCurrency)); // 수취 통화 코드 저장
+      // 수취 통화 코드 값 저장
+      dispatch(setReceivedCurrency(formData.receiveCurrency));
 
       router.push("/send/information/remittance");
     } else {

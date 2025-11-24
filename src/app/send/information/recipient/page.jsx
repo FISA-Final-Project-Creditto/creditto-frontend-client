@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 
 const phoneCodes = {
   USD: "🇺🇸 +1",
-  CNH: "🇨🇳 +86", // 🔥 CNH로 수정 (CHN X)
+  CHN: "🇨🇳 +86",
   JPY: "🇯🇵 +81",
 };
 
@@ -58,10 +58,10 @@ export default function RecipientPage() {
   const router = useRouter();
 
   // Redux에서 수취 통화 코드 가져오기 (USD / CNH / JPY 등)
-  const receiveCurrency = useSelector((state) => state.send.receiveCurrency);
+  const receivedCurrency = useSelector((state) => state.send.receivedCurrency);
 
   // 화면에 보여줄 전화 국가 코드
-  const displayPhoneCode = phoneCodes[receiveCurrency] || "";
+  const displayPhoneCode = phoneCodes[receivedCurrency] || "";
 
   // 포맷팅에 사용할 실제 다이얼 코드 숫자 ("1", "86", "81")
   const initialDialCode = extractDialCode(displayPhoneCode); // 문자열
@@ -70,16 +70,16 @@ export default function RecipientPage() {
   const [formData, setFormData] = useState({
     name: "", // 수취인 이름
     phone: "", // 전화번호 (3-3-4 또는 3-4-4 등 포맷 적용)
-    phonecode: initialDialCode, // 🔥 숫자 문자열: "1", "86", "81"
-    currencycode: receiveCurrency || "", // 수취 통화 코드
+    phonecode: initialDialCode, // 숫자 문자열: "1", "86", "81"
+    address: "", // 수취인 주소
   });
 
   // 폼 유효성 검사
   const isFormValid =
     formData.name.trim() !== "" &&
     formData.phone.trim() !== "" &&
-    formData.phonecode !== "" && // 🔥 숫자 코드 존재 여부로 체크
-    formData.currencycode.trim() !== "";
+    formData.phonecode !== "" && // 숫자 코드 존재 여부로 체크
+    formData.address.trim() !== "";
 
   // 폼 제출
   const handleSubmit = (e) => {
@@ -99,7 +99,7 @@ export default function RecipientPage() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // 🔢 전화번호 입력 시: 국가 코드에 따라 포맷팅
+    // 전화번호 입력 시: 국가 코드에 따라 포맷팅
     if (name === "phone") {
       const digits = value.replace(/\D/g, ""); // 숫자만 추출
 
@@ -209,18 +209,19 @@ export default function RecipientPage() {
                     />
                   </div>
 
-                  {/* 통화 코드 */}
+                  {/* 주소 */}
                   <div className="flex flex-col items-start">
                     <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                      통화 코드
+                      주소
                     </label>
                     <div className="relative w-full">
                       <input
-                        name="currencycode"
-                        value={formData.currencycode}
-                        readOnly
+                        name="address"
+                        value={formData.address}
+                        placeholder="주소를 입력하세요"
+                        onChange={handleChange}
                         className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
-                          formData.currencycode === ""
+                          formData.address === ""
                             ? "text-[#86909C]"
                             : "text-black"
                         }`}

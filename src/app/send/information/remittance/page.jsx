@@ -1,28 +1,31 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import StepProgressBar from "../components/StepProgressbar";
 import BottomBar from "../../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useDispatch, useSelector } from "react-redux";
+import { setRemittanceDetails } from "@/src/store/features/send/sendSlice";
 
-const nationalities = {
-  USD: "미국(USA)",
-  CHN: "중국(CHN)",
-  JPY: "일본(JPN)",
+const currencyToNationality = {
+  USD: "USA",
+  CHN: "CHINA",
+  JPY: "JAPAN",
 };
 
 export default function RemittancePage() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const receiveCurrency = useSelector((state) => state.send.receiveCurrency); // 수취 통화코드 가져오기
+
+  // 수취 통화 코드 가져오기
+  const receivedCurrency = useSelector((state) => state.send.receivedCurrency);
 
   // 송금인 정보값 상태 관리
   const [formData, setFormData] = useState({
     name: "", // 송금인 이름
-    nationality: nationalities[receiveCurrency] || "", // 송금인 국적
+    nationality: currencyToNationality[receivedCurrency], // 송금인 국적
     address: "", // 송금인 주소
     detailAddr: "", // 상세 주소
   });
@@ -30,7 +33,6 @@ export default function RemittancePage() {
   // 폼 유효성 검사
   const isFormValid =
     formData.name.trim() !== "" &&
-    formData.nationality.trim() !== "" &&
     formData.address.trim() !== "" &&
     formData.detailAddr.trim() !== "";
 
@@ -121,7 +123,7 @@ export default function RemittancePage() {
                     disabled={true}
                     value={formData.nationality}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-[#86909C] focus:outline-none ${
+                    className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black ${
                       formData.nationality === ""
                         ? "text-[#86909C]"
                         : "text-black"

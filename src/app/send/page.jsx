@@ -65,7 +65,7 @@ export default function SendMainPage() {
               title="정기 해외 송금 내역 조회"
               subtitle="지난 송금 내역을 확인해요"
               icon="file"
-              onClick={() => console.log("조회 클릭")}
+              onClick={() => router.push("/send/history")}
             />
             <SendBtn
               title="정기 해외 송금 취소 · 변경"

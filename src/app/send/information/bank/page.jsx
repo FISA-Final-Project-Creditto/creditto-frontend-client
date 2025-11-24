@@ -38,16 +38,16 @@ export default function BankPage() {
   const router = useRouter();
 
   // 수취 통화 코드 가져오기
-  const receiveCurrency = useSelector((state) => state.send.receiveCurrency);
+  const receivedCurrency = useSelector((state) => state.send.receivedCurrency);
 
   // 해당 국가의 은행 가져오기
-  const banks = BANK_OPTIONS[receiveCurrency] || [];
+  const banks = BANK_OPTIONS[receivedCurrency] || [];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 수취인 정보값 상태 관리
   const [formData, setFormData] = useState({
-    country: countries[receiveCurrency], // 수취 은행 국가
+    country: countries[receivedCurrency], // 수취 은행 국가
     bankname: "", // 은행명
     bankcode: "", // 은행 코드
     accountno: "", // 계좌 번호
