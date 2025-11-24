@@ -5,7 +5,8 @@ const initialState = {
   birthdate: null, // 생년월일
   phoneNumber: null, // 전화번호
   address: null, // 주소
-  externalUserId: null,
+  userId: null,
+  serialNumber: null, // 인증서 시리얼 번호
 };
 
 export const UserSlice = createSlice({
@@ -20,9 +21,12 @@ export const UserSlice = createSlice({
     clearUserData: (state) => {
       Object.assign(state, initialState);
     },
+    setSerialNumber: (state, action) => {
+      state.serialNumber = action.payload;
+    },
   },
 });
 
-export const { setUserData } = UserSlice.actions;
+export const { setUserData, setSerialNumber } = UserSlice.actions;
 
 export default UserSlice.reducer;

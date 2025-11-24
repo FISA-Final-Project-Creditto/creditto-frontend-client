@@ -8,7 +8,7 @@ export default function BottomBar({ label, onClick, isActive = false }) {
 
   return (
     <div className="w-full px-5 h-[128px] flex justify-center mt-8">
-      <button className={buttonClasses} onClick={onClick} disabled={!isActive}>
+      <button type="submit" className={buttonClasses} onClick={onClick} disabled={!isActive}>
         {label}
       </button>
     </div>
