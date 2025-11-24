@@ -6,9 +6,9 @@ import { ChevronDown } from "lucide-react";
 import HistoryCard from "./components/HistoryCard";
 import Header from "../components/Header";
 
-export default function HistoryPage() {
+export default function RecurringPage() {
   const [dateRange, setDateRange] = useState("2025. 08.04 ~ 2025.11.04");
-  const [remove, setRemove] = useState(false);
+  const [choose, setChoose] = useState(false);
   const router = useRouter();
 
   // 정기 해외 송금 내역(Mock 데이터)
@@ -43,7 +43,7 @@ export default function HistoryPage() {
   ];
 
   return (
-    <div className="min-h-dvh flex flex-col bg-white">
+    <div className="min-h-dvh flex flex-col bg-white px-5">
       {/* 상단바 */}
       <header>
         <Header />
@@ -62,10 +62,10 @@ export default function HistoryPage() {
             <ChevronDown className="w-4 h-4 text-black" />
           </button>
           <button
-            className="text-sm font-semibold text-[#C9CDD4]"
-            onClick={() => setRemove(!remove)}
+            className="text-sm font-semibold text-[#4D6389]"
+            onClick={() => setChoose(!choose)}
           >
-            {remove ? "완료" : "삭제하기"}
+            {choose ? "선택완료" : "선택"}
           </button>
         </div>
       </section>
@@ -76,10 +76,9 @@ export default function HistoryPage() {
           <HistoryCard
             key={history.id}
             history={history}
-            removeState={remove}
-            onClick={() =>
-              router.push(`/send/history/historyDetail/${history.id}`)
-            }
+            chooseState={choose}
+            onChangeChooseState={setChoose}
+            onClick={() => router.push(`/send/history/${history.id}`)}
           />
         ))}
       </main>
