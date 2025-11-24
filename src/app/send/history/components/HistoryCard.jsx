@@ -74,7 +74,7 @@ export default function HistoryCard({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40">
                   <DropdownMenuItem
-                    onClick={() => router.push("/send/history/{history.id}")}
+                    onClick={() => router.push(`/send/history/${history.id}`)}
                     className="cursor-pointer gap-2"
                   >
                     <FileText className="w-4 h-4" />

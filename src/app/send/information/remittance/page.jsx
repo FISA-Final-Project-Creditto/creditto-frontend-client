@@ -7,7 +7,6 @@ import StepProgressBar from "../components/StepProgressbar";
 import BottomBar from "../../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useDispatch, useSelector } from "react-redux";
-import { setRemittanceDetails } from "@/src/store/features/send/sendSlice";
 
 const currencyToNationality = {
   USD: "USA",

@@ -24,7 +24,7 @@ export const sendSlice = createSlice({
   },
 });
 
-export const { setSelectedCountry, clearSelectedCountry, setTypeData } =
+export const { setSelectedCountry, clearSelectedCountry, setReceivedCurrency } =
   sendSlice.actions;
 
 export default sendSlice.reducer;
