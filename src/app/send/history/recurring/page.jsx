@@ -6,7 +6,8 @@ import { ChevronDown } from "lucide-react";
 import Header from "../../../components/Header";
 import HistoryCard from "../../components/HistoryCard";
 
-export default function HistoryDetailPage({ params: paramsPromise }) {
+// 정기적으로 송금 내역을 보여주는 페이지
+export default function SendDetailPage({ params: paramsPromise }) {
   const params = React.use(paramsPromise);
   const { id } = params;
 
