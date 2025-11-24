@@ -29,6 +29,7 @@ export default function LoadingPage() {
             src="https://lottie.host/5e3d00b3-79ca-4abd-9808-99013190e330/8EXayNOkme.lottie"
             loop
             autoplay
+            style={{ width: "100%", height: "100%" }} // 🔴 이 부분 중요
           />
         </div>
       </div>

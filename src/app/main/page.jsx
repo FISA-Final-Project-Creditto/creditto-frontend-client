@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Hambuger from "./components/Hambuger";
 import { CarouselDemo } from "./components/MainCarousel";
 import LoanButton from "./components/LoanButton";
@@ -10,8 +10,17 @@ import Credit from "../maine/components/Credit/Credit";
 import RoundedIconTabs from "./components/Tabs";
 import FunctionButton from "./components/FunctionButton/FunctionButton";
 import Money from "../maine/components/Money/Money";
+import { useRouter } from "next/navigation";
 
 export default function MainPage() {
+  const router = useRouter();
+  useEffect(()=>{
+    const accessToken = sessionStorage.getItem("accessToken");
+    if (!accessToken) {
+      alert("로그인이 필요합니다.");
+      router.replace("/");
+    }
+  })
   return (
     <>
       <Header />

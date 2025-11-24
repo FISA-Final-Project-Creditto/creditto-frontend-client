@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import BottomBar from "../ocr/components/BottomBar";
+import { useRouter } from "next/navigation";
 
 export default function SuccessPage() {
+  const router = useRouter();
   return (
     <div className="min-h-dvh bg-white flex flex-col pt-[100px] pb-[calc(68px+24px+env(safe-area-inset-bottom))]">
       <h1 className="text-[1.375rem] font-semibold text-[#000] mb-[35px] leading-tight">
@@ -23,7 +25,7 @@ export default function SuccessPage() {
         className="mx-auto"
       />
 
-      <BottomBar label="시작하기" isActive={true} />
+      <BottomBar label="시작하기" onClick={()=>{router.push('/')}} isActive={true} />
     </div>
   );
 }

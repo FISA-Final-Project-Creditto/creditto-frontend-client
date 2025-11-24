@@ -41,7 +41,7 @@ export default function SecurePinKeyboard({
   return (
     <div
       className="
-        fixed bottom-0 left-0 right-0
+        bottom-0 left-0 right-0
         pt-6 pb-[max(24px,env(safe-area-inset-bottom))]
         bg-[var(--accent)]
         [WebkitTapHighlightColor:transparent]
