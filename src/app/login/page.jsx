@@ -1,22 +1,51 @@
 "use client";
-import BottomSheet from "@/src/app/signup/phone/components/BottomSheet";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-import axios from "axios";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import api from "../api/axios";
+import { useDispatch } from "react-redux";
+import { loginMode } from "@/src/store/features/simplepw/simplepwSlice"; // 이 부분은 비밀번호 설정 모드 관련이므로 그대로 둡니다.
+import { setSerialNumber } from "@/src/store/features/signup/userSlice"; // 새로 만든 액션을 import 합니다.
 
 export default function LoginPage() {
   const [name, setName] = useState("");
-  const [phonenumber, setPhoneNumber] = useState("");
+  const [phoneNo, setPhoneNo] = useState("");
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-const LoginHandle = async () => {
-  try {
-    const res = await api.get(
-      `/api/certificate/serialNumber?username=${encodeURIComponent(
-        name
-      )}&phoneNo=${phonenumber}`
-    );
-    console.log("데이터 정보:", res.data);
+  // 페이지가 렌더링될 때 이미 로그인 상태인지 확인합니다.
+  useEffect(() => {
+    const accessToken = sessionStorage.getItem("accessToken");
+    if (accessToken) {
+      alert("이미 로그인되어 있습니다. 메인 페이지로 이동합니다.");
+      router.replace("/main"); // 뒤로가기 시 다시 로그인 페이지로 오지 않도록 replace 사용
+    }
+  }, [router]);
+
+const LoginHandle = async (e) => {
+    e.preventDefault();
+    try {
+    const res = await api.post("/api/certificate/serialNumber", {
+      username: name,
+      phoneNo: phoneNo
+    });
+    
+    console.log("데이터 정보:", res.data); // 서버 응답 확인
+
+    // 요청 성공 후 다음 로직을 여기에 구현합니다.
+    // 예를 들어, 응답 데이터에 특정 값이 있을 때 페이지를 이동시킬 수 있습니다.
+    // API 응답 데이터에 serialNumber가 있다고 가정합니다. (실제 키 이름은 API 명세에 맞게 확인 필요)
+    if (res.data) {
+      alert("본인 인증에 성공했습니다.");
+      // 1. Redux 스토어에 serialNumber 저장
+      console.log("serialNumber:", res.data.data.certificate_serial)
+      dispatch(setSerialNumber(res.data.data.certificate_serial));
+      dispatch(loginMode());
+      // 2. 비밀번호 입력 페이지로 이동
+      
+      router.push("/auth/pw"); // 비밀번호 입력 페이지로 이동
+    }
+
   } catch (err) {
     console.error("요청 실패:", err);
   }
@@ -48,7 +77,7 @@ const LoginHandle = async () => {
     <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
       <label className="text-sm text-gray-600 ">휴대폰 번호</label>
       <input
-        value={phonenumber}
+        value={phoneNo}
         type="text"
         placeholder="010-0000-0000"
         className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[20px] pb-1 tracking-wider"
@@ -67,7 +96,7 @@ const LoginHandle = async () => {
           }
 
           e.target.value = value;
-          setPhoneNumber(value);
+          setPhoneNo(value);
         }}
       />
     </div>
@@ -82,21 +111,23 @@ const LoginHandle = async () => {
           showHamburger={true}
           showBack={true}
         />
-        <div className="flex-1 px-8 pt-8 pb-10 text-left space-y-6">
-          {/* 상단 문구 */}
-
-          <h1 className="text-[20px] font-bold mb-5">
-            본인 인증을 위해
-            <br />
-            정보를 입력해주세요
-          </h1>
-
-          {/* 입력 필드 */}
-          {NameField}
-          {PhoneField}
-        </div>
-        <div className="w-30 h-30 bg-red-300" onClick={LoginHandle} />
-        로그인
+        <form onSubmit={LoginHandle} className="flex flex-col flex-1">
+          <div className="flex-1 px-8 pt-8 pb-10 text-left space-y-6">
+            {/* 상단 문구 */}
+            <h1 className="text-[20px] font-bold mb-5">
+              본인 인증을 위해
+              <br />
+              정보를 입력해주세요
+            </h1>
+  
+            {/* 입력 필드 */}
+            {NameField}
+            {PhoneField}
+          </div>
+          <button type="submit" className="w-full h-[90px] bg-[#190668] text-white text-[26px] font-medium">
+            로그인
+          </button>
+        </form>
       </div>
     </main>
   );

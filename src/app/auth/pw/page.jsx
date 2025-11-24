@@ -11,12 +11,12 @@ const SecurePinKeyboard = dynamic(
   { ssr: false } // 키보드는 클라이언트에서만 렌더 → hydration 에러 방지
 );
 
-export default function SecurePage({ length = 6, serialNumber }) { // serialNumber prop 추가
+export default function SecurePage({ length = 6 }) { // serialNumber prop 제거
   
   const settingMode = useSelector((state) => state.simplepw.settingMode);
   const loginMode = useSelector((state) => state.simplepw.loginMode);
-
-  
+  // Redux 스토어에서 serialNumber를 가져옵니다.
+  const serialNumber = useSelector((state) => state.user.serialNumber);
 
   const [pin, setPin] = useState(""); // 현재 입력된 비밀번호 상태
   const [firstPin, setFirstPin] = useState(null); // 1차에 입력한 비밀번호
@@ -55,42 +55,7 @@ export default function SecurePage({ length = 6, serialNumber }) { // serialNumb
         if (v === firstPin) {
           // 성공
           // 인증서 발급 API 호출
-          try {
-            const data = {
-              externalUserId: userData.externalUserId,
-              name: userData.name,
-              birthDate: userData.birthDate,
-              phoneNo: userData.phoneNumber,
-              simplePassword: v,
-            };
 
-            const res = await issueCertificate(data);
-            // 성공 시
-            if (res && res.code === 200) {
-              // 1. loadingpage로 이동
-              router.push("/auth/loading");
-              // console.log("성공");
-
-              // 2. serialNumber를 저장해두기 (httpOnly 쿠키)
-              try {
-                await fetch("/api/serial_cookie", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({ serialNumber: res.data.serialNumber }),
-                });
-              } catch (cookieError) {
-                console.error(
-                  "Failed to set serial number cookie:",
-                  cookieError
-                );
-              }
-            }
-          } catch (error) {
-            console.error("Failed to issue certificate:", error);
-          }
-        } else {
           // 실패 → 리셋
           // ✅ TODO: 에러 메세지가 UI에 표시되도록 개선
           setPin("");
@@ -136,13 +101,14 @@ export default function SecurePage({ length = 6, serialNumber }) { // serialNumb
   useEffect(() => {
     const attemptLogin = async () => {
       try {
+             console.log("시리얼 넘버", serialNumber)
         console.log("🔵 [로그인] 입력된 비밀번호로 로그인 시도:", pin);
-        // const serialNumber = getCookie("serialNumber"); // 삭제: 클라이언트에서 httpOnly 쿠키 접근 불가
         if (!serialNumber) {
           setErrorMessage("인증서 정보를 찾을 수 없습니다.");
           setIsShaking(true);
           return;
         }
+   
 
         const params = new URLSearchParams();
         params.append("grant_type", "certificate");
@@ -150,11 +116,20 @@ export default function SecurePage({ length = 6, serialNumber }) { // serialNumb
         params.append("simple_password", pin);
         params.append("client_id", process.env.NEXT_PUBLIC_CLIENT_ID);
         params.append("client_secret", process.env.NEXT_PUBLIC_CLIENT_SECRET);
+        
+        // params에 담긴 값들을 문자열 형태로 확인합니다.
+        console.log("🚀 전송될 파라미터:", params.toString());
 
-        const response = await api.post("/oauth2/token", params);
+        const response = await api.post("/oauth2/token", params, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        });
 
-        if (response.data?.access_token) {
-          console.log("✅ [로그인] 성공");
+        if (response.data) {
+          console.log("무슨 데이타?",response.data);
+          sessionStorage.setItem("accessToken", response.data.access_token);
+          sessionStorage.setItem("refreshToken", response.data.refresh_token);
           router.push("/main"); // 성공 시 메인 페이지로 이동
         }
         // api.post에서 4xx, 5xx 에러는 catch 블록으로 빠짐
