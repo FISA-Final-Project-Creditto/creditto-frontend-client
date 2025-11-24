@@ -3,15 +3,15 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Header from "../../components/Header";
 import StepProgressBar from "../components/StepProgressbar";
 import BottomBar from "../../components/BottomBar";
 import Modal from "../../components/Modal";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
+import { useSelector } from "react-redux";
 
 // 국가별 은행 목록
 const BANK_OPTIONS = {
-  US: [
+  USD: [
     { name: "JP모건 체이스", code: "JPMCUS33" },
     { name: "뱅크 오브 아메리카", code: "BOFAUS3N" },
     { name: "웰스 파고", code: "WFBIUS6S" },
@@ -21,21 +21,33 @@ const BANK_OPTIONS = {
     { name: "중국은행", code: "BKCHCNBJ" },
     { name: "중국농업은행", code: "ABOCCNBJ" },
   ],
-  JPN: [
+  JPY: [
     { name: "미쓰비시UFJ은행", code: "BOTKJPJT" },
     { name: "미쓰이스미토모은행", code: "SMBCJPJT" },
     { name: "미즈호은행", code: "MHCBJPJT" },
   ],
 };
 
+const countries = {
+  USD: "USA",
+  CHN: "China",
+  JPY: "Japan",
+};
+
 export default function BankPage() {
   const router = useRouter();
+
+  // 수취 통화 코드 가져오기
+  const receiveCurrency = useSelector((state) => state.send.receiveCurrency);
+
+  // 해당 국가의 은행 가져오기
+  const banks = BANK_OPTIONS[receiveCurrency] || [];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 수취인 정보값 상태 관리
   const [formData, setFormData] = useState({
-    country: "", // 수취 은행 국가
+    country: countries[receiveCurrency], // 수취 은행 국가
     bankname: "", // 은행명
     bankcode: "", // 은행 코드
     accountno: "", // 계좌 번호
@@ -43,12 +55,9 @@ export default function BankPage() {
 
   // 폼 유효성 검사
   const isFormValid =
-    formData.country.trim() !== "" &&
     formData.bankname.trim() !== "" &&
     formData.bankcode.trim() !== "" &&
     formData.accountno.trim() !== "";
-
-  const selectedBankList = BANK_OPTIONS[formData.country] || [];
 
   // 폼 제출
   const handleSubmit = (e) => {
@@ -74,10 +83,10 @@ export default function BankPage() {
     }));
   };
 
-  // 은행 선택 시 은행명 + 코드 동시 업데이트
+  // 은행 선택 시: 은행명 + 은행코드 동시 업데이트
   const handleBankChange = (e) => {
-    const { value } = e.target; // value를 은행명으로 사용
-    const bank = selectedBankList.find((b) => b.name === value);
+    const { value } = e.target; // value = 은행명
+    const bank = banks.find((b) => b.name === value);
 
     setFormData((prev) => ({
       ...prev,
@@ -136,21 +145,14 @@ export default function BankPage() {
                       국가 (Country)
                     </label>
                     <div className="relative w-full">
-                      <select
+                      <input
                         name="country"
+                        disabled={true}
                         value={formData.country}
                         onChange={handleChange}
                         className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none
     ${formData.country === "" ? "text-[#86909C]" : "text-black"}`}
-                      >
-                        <option value="">
-                          은행이 위치한 국가를 선택하세요
-                        </option>
-                        <option value="US">미국(USA)</option>
-                        <option value="CHN">중국(CHINA)</option>
-                        <option value="JPN">일본(JAPAN)</option>
-                      </select>
-                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                      ></input>
                     </div>
                   </div>
 
@@ -174,27 +176,25 @@ export default function BankPage() {
                           }`}
                         >
                           <option value="">
-                            {selectedBankList.length > 0
+                            {banks.length > 0
                               ? "은행명을 선택하세요"
-                              : "국가를 먼저 선택하세요"}
+                              : "통화 코드를 먼저 선택하세요"}
                           </option>
 
-                          {selectedBankList.map((bank) => (
+                          {banks.map((bank) => (
                             <option key={bank.code} value={bank.name}>
                               {bank.name}
                             </option>
                           ))}
                         </select>
-                        {selectedBankList.length > 0 ? (
+                        {banks.length > 0 && (
                           <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86909C] pointer-events-none" />
-                        ) : (
-                          " "
                         )}
                       </div>
 
                       {/* 은행 코드 표시 */}
                       <div
-                        className={`min-w-[120px] px-3 py-3 bg-[#F7F8FA] border border-dashed border-[#E5E6EB] text-[0.875rem] text-[#4E5969] text-center ${
+                        className={`min-w-[120px] px-3 py-3 bg-[#F7F8FA] border border-dashed border-[#E5E6EB] text-[0.875rem] text-center ${
                           formData.bankcode === ""
                             ? "text-[#86909C]"
                             : "text-black"
