@@ -15,6 +15,8 @@ export default function SecurePage({ length = 6 }) { // serialNumber prop 제거
   
   const settingMode = useSelector((state) => state.simplepw.settingMode);
   const loginMode = useSelector((state) => state.simplepw.loginMode);
+  console.log("settingMode", settingMode)
+  console.log("loginMode",loginMode)
   // Redux 스토어에서 serialNumber를 가져옵니다.
   const serialNumber = useSelector((state) => state.user.serialNumber);
 
@@ -65,6 +67,7 @@ export default function SecurePage({ length = 6 }) { // serialNumber prop 제거
         }
 
         setShuffleToken((t) => t + 1);
+      router.push("/auth/loading")
       }
       }
     },

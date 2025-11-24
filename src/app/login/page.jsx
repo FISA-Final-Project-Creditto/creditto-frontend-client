@@ -6,6 +6,7 @@ import api from "../api/axios";
 import { useDispatch } from "react-redux";
 import { loginMode } from "@/src/store/features/simplepw/simplepwSlice"; // 이 부분은 비밀번호 설정 모드 관련이므로 그대로 둡니다.
 import { setSerialNumber } from "@/src/store/features/signup/userSlice"; // 새로 만든 액션을 import 합니다.
+import BottomBar from "../send/components/BottomBar";
 
 export default function LoginPage() {
   const [name, setName] = useState("");
@@ -41,6 +42,7 @@ const LoginHandle = async (e) => {
       console.log("serialNumber:", res.data.data.certificate_serial)
       dispatch(setSerialNumber(res.data.data.certificate_serial));
       dispatch(loginMode());
+      // dispatch(loginMode()); // loginMode는 여기서 설정할 필요가 없으므로 제거합니다.
       // 2. 비밀번호 입력 페이지로 이동
       
       router.push("/auth/pw"); // 비밀번호 입력 페이지로 이동
@@ -124,9 +126,12 @@ const LoginHandle = async (e) => {
             {NameField}
             {PhoneField}
           </div>
-          <button type="submit" className="w-full h-[90px] bg-[#190668] text-white text-[26px] font-medium">
-            로그인
-          </button>
+      <footer>
+             <BottomBar
+               label="로그인"
+               isActive={true}
+             />
+           </footer>
         </form>
       </div>
     </main>
