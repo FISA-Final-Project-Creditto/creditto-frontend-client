@@ -1,8 +1,18 @@
 // src/lib/axios.js
 import axios from "axios";
 
-const api = axios.create({
+// 1. 기본 API 서버용 인스턴스
+export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// 2. 다른 서버용 인스턴스 (예: 인증 서버)
+//    .env.local 파일에 NEXT_PUBLIC_AUTH_URL=https://auth.example.com 와 같이 추가해야 합니다.
+export const credittoApi = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_CREDITTO_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -35,7 +45,20 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// authApi 인스턴스에도 필요하다면 별도의 인터셉터를 추가할 수 있습니다.
+credittoApi.interceptors.request.use((config) => {
+  console.log("인증 API 요청 전송:", config.url);
+  return config;
+});
+
+
+// 기존 코드와의 호환성을 위해 기본 인스턴스를 default로 export 합니다.
+// 다른 파일에서 import api from '...' 형태로 계속 사용할 수 있습니다.
 export default api;
+
+
+
 
 // 유저 등록
 export const registerUser = async (userData) => {

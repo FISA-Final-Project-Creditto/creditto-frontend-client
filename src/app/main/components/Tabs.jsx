@@ -4,6 +4,7 @@ import { CreditCard as CreditCardIcon, Home, MapPin } from "lucide-react";
 import Credit from "../../maine/components/Credit/Credit";
 import { CreditCard } from "@/components/ui/credit-card"
 import CreditChart from "../../maine/components/Chart/CreditChart";
+import { useRouter } from "next/navigation";
 
 const tabs = [
   { id: "home", label: "홈", icon: Home },
@@ -13,6 +14,7 @@ const tabs = [
 
 export default function RoundedIconTabs() {
   const [activeTab, setActiveTab] = useState("home");
+  const router = useRouter();
 
   return (
     <div className="bg-gradient-to-b from-[#F4F8FF] via-[#E9F2FF] to-[#F4F8FF] p-3 shadow-b h-[480px] ">
@@ -50,13 +52,14 @@ export default function RoundedIconTabs() {
           </div>
         )}
         {activeTab === "QR" && (
-          <div className="flex justify-center items-center flex-col px-5">
+          <div className="flex justify-center items-center flex-col px-5"
+          onClick={()=>{router.push("/account/connection")}}>
             <div className="w-40 h-40 bg-gray-200 rounded-lg"></div>
             <div className="w-full h-full mt-6 ">
                 <CreditCard
         variant="dark"
-        cardNumber="1234 5678 4298 5403"
-        cardHolder="Jane Smith"
+        cardNumber=""
+        cardHolder="이름"
         expiryDate="06/25"
       />
             </div>
