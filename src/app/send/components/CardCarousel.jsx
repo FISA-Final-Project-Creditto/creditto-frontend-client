@@ -11,6 +11,7 @@ import {
   Settings,
 } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import SendBtn from "./SendBtn";
 
@@ -19,49 +20,33 @@ const transferTypes = [
   {
     id: "regular",
     title: "정기 해외 송금",
-    subtitle: "매달 보내야 할 때",
-    description: "한 번 등록으로\n알아서 척척 송금",
+    subtitle: "매주 · 매달 정기적으로",
+    description: "한 번만 등록하면\n약속한 날짜에 자동 송금",
     icon: Repeat,
     color: "bg-gradient-to-br from-[#002057] to-[#334D79]",
   },
   {
     id: "one-time",
     title: "일회성 해외 송금",
-    subtitle: "급하게 보내야 할 때",
-    description: "지금 바로 송금 가능",
+    subtitle: "원할 때 자유롭게",
+    description: "기다릴 필요 없이\n즉시 송금",
     icon: Globe,
     color: "bg-gradient-to-br from-[#4D6389] to-[#99A6BC]",
   },
 ];
 
-// 버튼 그룹 컨테이너 애니메이션 설정
-const actionsContainerVariants = {
-  hidden: { opacity: 0, y: 24 }, // 아래쪽 + 투명
-  visible: {
-    opacity: 1,
-    y: 0, // 제자리로
-    transition: {
-      duration: 0.25,
-      ease: "easeOut",
-      when: "beforeChildren",
-      staggerChildren: 0.06, // 자식들 순서대로 탁탁 나옴
-    },
-  },
-  exit: {
-    opacity: 0,
-    y: 24, // 다시 아래로 빠지면서 사라짐
-    transition: { duration: 0.2, ease: "easeIn" },
-  },
-};
-
 // onSelectType: 카드의 id를 상위로 올려주는 콜백
 export default function CardCarousel({ onSelectType }) {
+  const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [regClick, setRegClick] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false);
 
   return (
     <div className="flex-1 flex justify-center relative">
-      <div className="relative w-full h-[420px] flex items-center justify-center mb-10">
+      <div
+        className="relative w-full h-[420px] flex items-center justify-center mb-10"
+        style={{ perspective: "1000px" }}
+      >
         {transferTypes.map((type, index) => {
           const isActive = index === activeIndex;
 
@@ -69,8 +54,7 @@ export default function CardCarousel({ onSelectType }) {
             <motion.div
               key={type.id}
               className={clsx(
-                "absolute w-full max-w-[300px] h-[400px] rounded-3xl p-8 flex flex-col justify-between shadow-2xl cursor-pointer",
-                type.color,
+                "absolute w-full max-w-[300px] h-[400px] rounded-3xl shadow-2xl cursor-pointer",
                 isActive ? "shadow-blue-200" : "shadow-none"
               )}
               initial={{ x: 100, opacity: 0 }}
@@ -79,13 +63,24 @@ export default function CardCarousel({ onSelectType }) {
                 scale: isActive ? 1 : 0.85,
                 opacity: isActive ? 1 : 0.4,
                 zIndex: isActive ? 10 : 0,
-                rotateY: isActive ? 0 : activeIndex === 0 ? -10 : 10,
+                rotateY: isActive
+                  ? isFlipped
+                    ? 180
+                    : 0
+                  : activeIndex === 0
+                  ? -10
+                  : 10,
               }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              // 카드 탭하면 활성 카드 변경
-              onClick={() => setActiveIndex(index)}
-              // 활성 카드만 좌우 제스처 허용
-              drag={isActive ? "x" : false}
+              onClick={() => {
+                if (index === activeIndex) {
+                  setIsFlipped((prev) => !prev);
+                } else {
+                  setActiveIndex(index);
+                  setIsFlipped(false);
+                }
+              }}
+              drag={isActive && !isFlipped ? "x" : false}
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0}
               dragMomentum={false}
@@ -95,40 +90,93 @@ export default function CardCarousel({ onSelectType }) {
                   activeIndex < transferTypes.length - 1
                 ) {
                   setActiveIndex((prev) => prev + 1);
+                  setIsFlipped(false);
                 } else if (info.offset.x > 50 && activeIndex > 0) {
                   setActiveIndex((prev) => prev - 1);
+                  setIsFlipped(false);
                 }
               }}
+              style={{ transformStyle: "preserve-3d" }}
             >
-              <div>
-                <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-6 backdrop-blur-sm">
-                  <type.icon className="w-6 h-6 text-white" />
+              {/* 카드 앞면 */}
+              <div
+                className={clsx(
+                  "absolute w-full h-full rounded-3xl p-8",
+                  type.color
+                )}
+                style={{
+                  transform: "translateZ(0)",
+                }}
+              >
+                <div>
+                  <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-12 backdrop-blur-sm">
+                    <type.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-medium mb-3 backdrop-blur-sm">
+                    {type.subtitle}
+                  </span>
+                  <h3 className="text-2xl font-bold text-white mb-2">
+                    {type.title}
+                  </h3>
+                  <p className="text-white/80 whitespace-pre-line leading-relaxed">
+                    {type.description}
+                  </p>
                 </div>
-                <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-medium mb-3 backdrop-blur-sm">
-                  {type.subtitle}
-                </span>
-                <h3 className="text-2xl font-bold text-white mb-2">
-                  {type.title}
-                </h3>
-                <p className="text-white/80 whitespace-pre-line leading-relaxed">
-                  {type.description}
-                </p>
               </div>
 
-              <div className="flex items-center justify-between mt-auto pt-6 border-t border-white/20">
-                <span className="text-white font-semibold">선택하기</span>
+              {/* 카드 뒷면 */}
+              <div
+                className={clsx(
+                  "absolute w-full h-full rounded-3xl p-8 flex flex-col justify-center text-white",
+                  type.color
+                )}
+                style={{
+                  transform: "rotateY(180deg) translateZ(0)",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                }}
+              >
                 <div
-                  className="w-8 h-8 rounded-full bg-white text-blue-600 flex items-center justify-center"
-                  onClick={(e) => {
-                    e.stopPropagation(); // 카드 클릭 이벤트 막기
-
-                    // 상위 컴포넌트에 선택 이벤트 전달
-                    // onSelectType?.(type.id);
-
-                    onSelectType(type.id);
+                  style={{
+                    opacity: isFlipped ? 1 : 0,
+                    visibility: isFlipped ? "visible" : "hidden",
+                    transition: "opacity 0.2s",
                   }}
                 >
-                  <ArrowRight className="w-4 h-4" />
+                  {/* 정기 송금 */}
+                  {type.id === "regular" && (
+                    <div className="flex flex-col gap-2 mt-2 w-full">
+                      <SendBtn
+                        title="새로운 송금 등록"
+                        subtitle={"원하는 날짜와\n금액을 설정해요"}
+                        icon="plus"
+                        onClick={() => router.push("/send/choose")}
+                      />
+                      <SendBtn
+                        title="송금 조회 · 관리"
+                        subtitle={"송금 내역과\n신청 정보를 한눈에"}
+                        icon="file"
+                        onClick={() => router.push("/send/history")}
+                      />
+                    </div>
+                  )}
+                  {/* 일회성 송금 */}
+                  {type.id === "one-time" && (
+                    <div className="flex flex-col gap-2 mt-2 w-full">
+                      <SendBtn
+                        title="바로 송금하기"
+                        subtitle={"기다리지 않고\n지금 즉시 보내요"}
+                        icon="plus"
+                        onClick={() => router.push("")}
+                      />
+                      <SendBtn
+                        title="송금 내역 조회"
+                        subtitle={"지금까지 보낸\n기록을 모아봐요"}
+                        icon="file"
+                        onClick={() => router.push("")}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
