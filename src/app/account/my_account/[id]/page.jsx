@@ -4,7 +4,6 @@ import { useRouter, useParams } from "next/navigation";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import api, { credittoApi } from "@/src/app/api/axios";
 
-
 function formatNumber(n) {
   // n이 유효한 숫자인지 확인하고, 아닐 경우 '0'을 반환합니다.
   if (typeof n !== "number" || isNaN(n)) {
@@ -87,7 +86,9 @@ export default function AccountDetailPage() {
                 <p className="font-semibold text-gray-900">
                   {accountData?.accountName}
                 </p>
-                <p className="text-sm text-gray-400">{accountData?.accountNo}</p>
+                <p className="text-sm text-gray-400">
+                  {accountData?.accountNo}
+                </p>
               </div>
               <span className="ml-2 px-2 py-1 text-xs rounded bg-gray-100 text-gray-600">
                 {accountData?.accountType}
@@ -155,7 +156,9 @@ export default function AccountDetailPage() {
                         isDeposit ? "text-blue-600" : "text-red-500"
                       }`}
                     >
-                      <span className="font-bold">{formatNumber(tx.txnAmount)}</span>
+                      <span className="font-bold">
+                        {formatNumber(tx.txnAmount)}
+                      </span>
                       <span className="font-medium">원</span>
                     </p>
                     <p className="text-xs text-gray-400 pt-1">

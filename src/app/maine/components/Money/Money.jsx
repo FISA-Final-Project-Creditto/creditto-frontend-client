@@ -1,6 +1,6 @@
-'use client'
-import { Eye, EyeOff } from 'lucide-react';
-import React, { useState } from 'react'
+"use client";
+import { Eye, EyeOff } from "lucide-react";
+import React, { useState } from "react";
 
 export default function Money({ accounts }) {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
@@ -14,9 +14,9 @@ export default function Money({ accounts }) {
       ? accounts.reduce((sum, account) => sum + account.balance, 0)
       : 0;
 
-  const formattedBalance = new Intl.NumberFormat('ko-KR', {
-    style: 'currency',
-    currency: 'KRW',
+  const formattedBalance = new Intl.NumberFormat("ko-KR", {
+    style: "currency",
+    currency: "KRW",
   }).format(totalBalance);
 
   return (
@@ -25,11 +25,16 @@ export default function Money({ accounts }) {
         <p className="text-base text-white font-medium">계좌잔액</p>
         <h4 className="text-base font-normal text-white">
           {accounts && accounts.length > 0
-            ? isBalanceVisible ? formattedBalance : '●●●●●'
-            : '계좌 연결 후 조회가능'}
+            ? isBalanceVisible
+              ? formattedBalance
+              : "●●●●●"
+            : "계좌 연결 후 조회가능"}
         </h4>
       </div>
-      <button onClick={toggleBalanceVisibility} className="p-1.5 hover:bg-white/10 rounded-lg transition text-white">
+      <button
+        onClick={toggleBalanceVisibility}
+        className="p-1.5 hover:bg-white/10 rounded-lg transition text-white"
+      >
         {isBalanceVisible ? <EyeOff size={18} /> : <Eye size={18} />}
       </button>
     </div>
