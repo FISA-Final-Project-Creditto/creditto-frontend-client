@@ -36,10 +36,7 @@ export default function CardCarousel() {
 
   return (
     <div className="flex-1 flex justify-center relative">
-      <div
-        className="relative w-full h-[420px] flex items-center justify-center mb-10"
-        style={{ perspective: "1000px" }}
-      >
+      <div className="relative w-full h-[420px] flex items-center justify-center mb-10">
         {transferTypes.map((type, index) => {
           const isActive = index === activeIndex;
 
@@ -47,7 +44,7 @@ export default function CardCarousel() {
             <motion.div
               key={type.id}
               className={clsx(
-                "absolute w-full max-w-[300px] h-[400px] rounded-3xl shadow-2xl cursor-pointer",
+                "absolute w-full max-w-[300px] h-[400px] rounded-3xl shadow-2xl cursor-pointer [transform-style:preserve-3d]",
                 isActive ? "shadow-blue-200" : "shadow-none"
               )}
               initial={{ x: 100, opacity: 0 }}
@@ -89,17 +86,13 @@ export default function CardCarousel() {
                   setIsFlipped(false);
                 }
               }}
-              style={{ transformStyle: "preserve-3d" }}
             >
               {/* 카드 앞면 */}
               <div
                 className={clsx(
-                  "absolute w-full h-full rounded-3xl p-8",
+                  "absolute w-full h-full rounded-3xl p-8 translate-z-0",
                   type.color
                 )}
-                style={{
-                  transform: "translateZ(0)",
-                }}
               >
                 <div>
                   <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-12 backdrop-blur-sm">
@@ -120,21 +113,14 @@ export default function CardCarousel() {
               {/* 카드 뒷면 */}
               <div
                 className={clsx(
-                  "absolute w-full h-full rounded-3xl p-8 flex flex-col justify-center text-white",
+                  "absolute w-full h-full rounded-3xl p-8 flex flex-col justify-center text-white [transform:rotateY(180deg)_translateZ(0)] backface-hidden",
                   type.color
                 )}
-                style={{
-                  transform: "rotateY(180deg) translateZ(0)",
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                }}
               >
                 <div
-                  style={{
-                    opacity: isFlipped ? 1 : 0,
-                    visibility: isFlipped ? "visible" : "hidden",
-                    transition: "opacity 0.2s",
-                  }}
+                  className={clsx(
+                    isFlipped ? "opacity-100 visible" : "opacity-0 invisible"
+                  )}
                 >
                   {/* 정기 송금 */}
                   {type.id === "regular" && (
