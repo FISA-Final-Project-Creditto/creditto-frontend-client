@@ -13,20 +13,13 @@ function formatNumber(n) {
   return n.toLocaleString("ko-KR");
 }
 
-function groupByDate(list) {
-  return list?.reduce((acc, tx) => {
-    (acc[tx.date] ||= []).push(tx);
-    return acc;
-  }, {});
-}
-
 export default function AccountDetailPage() {
   const router = useRouter();
   const params = useParams(); // useParams()는 { id: '...' } 형태의 객체를 반환합니다.
   const accountId = params.id; // 객체에서 실제 id 값을 추출합니다.
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all"); // all, in, out'
-  const [data, setData] = useState();
+  const [accountData, setAccountData] = useState();
   const [transactions, setTransactions] = useState();
 
   useEffect(() => {
@@ -35,13 +28,13 @@ export default function AccountDetailPage() {
       console.log("accountId :", accountId);
       try {
         const accessToken = sessionStorage.getItem("accessToken");
-        const res = await credittoApi.get(`/api/accounts/id/${accountId}`, {
+        const res = await credittoApi.get(`/api/accounts/${accountId}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
         const Detailres = await credittoApi.get(
-          `/api/accounts/id/${accountId}/transactions`,
+          `/api/accounts/${accountId}/transactions`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -51,7 +44,7 @@ export default function AccountDetailPage() {
 
         console.log("계좌 상세 정보:", res.data);
         console.log("거래 내역:", Detailres.data);
-        setData(res.data.data);
+        setAccountData(res.data.data);
         setTransactions(Detailres.data.data);
         // TODO: 가져온 데이터를 state에 저장하여 화면에 표시합니다.
       } catch (error) {
@@ -64,14 +57,14 @@ export default function AccountDetailPage() {
 
   const filtered = useMemo(() => {
     return transactions?.filter((t) => {
-      if (filter === "in" && t.amount <= 0) return false;
-      if (filter === "out" && t.amount >= 0) return false;
+      if (filter === "in" && t.txnType !== "DEPOSIT") return false;
+      if (filter === "out" && t.txnType !== "WITHDRAWAL") return false;
       if (!query) return true;
-      return t.title.includes(query);
+      const title = t.txnType === "DEPOSIT" ? "입금" : "출금";
+      return title.includes(query);
     });
-  }, [query, filter]);
+  }, [transactions, query, filter]);
 
-  const grouped = useMemo(() => groupByDate(filtered), [filtered]);
   return (
     <main className="min-h-[100dvh] flex flex-col">
       <AppHeader title="계좌 내역 조회" show={true} showHamburger={false} />
@@ -92,16 +85,18 @@ export default function AccountDetailPage() {
               />
               <div className="flex-1">
                 <p className="font-semibold text-gray-900">
-                  {data?.accountName}
+                  {accountData?.accountName}
                 </p>
-                <p className="text-sm text-gray-400">{data?.accountNo}</p>
+                <p className="text-sm text-gray-400">{accountData?.accountNo}</p>
               </div>
               <span className="ml-2 px-2 py-1 text-xs rounded bg-gray-100 text-gray-600">
-                {data?.accountType}
+                {accountData?.accountType}
               </span>
             </div>
             <p className="mt-4 text-right text-2xl font-bold">
-              <span className="font-bold">{formatNumber(data?.balance)}</span>
+              <span className="font-bold">
+                {formatNumber(accountData?.balance)}
+              </span>
               <span className="font-medium">원</span>
             </p>
           </div>
@@ -135,48 +130,38 @@ export default function AccountDetailPage() {
               </p>
             )}
 
-            {/* {dates.map((date) => (
-              <div key={date}>
-                <p className="text-sm text-gray-500 mb-3 text-left">
-                  {new Date(date).toLocaleDateString("ko-KR", {
-                    month: "numeric",
-                    day: "numeric",
-                  })}
-                </p>
-                <div className="space-y-4">
-                  {grouped[date].map((tx) => (
-                    <div
-                      key={tx.accountId}
-                      className="flex items-start justify-between"
-                    >
-                      <div>
-                        <p className="text-base font-medium">{tx.title}</p>
-                      </div>
+            {filtered?.map((tx) => {
+              const isDeposit = tx.txnType === "DEPOSIT";
+              const title = isDeposit ? "입금" : "출금";
+              return (
+                <div
+                  key={tx.typeId}
+                  className="flex items-start justify-between"
+                >
+                  <div>
+                    <p className="text-base font-medium">{title}</p>
+                    {/* txnDate가 없으므로 시간 표시는 주석 처리 또는 제거합니다. */}
+                    {/* <p className="text-xs text-gray-400 pt-1">
+                      {new Date(tx.txnDate).toLocaleTimeString("ko-KR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p> */}
+                  </div>
 
-                      <div className="text-right mt-8">
-                        <p
-                          className={`text-base font-semibold ${
-                            tx.txtamount >= 0 ? "text-blue-600" : "text-red-500"
-                          }`}
-                        >
-                          {tx.txtamount >= 0 ? "" : ""}
-                          <span className="font-bold">
-                            {formatNumber(Math.abs(tx.txtamount))}
-                          </span>
-                          <span className="font-medium">원</span>
-                        </p>
-                        <p className="text-sm text-gray-400 font-thin mt-1">
-                          <span className="">
-                            {formatNumber(tx.balanceAfter)}
-                          </span>
-                          <span className="font-medium">원</span>
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+                  <div className="text-right">
+                    <p
+                      className={`text-base font-semibold ${
+                        isDeposit ? "text-blue-600" : "text-red-500"
+                      }`}
+                    >
+                      <span className="font-bold">{formatNumber(tx.txnAmount)}</span>
+                      <span className="font-medium">원</span>
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))} */}
+              );
+            })}
           </div>
         </div>
       </div>
