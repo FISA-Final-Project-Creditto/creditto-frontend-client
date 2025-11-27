@@ -36,7 +36,10 @@ export default function CardCarousel() {
 
   return (
     <div className="flex-1 flex justify-center relative">
-      <div className="relative w-full h-[420px] flex items-center justify-center mb-10">
+      <div
+        className="relative w-full h-[420px] flex items-center justify-center mb-10"
+        style={{ perspective: "1000px" }}
+      >
         {transferTypes.map((type, index) => {
           const isActive = index === activeIndex;
 
@@ -86,6 +89,7 @@ export default function CardCarousel() {
                   setIsFlipped(false);
                 }
               }}
+              style={{ transformStyle: "preserve-3d" }}
             >
               {/* 카드 앞면 */}
               <div
