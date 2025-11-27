@@ -158,6 +158,9 @@ export default function AccountDetailPage() {
                       <span className="font-bold">{formatNumber(tx.txnAmount)}</span>
                       <span className="font-medium">원</span>
                     </p>
+                    <p className="text-xs text-gray-400 pt-1">
+                      {formatNumber(tx.balance)}원
+                    </p>
                   </div>
                 </div>
               );
