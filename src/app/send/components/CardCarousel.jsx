@@ -1,133 +1,137 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import clsx from "clsx";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  ArrowRight,
+  FileText,
+  Globe,
+  Plus,
+  Repeat,
+  Settings,
+} from "lucide-react";
+import { useState } from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import SendBtn from "./SendBtn";
 
-export default function CardCarousel() {
-  const [activeIndex, setActiveIndex] = useState(1);
-  const [centerPos, setCenterPos] = useState(1); // 스크롤 기준의 실시간 중심 위치
-  const carouselRef = useRef(null);
+// 송금 유형 데이터
+const transferTypes = [
+  {
+    id: "regular",
+    title: "정기 해외 송금",
+    subtitle: "매달 보내야 할 때",
+    description: "한 번 등록으로\n알아서 척척 송금",
+    icon: Repeat,
+    color: "bg-gradient-to-br from-[#002057] to-[#334D79]",
+  },
+  {
+    id: "one-time",
+    title: "일회성 해외 송금",
+    subtitle: "급하게 보내야 할 때",
+    description: "지금 바로 송금 가능",
+    icon: Globe,
+    color: "bg-gradient-to-br from-[#4D6389] to-[#99A6BC]",
+  },
+];
 
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
+// 버튼 그룹 컨테이너 애니메이션 설정
+const actionsContainerVariants = {
+  hidden: { opacity: 0, y: 24 }, // 아래쪽 + 투명
+  visible: {
+    opacity: 1,
+    y: 0, // 제자리로
+    transition: {
+      duration: 0.25,
+      ease: "easeOut",
+      when: "beforeChildren",
+      staggerChildren: 0.06, // 자식들 순서대로 탁탁 나옴
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: 24, // 다시 아래로 빠지면서 사라짐
+    transition: { duration: 0.2, ease: "easeIn" },
+  },
+};
 
-  const cards = [
-    { id: 1, content: "" },
-    { id: 2, content: "" },
-    { id: 3, content: "" },
-  ];
-
-  // 중심 인덱스 추정 업데이트
-  const updateCenterPos = () => {
-    const el = carouselRef.current;
-    if (!el) return;
-    const cardWidth = el.offsetWidth * 0.6;
-    const gap = 16;
-    const centerOffset = (el.offsetWidth - cardWidth) / 2;
-    const pos = (el.scrollLeft + centerOffset) / (cardWidth + gap);
-    setCenterPos(pos);
-  };
-
-  // activeIndex 변경 시 해당 카드로 스크롤 + centerPos 동기화
-  useEffect(() => {
-    const el = carouselRef.current;
-    if (!el) return;
-    const cardWidth = el.offsetWidth * 0.6;
-    const gap = 16;
-    const centerOffset = (el.offsetWidth - cardWidth) / 2;
-    const scrollPosition = (cardWidth + gap) * activeIndex - centerOffset;
-    el.scrollTo({ left: scrollPosition, behavior: "smooth" });
-    const t = setTimeout(updateCenterPos, 180);
-    return () => clearTimeout(t);
-  }, [activeIndex]);
-
-  const handleMouseDown = (e) => {
-    if (!carouselRef.current) return;
-    setIsDragging(true);
-    setStartX(e.pageX - carouselRef.current.offsetLeft);
-    setScrollLeft(carouselRef.current.scrollLeft);
-  };
-
-  const handleTouchStart = (e) => {
-    if (!carouselRef.current) return;
-    setIsDragging(true);
-    setStartX(e.touches[0].pageX - carouselRef.current.offsetLeft);
-    setScrollLeft(carouselRef.current.scrollLeft);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging || !carouselRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - carouselRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    carouselRef.current.scrollLeft = scrollLeft - walk;
-    updateCenterPos();
-  };
-
-  const handleTouchMove = (e) => {
-    if (!isDragging || !carouselRef.current) return;
-    const x = e.touches[0].pageX - carouselRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    carouselRef.current.scrollLeft = scrollLeft - walk;
-    updateCenterPos();
-  };
-
-  const handleDragEnd = () => {
-    setIsDragging(false);
-    const el = carouselRef.current;
-    if (!el) return;
-    const cardWidth = el.offsetWidth * 0.6;
-    const gap = 16;
-    const centerOffset = (el.offsetWidth - cardWidth) / 2;
-    const scrollPosition = el.scrollLeft + centerOffset;
-    const newIndex = Math.round(scrollPosition / (cardWidth + gap));
-    setActiveIndex(Math.max(0, Math.min(cards.length - 1, newIndex)));
-    updateCenterPos();
-  };
+// onSelectType: 카드의 id를 상위로 올려주는 콜백
+export default function CardCarousel({ onSelectType }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [regClick, setRegClick] = useState(false);
 
   return (
-    <div className="relative flex-1 pb-12">
-      <div
-        ref={carouselRef}
-        className="flex gap-4 overflow-x-hidden h-[380px] cursor-grab active:cursor-grabbing"
-        style={{ perspective: "1000px" }} // 원근감
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleDragEnd}
-        onMouseLeave={handleDragEnd}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleDragEnd}
-        onScroll={updateCenterPos}
-      >
-        {cards.map((card, index) => {
-          // 중심(스크롤 기준)으로부터의 오프셋
-          const offset = index - centerPos;
-
-          // 곡선 파라미터 (원하는 느낌으로 조절 가능)
-          const ROT_Y = -12; // 좌/우로 말리는 각도
-          const DEPTH = 90; // 뒤로 들어가는 깊이
-          const LIFT = 14; // 아치 곡률 (옆으로 갈수록 살짝 내려감)
-          const SCALE_DROP = 0.08; // 축소 비율
-
-          const rotateY = `${offset * ROT_Y}deg`;
-          const translateZ = `${-Math.abs(offset) * DEPTH}px`;
-          const translateY = `${Math.pow(offset, 2) * LIFT}px`;
-          const scale = 1 - Math.min(Math.abs(offset) * SCALE_DROP, 0.3);
-          const opacity = 1 - Math.min(Math.abs(offset) * 0.4, 0.5);
+    <div className="flex-1 flex justify-center relative">
+      <div className="relative w-full h-[420px] flex items-center justify-center mb-10">
+        {transferTypes.map((type, index) => {
+          const isActive = index === activeIndex;
 
           return (
-            <div
-              key={card.id}
-              className="min-w-[60%] rounded-3xl select-none transition-[transform,opacity] duration-200 will-change-transform"
-              style={{
-                background: "#A8C7FA",
-                transform: `translateY(${translateY}) translateZ(${translateZ}) rotateY(${rotateY}) scale(${scale})`,
-                transformStyle: "preserve-3d",
-                opacity,
+            <motion.div
+              key={type.id}
+              className={clsx(
+                "absolute w-full max-w-[300px] h-[400px] rounded-3xl p-8 flex flex-col justify-between shadow-2xl cursor-pointer",
+                type.color,
+                isActive ? "shadow-blue-200" : "shadow-none"
+              )}
+              initial={{ x: 100, opacity: 0 }}
+              animate={{
+                x: isActive ? 0 : activeIndex === 0 ? 40 : -40,
+                scale: isActive ? 1 : 0.85,
+                opacity: isActive ? 1 : 0.4,
+                zIndex: isActive ? 10 : 0,
+                rotateY: isActive ? 0 : activeIndex === 0 ? -10 : 10,
               }}
-            />
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              // 카드 탭하면 활성 카드 변경
+              onClick={() => setActiveIndex(index)}
+              // 활성 카드만 좌우 제스처 허용
+              drag={isActive ? "x" : false}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0}
+              dragMomentum={false}
+              onDragEnd={(e, info) => {
+                if (
+                  info.offset.x < -50 &&
+                  activeIndex < transferTypes.length - 1
+                ) {
+                  setActiveIndex((prev) => prev + 1);
+                } else if (info.offset.x > 50 && activeIndex > 0) {
+                  setActiveIndex((prev) => prev - 1);
+                }
+              }}
+            >
+              <div>
+                <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-6 backdrop-blur-sm">
+                  <type.icon className="w-6 h-6 text-white" />
+                </div>
+                <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-medium mb-3 backdrop-blur-sm">
+                  {type.subtitle}
+                </span>
+                <h3 className="text-2xl font-bold text-white mb-2">
+                  {type.title}
+                </h3>
+                <p className="text-white/80 whitespace-pre-line leading-relaxed">
+                  {type.description}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between mt-auto pt-6 border-t border-white/20">
+                <span className="text-white font-semibold">선택하기</span>
+                <div
+                  className="w-8 h-8 rounded-full bg-white text-blue-600 flex items-center justify-center"
+                  onClick={(e) => {
+                    e.stopPropagation(); // 카드 클릭 이벤트 막기
+
+                    // 상위 컴포넌트에 선택 이벤트 전달
+                    // onSelectType?.(type.id);
+
+                    onSelectType(type.id);
+                  }}
+                >
+                  <ArrowRight className="w-4 h-4" />
+                </div>
+              </div>
+            </motion.div>
           );
         })}
       </div>

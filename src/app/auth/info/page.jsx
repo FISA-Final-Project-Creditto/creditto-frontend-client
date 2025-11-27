@@ -12,7 +12,6 @@ import { countryCodes } from "../../constants/countryCode";
 import { settingMode as settingModeAction } from "@/src/store/features/simplepw/simplepwSlice";
 
 export default function InfoInputPage() {
-
   // Redux 스토어에서 ocr과 user 데이터 전체를 가져오기
   const { imageData: previewUrl, ...ocrData } = useSelector(
     (state) => state.ocr
@@ -30,7 +29,7 @@ export default function InfoInputPage() {
 
   const router = useRouter();
   const dispatch = useDispatch();
-const settingMode = useSelector((state) => state.simplepw.settingMode);
+  const settingMode = useSelector((state) => state.simplepw.settingMode);
   const handleChange = (field, value) => {
     let formattedValue = value;
 
@@ -78,7 +77,7 @@ const settingMode = useSelector((state) => state.simplepw.settingMode);
       dispatch(settingModeAction()); // OK
 
       const matched = countryCodes.find((c) => c.name === formData.nationality);
-     
+
       // API 요청을 위해 formData의 키를 API 사양에 맞게 조정
       const data = {
         name: formData.name,

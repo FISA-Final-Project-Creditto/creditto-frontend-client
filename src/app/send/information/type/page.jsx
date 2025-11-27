@@ -1,13 +1,14 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
-import Header from "../../components/Header";
 import StepProgressBar from "../components/StepProgressbar";
 import DatePicker from "./components/DatePicker";
 import { useState } from "react";
 import BottomBar from "../../components/BottomBar";
 import { useRouter } from "next/navigation";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
+import { useDispatch, useSelector } from "react-redux";
+import { setReceivedCurrency } from "@/src/store/features/send/sendSlice";
 
 // 요일
 const DAYS = [
@@ -16,34 +17,52 @@ const DAYS = [
   { name: "수요일", value: "WEDNESDAY" },
   { name: "목요일", value: "THRUSDAY" },
   { name: "금요일", value: "FRIDAY" },
-  { name: "토요일", value: "SATURDAY" },
-  { name: "일요일", value: "SUNDAY" },
 ];
+
+// 국가별 통화 코드
+const currency = {
+  US: "USD",
+  CN: "CHN",
+  JP: "JPY",
+};
+
+// 연결된 계좌
+// ✅ TODO: useSelector로 계좌들을 가져오기
+const connectedAccounts = ["1002-123-123124", "1002-346-346234"];
 
 export default function TypePage() {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const selectedCountry = useSelector((state) => state.send.selectedCountry); // 선택된 국가 가져오기
 
   // 송금 유형 정보값 상태 관리
   const [formData, setFormData] = useState({
-    accountNO: "1002-123-456789", // 송금 계좌(계좌 페이지에 설정되어있기 때문에 거기서 가져오면 될 듯)
-    receiveCurrency: "", // 수취 통화 코드
-    sendCurrency: "", // 송금 통화 코드
+    accountNO: "", // 송금 계좌(계좌 페이지에 설정되어있기 때문에 거기서 가져오면 될 듯)
+    sendCurrency: "KRW", // 송금 통화 코드를 KRW로 고정
+    receiveCurrency: currency[selectedCountry] || "", // 수취 통화 코드
     sendAmount: "", // 외화 거래 금액
     regRemStatus: "ACTIVE", // 정기 송금 설정(수정 시 PAUSED/CANCELLED로 변경 가능 -> ENUM 타입)
     regRemType: "", // 송금 주기
-    scheduled: "", // 송금 주기 상세(달별/주별 정기 송금일)
+    scheduled: 0 || "", // 송금 주기 상세(달별/주별 정기 송금일)
     startDate: "", // 송금 시작일
   });
+
+  const hasScheduled =
+    formData.regRemType === "monthly"
+      ? Number(formData.scheduled) > 0
+      : formData.regRemType === "weekly"
+      ? !isScheduledEmpty
+      : false;
 
   // 폼 유효성 검사
   const isFormValid =
     formData.accountNO.trim() !== "" &&
-    formData.receiveCurrency.trim() !== "" &&
+    // formData.receiveCurrency.trim() !== "" &&
     formData.sendCurrency.trim() !== "" &&
     formData.sendAmount.trim() !== "" &&
     formData.regRemStatus.trim() !== "" &&
     formData.regRemType.trim() !== "" &&
-    formData.scheduled.trim() !== "" &&
+    formData.scheduled > 0 &&
     formData.startDate.trim() !== "";
 
   // 공통 input 변경 핸들러
@@ -99,12 +118,14 @@ export default function TypePage() {
     e.preventDefault();
 
     if (isFormValid) {
-      const submissionData = {
-        ...formData,
-        sendAmount: formData.sendAmount.replace(/,/g, ""),
-        accountNO: formData.accountNO.replace(/-/g, ""),
-      };
-      console.log("Form submitted:", submissionData);
+      // const submissionData = {
+      //   ...formData,
+      //   sendAmount: formData.sendAmount.replace(/,/g, ""),
+      //   accountNO: formData.accountNO.replace(/-/g, ""),
+      // };
+
+      // 수취 통화 코드 값 저장
+      dispatch(setReceivedCurrency(formData.receiveCurrency));
 
       router.push("/send/information/remittance");
     } else {
@@ -141,7 +162,7 @@ export default function TypePage() {
             </h2>
 
             <h3 className="text-left text-[1.125rem] text-black font-semibold">
-              소액 송금 (USD 기준 5천불 이하)
+              소액 송금
             </h3>
 
             {/* 입력칸 */}
@@ -154,14 +175,46 @@ export default function TypePage() {
                 <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
                   송금 계좌
                 </label>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={formData.accountNO}
-                  onChange={handleAccountNumberChange}
-                  placeholder="송금할 계좌번호를 입력하세요"
-                  className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
-                />
+                <div className="relative w-full">
+                  <select
+                    name="accountNO"
+                    value={formData.accountNO}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-[#86909C] focus:outline-none ${
+                      formData.accountNO === ""
+                        ? "text-[#86909C]"
+                        : "text-black"
+                    }`}
+                  >
+                    <option value="">계좌를 선택하세요</option>
+                    {connectedAccounts.map((account, index) => (
+                      <option key={index} value={account}>
+                        {account}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86909C] pointer-events-none" />
+                </div>
+              </div>
+
+              {/* 송금 통화 코드(원화로 고정) */}
+              <div className="flex flex-col items-start">
+                <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
+                  송금 통화 코드
+                </label>
+                <div className="relative w-full">
+                  <input
+                    name="sendCurrency"
+                    disabled={true}
+                    value={formData.sendCurrency}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
+                      formData.sendCurrency === ""
+                        ? "text-[#86909C]"
+                        : "text-black"
+                    }`}
+                  ></input>
+                </div>
               </div>
 
               {/* 수취 통화 코드 */}
@@ -170,8 +223,9 @@ export default function TypePage() {
                   수취 통화 코드
                 </label>
                 <div className="relative w-full">
-                  <select
+                  <input
                     name="receiveCurrency"
+                    disabled={true}
                     value={formData.receiveCurrency}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
@@ -179,43 +233,7 @@ export default function TypePage() {
                         ? "text-[#86909C]"
                         : "text-black"
                     }`}
-                  >
-                    <option value="">
-                      수취 통화를 선택하세요 (예: USD, JPY 등)
-                    </option>
-                    <option value="USD">USD - 미국 달러</option>
-                    <option value="JPY">JPY - 일본 엔화</option>
-                    <option value="CNY">CNY - 중국 위안화</option>
-                  </select>
-                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86909C] pointer-events-none" />
-                </div>
-              </div>
-
-              {/* 송금 통화 코드 */}
-              <div className="flex flex-col items-start">
-                <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                  송금 통화 코드
-                </label>
-                <div className="relative w-full">
-                  <select
-                    name="sendCurrency"
-                    value={formData.sendCurrency}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
-                      formData.sendCurrency === ""
-                        ? "text-[#86909C]"
-                        : "text-black"
-                    }`}
-                  >
-                    <option value="">
-                      송금 통화를 선택하세요 (예: KRW, USD 등)
-                    </option>
-                    <option value="KRW">KRW - 한국 원화</option>
-                    <option value="USD">USD - 미국 달러</option>
-                    <option value="JPY">JPY - 일본 엔화</option>
-                    <option value="CNY">CNY - 중국 위안화</option>
-                  </select>
-                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86909C] pointer-events-none" />
+                  ></input>
                 </div>
               </div>
 
@@ -271,7 +289,7 @@ export default function TypePage() {
                     value={formData.scheduled}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
-                      formData.scheduled === ""
+                      formData.scheduled === "" || formData.scheduled === 0
                         ? "text-[#86909C]"
                         : "text-black"
                     }`}
@@ -292,6 +310,21 @@ export default function TypePage() {
                   </select>
                   <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86909C] pointer-events-none" />
                 </div>
+
+                {/* 송금 주기 상세가 매월일 경우, 매주일 경우 보여지는 경고 문자가 다르게 보여짐 */}
+                {formData.scheduled !== "" &&
+                  formData.regRemType === "weekly" && (
+                    <p className="text-xs mt-1 text-[#F53F3F]">
+                      우리은행은 평일에만 송금이 가능하오니 이용에 참고해주세요
+                    </p>
+                  )}
+                {formData.scheduled > 28 &&
+                  formData.regRemType === "monthly" && (
+                    <p className="text-xs mt-1 text-[#F53F3F]">
+                      해당 월에 해당 날짜가 없으면 자동으로 그 달의 마지막 날에
+                      실행됩니다
+                    </p>
+                  )}
               </div>
 
               {/* 송금 시작일 */}
@@ -306,16 +339,9 @@ export default function TypePage() {
               </div>
             </form>
           </section>
-
-      
         </section>
-        
       </div>
-          <BottomBar
-            label="다음"
-            onClick={handleSubmit}
-            isActive={isFormValid}
-          />
+      <BottomBar label="다음" onClick={handleSubmit} isActive={isFormValid} />
     </main>
   );
 }
