@@ -21,7 +21,6 @@ export default function SplashPage({ hasSerial }) {
 
   const handleLogin = () => {
     if (!hasSerial) {
-      alert("인증서가 없습니다");
       router.push("/login");
     } else {
       dispatch(loginMode());

@@ -1,86 +1,98 @@
 "use client";
-import api from "@/src/app/api/axios";
+import api, { credittoApi } from "@/src/app/api/axios";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setAccounts } from "@/src/store/features/account/accountSlice";
+import BottomBar from "@/src/app/send/components/BottomBar";
 
 export default function ImportAccount() {
   const router = useRouter();
-  const mock = [
-    {
-      accountId : 1,
-      accountNo: "1810908621009",
-      accountName: "테스트 계좌",
-      balance: 1592000,
-      accountType: "SAVINGS",
-      accountState: "ACTIVE",
-      userId: "2",
-    },
-    {
-      accountId : 2,
-      accountNo: "1816298859905",
-      accountName: "테스트 계좌",
-      balance: 12000,
-      accountType: "SAVINGS",
-      accountState: "ACTIVE",
-      userId: "2",
-    },
-    {
-      accountId :3,
-      accountNo: "2073211213735",
-      accountName: "테스트 계좌",
-      balance: 3000,
-      accountType: "LOAN",
-      accountState: "ACTIVE",
-      userId: "2",
-    },
-  ];
+  const dispatch = useDispatch();
+  const { accounts, status } = useSelector((state) => state.account);
 
-  // useEffect(()=>{
-  //   const accesstoken = sessionStorage.getItem("accessToken")
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) {
+          console.error("Access Token이 없습니다.");
+          return;
+        }
 
-  //   const res = api.get("/api/accounts/me/accounts",{accesstoken})
-  //   console.log(res.data)
-  // },[])
+        // `credittoApi` 인스턴스를 사용하여 API 호출
+        const response = await credittoApi.get("/api/accounts/me", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        // API 응답 데이터의 data 프로퍼티에 실제 계좌 배열이 들어있으므로, response.data.data를 저장합니다.
+        if (response.data && response.data.data) {
+          dispatch(setAccounts(response.data.data));
+          sessionStorage.setItem("account", response.data?.data[0]?.accountNo);
+          console.log("계좌 정보 저장 성공:", response.data.data);
+        }
+      } catch (error) {
+        console.error("계좌 정보를 가져오는 데 실패했습니다:", error);
+      }
+    };
+
+    // 계좌 정보가 아직 없을 때만 API 호출
+    if (status === "idle") {
+      fetchAccounts();
+    }
+  }, [dispatch, status]);
+  const handleAccount = ()=>{
+    router.push("/account/create")
+  }
 
   return (
     <div className="w-full px-4 py-6">
       <h2 className="text-xl font-bold text-gray-900 mb-6">우리은행 예·적금</h2>
 
       <div className="space-y-4">
-        {mock.map((mock) => (
-          <div
-            key={mock.accountId}
-            className="bg-white border-b border-gray-200 p-2 cursor-pointer"
-            onClick={() => {
-              router.push(`/account/my_account/${mock.accountId}`);
-            }}
-          >
-            <div className="flex items-start text-left gap-4 flex-1">
-              <img
-                src="/icon/woori.png"
-                alt="우리은행 로고"
-                className="w-12 h-12 rounded-full"
-              />
+        {accounts?.length > 0 ? (
+          accounts.map((account) => (
+            <div
+              key={account.accountId}
+              className="bg-white border-b border-gray-200 p-2 cursor-pointer"
+              onClick={() => {
+                router.push(`/account/my_account/${account.accountId}`);
+              }}
+            >
+              <div className="flex items-start text-left gap-4 flex-1">
+                <img
+                  src="/icon/woori.png"
+                  alt="우리은행 로고"
+                  className="w-12 h-12 rounded-full"
+                />
 
-              <div className="flex-1">
-                <p className="font-semibold text-lg text-gray-900">
-                  {mock.accountName}
-                </p>
-                <p className="text-sm text-gray-500">{mock.accountNo}</p>
+                <div className="flex-1">
+                  <p className="font-semibold text-lg text-gray-900">
+                    {account.accountName}
+                  </p>
+                  <p className="text-sm text-gray-500">{account.accountNo}</p>
+                </div>
               </div>
-              <button
-                className={`px-3 py-1 rounded text-sm font-medium bg-gray-300 text-gray-700 flex-shrink-0 ml-2`}
-              >
-                {mock.accountType}
-              </button>
+              <div>
+                <p className="text-lg text-right font-bold text-gray-900">
+                  {new Intl.NumberFormat("ko-KR").format(account.balance)}원
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-lg text-right font-bold text-gray-900">
-                {new Intl.NumberFormat("ko-KR").format(mock.balance)}원
-              </p>
+          ))
+        ) : (
+          <div className="text-center text-gray-500 py-8">
+            <div className=" w-full h-full bg-blue-300 ">
+            <p>연결된 계좌가 없습니다.</p>
             </div>
+            <footer>
+              <BottomBar label="계좌 개설하러 가기"  onClick={handleAccount}  isActive={true} />
+            </footer>
           </div>
-        ))}
+          
+        )}
       </div>
     </div>
   );
