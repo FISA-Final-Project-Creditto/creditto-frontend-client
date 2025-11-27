@@ -42,9 +42,7 @@ const Modal = ({ title, message, onClose, onConfirm }) => {
           <h2 className="text-[#1A3668] font-semibold text-[1.375rem] text-left mb-[10px]">
             {title}
           </h2>
-          <div className="text-left">
-            {message}
-          </div>
+          <div className="text-left whitespace-pre-line">{message}</div>
         </section>
         {/* 버튼 영역 */}
         <section className="flex w-full mt-6">
