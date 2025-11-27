@@ -3,6 +3,7 @@ import * as React from "react"
 import { motion } from "framer-motion"
 import { Eye, EyeOff } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useSelector } from "react-redux";
 
 const PERSPECTIVE = 400
 const CARD_ANIMATION_DURATION = 0.5
@@ -22,10 +23,17 @@ const fadeInVariants = {
 const CreditCard = React.forwardRef(
   ({ className, cardNumber, cardHolder, expiryDate, variant = "default", ...props }, ref) => {
     const [isVisible, setIsVisible] = React.useState(false)
+    const account = sessionStorage.getItem("account")
 
-    const getMaskedNumber = (number) => {
-      const lastFour = number.slice(-4)
-      return `**** **** **** ${lastFour}`
+    const getMaskedNumber = () => {
+
+
+      if(!account){
+        return `계좌연결 후 사용 가능`
+      }
+      else{
+        return `${account}`
+      }
     }
 
     const variants = {

@@ -2,55 +2,19 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-import api from "@/src/app/api/axios";
+import api, { credittoApi } from "@/src/app/api/axios";
 
-const mockAccount = {
-  accountId: 1,
-  accountNo: "1810908621009",
-  accountName: "테스트 계좌",
-  balance: 1592000,
-  accountType: "SAVINGS",
-  accountState: "ACTIVE",
-  userId: "2",
-};
-
-const mockTransactions = [
-  {
-    accountId: 1,
-    date: "2024-10-27",
-    title: "상암 GS25",
-    txtamount: -4500,
-    balanceAfter: 1200000,
-  },
-  {
-    accountId: 2,
-    date: "2024-10-27",
-    title: "상암 교촌치킨",
-    txtamount: -22500,
-    balanceAfter: 1204500,
-  },
-  {
-    accountId: 3,
-    date: "2024-10-25",
-    title: "급여",
-    txtamount: 1200000,
-    balanceAfter: 1227000,
-  },
-  {
-    accountId: 4,
-    date: "2024-10-25",
-    title: "9월 교통대금",
-    txtamount: -65000,
-    balanceAfter: 27000,
-  },
-];
 
 function formatNumber(n) {
+  // n이 유효한 숫자인지 확인하고, 아닐 경우 '0'을 반환합니다.
+  if (typeof n !== "number" || isNaN(n)) {
+    return "0";
+  }
   return n.toLocaleString("ko-KR");
 }
 
 function groupByDate(list) {
-  return list.reduce((acc, tx) => {
+  return list?.reduce((acc, tx) => {
     (acc[tx.date] ||= []).push(tx);
     return acc;
   }, {});
@@ -58,18 +22,48 @@ function groupByDate(list) {
 
 export default function AccountDetailPage() {
   const router = useRouter();
-  const accountId = useParams(); // 필요 시 사용
+  const params = useParams(); // useParams()는 { id: '...' } 형태의 객체를 반환합니다.
+  const accountId = params.id; // 객체에서 실제 id 값을 추출합니다.
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all"); // all, in, out'
-  const accesstoken = sessionStorage.getItem("accessToken");
+  const [data, setData] = useState();
+  const [transactions, setTransactions] = useState();
 
-  // useEffect(() => {
-  //   const res = api.get(`/api/accounts/id/${accountId}`, { accesstoken });
-  //   console.log(res.data);
-  // }, []);
+  useEffect(() => {
+    const fetchAccountDetails = async () => {
+      if (!accountId) return; // accountId가 없으면 API를 호출하지 않습니다.
+      console.log("accountId :", accountId);
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const res = await credittoApi.get(`/api/accounts/id/${accountId}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        const Detailres = await credittoApi.get(
+          `/api/accounts/id/${accountId}/transactions`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        console.log("계좌 상세 정보:", res.data);
+        console.log("거래 내역:", Detailres.data);
+        setData(res.data.data);
+        setTransactions(Detailres.data.data);
+        // TODO: 가져온 데이터를 state에 저장하여 화면에 표시합니다.
+      } catch (error) {
+        console.error("계좌 상세 정보를 가져오는 데 실패했습니다:", error);
+      }
+    };
+
+    fetchAccountDetails();
+  }, [accountId]); // accountId가 변경될 때마다 useEffect가 다시 실행됩니다.
 
   const filtered = useMemo(() => {
-    return mockTransactions.filter((t) => {
+    return transactions?.filter((t) => {
       if (filter === "in" && t.amount <= 0) return false;
       if (filter === "out" && t.amount >= 0) return false;
       if (!query) return true;
@@ -78,8 +72,6 @@ export default function AccountDetailPage() {
   }, [query, filter]);
 
   const grouped = useMemo(() => groupByDate(filtered), [filtered]);
-  const dates = Object.keys(grouped).sort((a, b) => (a < b ? 1 : -1));
-
   return (
     <main className="min-h-[100dvh] flex flex-col">
       <AppHeader title="계좌 내역 조회" show={true} showHamburger={false} />
@@ -100,20 +92,16 @@ export default function AccountDetailPage() {
               />
               <div className="flex-1">
                 <p className="font-semibold text-gray-900">
-                  {mockAccount.accountName}
+                  {data?.accountName}
                 </p>
-                <p className="text-sm text-gray-400">
-                  {mockAccount.accountNo}
-                </p>
+                <p className="text-sm text-gray-400">{data?.accountNo}</p>
               </div>
               <span className="ml-2 px-2 py-1 text-xs rounded bg-gray-100 text-gray-600">
-                제한 계좌
+                {data?.accountType}
               </span>
             </div>
             <p className="mt-4 text-right text-2xl font-bold">
-              <span className="font-bold">
-                {formatNumber(mockAccount.balance)}
-              </span>
+              <span className="font-bold">{formatNumber(data?.balance)}</span>
               <span className="font-medium">원</span>
             </p>
           </div>
@@ -141,13 +129,13 @@ export default function AccountDetailPage() {
 
           {/* 거래 리스트 */}
           <div className="px-2 space-y-6">
-            {dates.length === 0 && (
+            {transactions?.length === 0 && (
               <p className="text-center text-gray-400 py-8">
                 거래내역이 없습니다.
               </p>
             )}
 
-            {dates.map((date) => (
+            {/* {dates.map((date) => (
               <div key={date}>
                 <p className="text-sm text-gray-500 mb-3 text-left">
                   {new Date(date).toLocaleDateString("ko-KR", {
@@ -188,7 +176,7 @@ export default function AccountDetailPage() {
                   ))}
                 </div>
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
       </div>
