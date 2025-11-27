@@ -4,25 +4,8 @@ import CardCarousel from "./components/CardCarousel";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import SendBtn from "./components/SendBtn";
-import BottomSheet from "./components/BottomSheet";
 
 export default function SendMainPage() {
-  const router = useRouter();
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-
-  // 카드에서 선택된 송금 타입 id를 받는 콜백
-  const handleSelectType = (id) => {
-    if (id === "regular") {
-      // 정기 해외 송금 선택 → 바텀시트 열기
-      setIsSheetOpen(true);
-    } else if (id === "one-time") {
-      // 일회성 송금 로직 (예시)
-      console.log("One-time transfer selected");
-      // router.push("/transfer/one-time");
-    }
-  };
-
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* 헤더 */}
@@ -46,7 +29,7 @@ export default function SendMainPage() {
         </div>
 
         {/* 카드 캐러셀 영역 */}
-        <CardCarousel onSelectType={handleSelectType} />
+        <CardCarousel />
       </div>
     </div>
   );

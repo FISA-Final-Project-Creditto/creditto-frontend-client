@@ -1,15 +1,8 @@
 "use client";
 
 import clsx from "clsx";
-import { AnimatePresence, motion } from "framer-motion";
-import {
-  ArrowRight,
-  FileText,
-  Globe,
-  Plus,
-  Repeat,
-  Settings,
-} from "lucide-react";
+import { motion } from "framer-motion";
+import { Globe, Repeat } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -36,7 +29,7 @@ const transferTypes = [
 ];
 
 // onSelectType: 카드의 id를 상위로 올려주는 콜백
-export default function CardCarousel({ onSelectType }) {
+export default function CardCarousel() {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -167,13 +160,13 @@ export default function CardCarousel({ onSelectType }) {
                         title="바로 송금하기"
                         subtitle={"기다리지 않고\n지금 즉시 보내요"}
                         icon="plus"
-                        onClick={() => router.push("")}
+                        onClick={() => {}}
                       />
                       <SendBtn
                         title="송금 내역 조회"
                         subtitle={"지금까지 보낸\n기록을 모아봐요"}
                         icon="file"
-                        onClick={() => router.push("")}
+                        onClick={() => {}}
                       />
                     </div>
                   )}
