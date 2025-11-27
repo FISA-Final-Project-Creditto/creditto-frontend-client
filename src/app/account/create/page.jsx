@@ -15,14 +15,18 @@ export default function AccountCreatePage() {
 
   const CreateHandle = async (e) => {
     e.preventDefault(); //새로고침 방지
-    const res = await credittoApi.post("/api/accounts", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
+    const res = await credittoApi.post(
+      "/api/accounts",
+      {
+        accountName,
+        accountType,
       },
-
-      accountName,
-      accountType,
-    });
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
 
     console.log("데이터 정보:", res.data); // 서버 응답 확인
   };
