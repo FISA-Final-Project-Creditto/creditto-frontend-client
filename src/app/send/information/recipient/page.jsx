@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 import StepProgressBar from "../components/StepProgressbar";
 import BottomBar from "../../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useDispatch, useSelector } from "react-redux";
+import { setRecipientData } from "@/src/store/features/send/sendSlice";
 import { setRecipientData } from "@/src/store/features/send/sendSlice";
 
 const phoneCodes = {
   USD: "🇺🇸 +1",
+  CNY: "🇨🇳 +86",
   CNY: "🇨🇳 +86",
   JPY: "🇯🇵 +81",
 };

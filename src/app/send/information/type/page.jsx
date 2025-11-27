@@ -8,10 +8,7 @@ import StepProgressBar from "../components/StepProgressbar";
 import DatePicker from "./components/DatePicker";
 import BottomBar from "../../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-import {
-  setTypeData,
-  setReceivedCurrency,
-} from "@/src/store/features/send/sendSlice";
+import { setTypeData } from "@/src/store/features/send/sendSlice";
 
 // 요일
 const DAYS = [
@@ -36,25 +33,19 @@ const connectedAccounts = ["1002-123-123124", "1002-346-346234"];
 export default function TypePage() {
   const router = useRouter();
   const dispatch = useDispatch();
+
   const selectedCountry = useSelector((state) => state.send.selectedCountry); // 선택된 국가 가져오기
   const receiveCurrency = currency[selectedCountry]; // 수취 통화 코드
   const sendCurrency = "KRW"; // 송금 통화 코드를 KRW로 고정
 
   // 송금 유형 정보값 상태 관리
   const [formData, setFormData] = useState({
-    accountNo: "", // 송금 계좌(계좌 페이지에 설정되어있기 때문에 거기서 가져오면 될 듯)
-    sendAmount: "", // 외화 거래 금액
+    accountNo: "", // 송금 계좌
+    sendAmount: "", // 외화 거래 금액 (문자열 + 콤마포맷)
     regRemType: "", // 송금 주기
-    scheduled: 0 || "", // 송금 주기 상세(달별/주별 정기 송금일)
-    startedDate: "", // 송금 시작일
+    scheduled: "", // 송금 주기 상세(날짜 or 요일)
+    startedDate: "", // 송금 시작일 (YYYY-MM-DD 예상)
   });
-
-  // const hasScheduled =
-  //   formData.regRemType === "MONTHLY"
-  //     ? Number(formData.scheduled) > 0
-  //     : formData.regRemType === "WEEKLY"
-  //     ? !isScheduledEmpty
-  //     : false;
 
   // 폼 유효성 검사
   const isFormValid =
@@ -65,7 +56,9 @@ export default function TypePage() {
     formData.scheduled !== "";
 
   // 공통 input 변경 핸들러
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+  ) => {
     const { name, value } = e.target;
 
     setFormData((prevData) => ({
@@ -75,19 +68,21 @@ export default function TypePage() {
   };
 
   // 송금 금액(외화) 변경 핸들러
-  const handleAmountChange = (e) => {
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     const rawValue = value.replace(/[^0-9]/g, "");
+
     if (rawValue === "") {
-      setFormData({ ...formData, sendAmount: "" });
+      setFormData((prev) => ({ ...prev, sendAmount: "" }));
       return;
     }
+
     const formattedValue = new Intl.NumberFormat().format(Number(rawValue));
-    setFormData({ ...formData, sendAmount: formattedValue });
+    setFormData((prev) => ({ ...prev, sendAmount: formattedValue }));
   };
 
   // 날짜 변경 핸들러
-  const handleDateChange = (date) => {
+  const handleDateChange = (date: string) => {
     setFormData((prev) => ({
       ...prev,
       startedDate: date,
@@ -95,46 +90,47 @@ export default function TypePage() {
   };
 
   // 송금 유형 저장 후 다음 페이지로 이동
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (isFormValid) {
-      // 콤마 제거 후 숫자로 변환
-      const removeAmount = formData.sendAmount.replace(/,/g, "");
-      const numericAmount = Number(removeAmount);
-
-      // MONTHLY와 WEEKLY에 따라 scheduledDate와 scheduledDay 분리
-      let scheduledDate = null;
-      let scheduledDay = null;
-
-      if (formData.regRemType === "MONTHLY" && formData.scheduled) {
-        scheduledDate = Number(formData.scheduled); // 숫자로 변환
-      }
-
-      if (formData.regRemType === "WEEKLY" && formData.scheduled) {
-        scheduledDay = formData.scheduled; // 문자열이기 때문에 그대로 저장
-      }
-
-      const submissionData = {
-        accountNo: formData.accountNo,
-        sendCurrency,
-        receiveCurrency,
-        sendAmount: numericAmount,
-        regRemType: formData.regRemType,
-        scheduledDate, // MONTHLY일 때만 값, 나머지는 null
-        scheduledDay, // WEEKLY일 때만 값, 나머지는 null
-        startedDate: formData.startedDate,
-      };
-
-      console.log("작성된 폼: ", submissionData);
-
-      // 정기 해외 송금 신규 등록 요청바디 저장
-      dispatch(setTypeData(submissionData));
-
-      router.push("/send/information/remittance");
-    } else {
+    if (!isFormValid) {
       console.log("모든 입력 칸이 채워져야 됩니다");
+      return;
     }
+
+    // 콤마 제거 후 숫자로 변환
+    const removeAmount = formData.sendAmount.replace(/,/g, "");
+    const numericAmount = Number(removeAmount);
+
+    // MONTHLY와 WEEKLY에 따라 scheduledDate와 scheduledDay 분리
+    let scheduledDate: number | null = null;
+    let scheduledDay: string | null = null;
+
+    if (formData.regRemType === "MONTHLY" && formData.scheduled) {
+      scheduledDate = Number(formData.scheduled); // 숫자 (1~31)
+    }
+
+    if (formData.regRemType === "WEEKLY" && formData.scheduled) {
+      scheduledDay = formData.scheduled; // "MONDAY" 등 문자열
+    }
+
+    const submissionData = {
+      accountNo: formData.accountNo,
+      sendCurrency,
+      receiveCurrency,
+      sendAmount: numericAmount,
+      regRemType: formData.regRemType,
+      scheduledDate, // MONTHLY일 때만 값, 나머지는 null
+      scheduledDay, // WEEKLY일 때만 값, 나머지는 null
+      startedDate: formData.startedDate,
+    };
+
+    console.log("작성된 폼: ", submissionData);
+
+    // 정기 해외 송금 신규 등록 요청바디 저장
+    dispatch(setTypeData(submissionData));
+
+    router.push("/send/information/remittance");
   };
 
   return (
@@ -180,7 +176,7 @@ export default function TypePage() {
                     name="accountNo"
                     value={formData.accountNo}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-[#86909C] focus:outline-none ${
+                    className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
                       formData.accountNo === ""
                         ? "text-[#86909C]"
                         : "text-black"
@@ -207,12 +203,8 @@ export default function TypePage() {
                     name="sendCurrency"
                     value={sendCurrency}
                     readOnly
-                    className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
-                      formData.sendCurrency === ""
-                        ? "text-[#86909C]"
-                        : "text-black"
-                    }`}
-                  ></input>
+                    className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none text-black"
+                  />
                 </div>
               </div>
 
@@ -224,15 +216,13 @@ export default function TypePage() {
                 <div className="relative w-full">
                   <input
                     name="receiveCurrency"
-                    value={receiveCurrency}
+                    value={receiveCurrency || ""}
                     readOnly
                     placeholder="수취 통화 코드를 입력하세요(USD, CNY, JPY)"
                     className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none placeholder:text-[#86909C] focus:outline-none ${
-                      formData.receiveCurrency === ""
-                        ? "text-[#86909C]"
-                        : "text-black"
+                      receiveCurrency ? "text-black" : "text-[#86909C]"
                     }`}
-                  ></input>
+                  />
                 </div>
               </div>
 
@@ -261,7 +251,7 @@ export default function TypePage() {
                     name="regRemType"
                     value={formData.regRemType}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-[#86909C] focus:outline-none ${
+                    className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
                       formData.regRemType === ""
                         ? "text-[#86909C]"
                         : "text-black"
@@ -317,7 +307,7 @@ export default function TypePage() {
                       우리은행은 평일에만 송금이 가능하오니 이용에 참고해주세요
                     </p>
                   )}
-                {formData.scheduled > 28 &&
+                {Number(formData.scheduled) > 28 &&
                   formData.regRemType === "MONTHLY" && (
                     <p className="text-xs mt-1 text-[#F53F3F]">
                       해당 월에 해당 날짜가 없으면 자동으로 그 달의 마지막 날에

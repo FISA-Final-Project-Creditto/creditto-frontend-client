@@ -4,6 +4,7 @@ import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import StepProgressBar from "../components/StepProgressbar";
 import BottomBar from "../../components/BottomBar";
 import Modal from "../../components/Modal";
@@ -79,6 +80,9 @@ export default function BankPage() {
         ...formData,
       };
       console.log("작성된 폼", submissionData);
+
+      // Redux에 저장
+      dispatch(setBankData(submissionData));
 
       // Redux에 저장
       dispatch(setBankData(submissionData));
