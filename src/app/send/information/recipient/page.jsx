@@ -15,6 +15,12 @@ const phoneCodes = {
   JPY: "🇯🇵 +81",
 };
 
+const countries = {
+  USD: "USA",
+  CHN: "CHINA",
+  JPY: "JAPAN",
+};
+
 // 국가 번호만 추출하는 함수 (예: "🇺🇸 +1" -> "1")
 function extractDialCode(phoneCode) {
   if (!phoneCode) return "";
@@ -60,7 +66,8 @@ export default function RecipientPage() {
   const dispatch = useDispatch();
 
   const receiveCurrency = useSelector((state) => state.send.receiveCurrency); // 수취 통화 코드
-  const displayPhoneCode = phoneCodes[receiveCurrency] || ""; // 전화 국가코드 (예: "🇺🇸 +1")
+  const displayPhoneCode = phoneCodes[receiveCurrency] || ""; // 전화 국가코드
+  const recipientCountry = countries[receiveCurrency]; // 수취인 국적
 
   // 포맷팅에 사용할 실제 다이얼 코드 숫자 ("1", "86", "81")
   const rawDialCode = extractDialCode(displayPhoneCode); // 문자열 "1", "86", "81"
@@ -112,10 +119,12 @@ export default function RecipientPage() {
 
   // 수취인 정보 저장 후 다음 페이지 이동
   const handleSubmit = (e) => {
-    e?.preventDefault?.(); // form submit / 버튼 클릭 둘 다 대응
+    e?.preventDefault?.();
+
     if (isFormValid) {
       const submissionData = {
         ...formData,
+        recipientCountry, // 수취인 국적
         recipientPhoneNo: formData.phoneNo, // Redux에는 recipientPhoneNo로 저장
         recipientPhoneCc, // Redux에는 "+1" 형태의 recipientPhoneCc 저장
       };
@@ -183,6 +192,23 @@ export default function RecipientPage() {
                       placeholder="영문으로 입력하세요"
                       className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
                     />
+                  </div>
+
+                  {/* 국적 */}
+                  <div className="flex flex-col items-start">
+                    <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
+                      국적 (Nationality)
+                    </label>
+                    <div className="relative w-full">
+                      <input
+                        name="country"
+                        disabled={true}
+                        value={recipientCountry}
+                        readOnly
+                        className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none
+    ${formData.country === "" ? "text-[#86909C]" : "text-black"}`}
+                      ></input>
+                    </div>
                   </div>
 
                   {/* 수취인 전화번호 */}
