@@ -3,11 +3,12 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
 import StepProgressBar from "../components/StepProgressbar";
 import BottomBar from "../../components/BottomBar";
 import Modal from "../../components/Modal";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-import { useSelector } from "react-redux";
+import { setBankData } from "@/src/store/features/send/sendSlice";
 
 // 국가별 은행 목록
 const BANK_OPTIONS = {
@@ -30,34 +31,34 @@ const BANK_OPTIONS = {
 
 const countries = {
   USD: "USA",
-  CHN: "China",
+  CNY: "China",
   JPY: "Japan",
 };
 
 export default function BankPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   // 수취 통화 코드 가져오기
-  const receivedCurrency = useSelector((state) => state.send.receivedCurrency);
+  const receiveCurrency = useSelector((state) => state.send.receiveCurrency);
 
   // 해당 국가의 은행 가져오기
-  const banks = BANK_OPTIONS[receivedCurrency] || [];
+  const banks = BANK_OPTIONS[receiveCurrency] || [];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 수취인 정보값 상태 관리
   const [formData, setFormData] = useState({
-    country: countries[receivedCurrency], // 수취 은행 국가
-    bankname: "", // 은행명
-    bankcode: "", // 은행 코드
-    accountno: "", // 계좌 번호
+    recipientBankName: "", // 은행명
+    recipientBankCode: "", // 은행 코드
+    recipientAccountNo: "", // 계좌 번호
   });
 
   // 폼 유효성 검사
   const isFormValid =
-    formData.bankname.trim() !== "" &&
-    formData.bankcode.trim() !== "" &&
-    formData.accountno.trim() !== "";
+    formData.recipientBankName.trim() !== "" &&
+    formData.recipientBankCode.trim() !== "" &&
+    formData.recipientAccountNo.trim() !== "";
 
   // 폼 제출
   const handleSubmit = (e) => {
@@ -67,6 +68,9 @@ export default function BankPage() {
         ...formData,
       };
       console.log("작성된 폼", submissionData);
+
+      // Redux에 저장
+      dispatch(setBankData(submissionData));
 
       setIsModalOpen(!isModalOpen);
     } else {
@@ -90,10 +94,12 @@ export default function BankPage() {
 
     setFormData((prev) => ({
       ...prev,
-      bankname: value,
-      bankcode: bank?.code || "",
+      recipientBankName: value,
+      recipientBankCode: bank?.code || "",
     }));
   };
+
+  const handleConfirm = () => {};
 
   return (
     <div className="flex min-h-dvh justify-center bg-[#e5e5e5]">
@@ -139,23 +145,6 @@ export default function BankPage() {
                   onSubmit={handleSubmit}
                   className="flex flex-col gap-[1.875rem]"
                 >
-                  {/* 국가 */}
-                  <div className="flex flex-col items-start">
-                    <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                      국가 (Country)
-                    </label>
-                    <div className="relative w-full">
-                      <input
-                        name="country"
-                        disabled={true}
-                        value={formData.country}
-                        onChange={handleChange}
-                        className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none
-    ${formData.country === "" ? "text-[#86909C]" : "text-black"}`}
-                      ></input>
-                    </div>
-                  </div>
-
                   {/* 수취 은행명 + 은행 코드 */}
                   <div className="flex flex-col items-start">
                     <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
@@ -166,11 +155,11 @@ export default function BankPage() {
                       {/* 은행명 셀렉트 */}
                       <div className="relative flex-1">
                         <select
-                          name="bankname"
-                          value={formData.bankname}
+                          name="recipientBankName"
+                          value={formData.recipientBankName}
                           onChange={handleBankChange}
                           className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
-                            formData.bankname === ""
+                            formData.recipientBankName === ""
                               ? "text-[#86909C]"
                               : "text-black"
                           }`}
@@ -195,12 +184,12 @@ export default function BankPage() {
                       {/* 은행 코드 표시 */}
                       <div
                         className={`min-w-[120px] px-3 py-3 bg-[#F7F8FA] border border-dashed border-[#E5E6EB] text-[0.875rem] text-center ${
-                          formData.bankcode === ""
+                          formData.recipientBankCode === ""
                             ? "text-[#86909C]"
                             : "text-black"
                         }`}
                       >
-                        {formData.bankcode || "은행 코드"}
+                        {formData.recipientBankCode || "은행 코드"}
                       </div>
                     </div>
                   </div>
@@ -212,8 +201,8 @@ export default function BankPage() {
                     </label>
                     <input
                       type="text"
-                      name="accountno"
-                      value={formData.accountno}
+                      name="recipientAccountNo"
+                      value={formData.recipientAccountNo}
                       onChange={handleChange}
                       placeholder="계좌번호를 입력하세요"
                       className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"

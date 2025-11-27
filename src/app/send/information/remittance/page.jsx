@@ -1,16 +1,19 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import DaumPostcode from "react-daum-postcode";
 import StepProgressBar from "../components/StepProgressbar";
 import BottomBar from "../../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-import { useDispatch, useSelector } from "react-redux";
+import AddressModal from "./components/AddressModal";
+import { setClientData } from "@/src/store/features/send/sendSlice";
 
+// 수취 통화 코드를 송금인의 국적으로 변환할 때 사용
 const currencyToNationality = {
   USD: "USA",
-  CHN: "CHINA",
+  CNY: "CHINA",
   JPY: "JAPAN",
 };
 
@@ -18,20 +21,25 @@ export default function RemittancePage() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  // 수취 통화 코드 가져오기
-  const receivedCurrency = useSelector((state) => state.send.receivedCurrency);
+  const receiveCurrency = useSelector((state) => state.send.receiveCurrency); // 수취 통화 코드
+  console.log("수취 통화 코드: ", receiveCurrency);
+
+  // 국적
+  const clientCountry = receiveCurrency
+    ? currencyToNationality[receiveCurrency] || ""
+    : "";
 
   // 송금인 정보값 상태 관리
   const [formData, setFormData] = useState({
-    name: "", // 송금인 이름
-    nationality: currencyToNationality[receivedCurrency], // 송금인 국적
+    clientName: "", // 송금인 이름
     address: "", // 송금인 주소
     detailAddr: "", // 상세 주소
   });
+  const [isPostcodeOpen, setIsPostcodeOpen] = useState(false); // 우편 번호 모달 오픈 여부
 
   // 폼 유효성 검사
   const isFormValid =
-    formData.name.trim() !== "" &&
+    formData.clientName.trim() !== "" &&
     formData.address.trim() !== "" &&
     formData.detailAddr.trim() !== "";
 
@@ -40,18 +48,33 @@ export default function RemittancePage() {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: name === "name" ? value.toUpperCase() : value,
+      [name]: name === "clientName" ? value.toUpperCase() : value,
     }));
   };
 
-  // 폼 제출
+  // 주소 변경 핸들러: 모달에서 넘어온 address를 그대로 상태에 넣기
+  const handleCompletePostcode = (fullAddress) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      address: fullAddress,
+    }));
+    setIsPostcodeOpen(false);
+  };
+
+  // 송금인 정보 저장 후 페이지 이동
   const handleSubmit = (e) => {
     e.preventDefault(); // 페이지 새로고침 방지
     if (isFormValid) {
+      const clientAddress = `${formData.address} ${formData.detailAddr}`.trim(); // 주소 + 상세주소
+
       const submissionData = {
         ...formData,
+        clientCountry, // 국적은 input이 아니라서 여기서 처리
+        clientAddress,
       };
       console.log("작성된 폼", submissionData);
+
+      dispatch(setClientData(submissionData));
 
       router.push("/send/information/recipient"); // 수취인 페이지로 이동
     } else {
@@ -103,8 +126,8 @@ export default function RemittancePage() {
                 </label>
                 <input
                   type="text"
-                  name="name"
-                  value={formData.name}
+                  name="clientName"
+                  value={formData.clientName}
                   onChange={handleChange}
                   placeholder="영문으로 입력하세요"
                   className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
@@ -118,33 +141,34 @@ export default function RemittancePage() {
                 </label>
                 <div className="relative w-full">
                   <input
-                    name="nationality"
-                    disabled={true}
-                    value={formData.nationality}
-                    onChange={handleChange}
+                    name="clientCountry"
+                    value={clientCountry}
+                    readOnly
                     className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black ${
-                      formData.nationality === ""
-                        ? "text-[#86909C]"
-                        : "text-black"
+                      clientCountry === "" ? "text-[#86909C]" : "text-black"
                     }`}
                   ></input>
                 </div>
               </div>
 
               {/* 주소 */}
-              {/* ✅ 카카오 지도 API로 주소 가져오기 */}
               <div className="flex flex-col items-start">
                 <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
                   주소 (Address)
                 </label>
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  placeholder="송금인의 거주 주소를 입력하세요"
-                  className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
-                />
+                <div
+                  onClick={() => setIsPostcodeOpen(true)}
+                  className="w-full cursor-pointer"
+                >
+                  <input
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    readOnly
+                    placeholder="송금인의 거주 주소를 입력하세요"
+                    className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
+                  />
+                </div>
               </div>
 
               {/* 상세 주소 */}
@@ -167,6 +191,13 @@ export default function RemittancePage() {
           {/* 하단 버튼 */}
         </section>
       </div>
+
+      <AddressModal
+        open={isPostcodeOpen}
+        onOpenChange={setIsPostcodeOpen}
+        onComplete={handleCompletePostcode}
+      />
+
       <BottomBar label="다음" onClick={handleSubmit} isActive={isFormValid} />
     </main>
   );

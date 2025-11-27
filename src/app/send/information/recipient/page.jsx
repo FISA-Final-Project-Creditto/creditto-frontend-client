@@ -6,11 +6,12 @@ import { useRouter } from "next/navigation";
 import StepProgressBar from "../components/StepProgressbar";
 import BottomBar from "../../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setRecipientData } from "@/src/store/features/send/sendSlice";
 
 const phoneCodes = {
   USD: "🇺🇸 +1",
-  CHN: "🇨🇳 +86",
+  CNY: "🇨🇳 +86",
   JPY: "🇯🇵 +81",
 };
 
@@ -56,77 +57,76 @@ const formatPhoneNumber = (digits, phoneCode) => {
 
 export default function RecipientPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
 
-  // Redux에서 수취 통화 코드 가져오기 (USD / CNH / JPY 등)
-  const receivedCurrency = useSelector((state) => state.send.receivedCurrency);
-
-  // 화면에 보여줄 전화 국가 코드
-  const displayPhoneCode = phoneCodes[receivedCurrency] || "";
+  const receiveCurrency = useSelector((state) => state.send.receiveCurrency); // 수취 통화 코드
+  const displayPhoneCode = phoneCodes[receiveCurrency] || ""; // 전화 국가코드 (예: "🇺🇸 +1")
 
   // 포맷팅에 사용할 실제 다이얼 코드 숫자 ("1", "86", "81")
-  const initialDialCode = extractDialCode(displayPhoneCode); // 문자열
+  const rawDialCode = extractDialCode(displayPhoneCode); // 문자열 "1", "86", "81"
+  const dialCodeNum = rawDialCode ? Number(rawDialCode) : undefined; // 숫자 1, 86, 81
+
+  // Redux에 저장할 전화번호 국가코드("+1" 형태, 국기 제거)
+  const recipientPhoneCc = rawDialCode ? `+${rawDialCode}` : ""; // "+1", "+86", "+81"
 
   // 수취인 정보값 상태 관리
   const [formData, setFormData] = useState({
-    name: "", // 수취인 이름
-    phone: "", // 전화번호 (3-3-4 또는 3-4-4 등 포맷 적용)
-    phonecode: initialDialCode, // 숫자 문자열: "1", "86", "81"
-    address: "", // 수취인 주소
+    recipientName: "", // 수취인 이름
+    phoneNo: "", // 전화번호 (3-3-4 또는 3-4-4 등 포맷 적용)
+    recipientAddress: "", // 수취인 주소
   });
 
   // 폼 유효성 검사
   const isFormValid =
-    formData.name.trim() !== "" &&
-    formData.phone.trim() !== "" &&
-    formData.phonecode !== "" && // 숫자 코드 존재 여부로 체크
-    formData.address.trim() !== "";
-
-  // 폼 제출
-  const handleSubmit = (e) => {
-    e?.preventDefault?.(); // form submit / 버튼 클릭 둘 다 대응
-    if (isFormValid) {
-      const submissionData = {
-        ...formData,
-      };
-      console.log("작성된 폼", submissionData);
-      router.push("/send/information/bank"); // 수취 은행 페이지로 이동
-    } else {
-      console.log("모든 입력 칸이 채워져야 됩니다");
-    }
-  };
+    formData.recipientName.trim() !== "" &&
+    formData.phoneNo.trim() !== "" &&
+    formData.recipientAddress.trim() !== "";
 
   // 공통 input 변경 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     // 전화번호 입력 시: 국가 코드에 따라 포맷팅
-    if (name === "phone") {
+    if (name === "phoneNo") {
       const digits = value.replace(/\D/g, ""); // 숫자만 추출
 
-      // phonecode가 없으면 그냥 숫자만
-      if (!formData.phonecode) {
-        setFormData((prevData) => ({
-          ...prevData,
-          phone: digits,
-        }));
-        return;
-      }
-
-      const dialCodeNum = Number(formData.phonecode); // "1" -> 1
-      const formatted = formatPhoneNumber(digits, dialCodeNum);
+      // 국가 코드 숫자(dialCodeNum)를 사용해 패턴 적용
+      const formatted =
+        dialCodeNum !== undefined
+          ? formatPhoneNumber(digits, dialCodeNum)
+          : digits; // 혹시 모를 예외 대비
 
       setFormData((prevData) => ({
         ...prevData,
-        phone: formatted,
+        phoneNo: formatted,
       }));
       return;
     }
 
-    // 이름: 자동 대문자 변환
+    // 이자동 대문자 변환
     setFormData((prevData) => ({
       ...prevData,
-      [name]: name === "name" ? value.toUpperCase() : value,
+      [name]: name === "recipientName" ? value.toUpperCase() : value,
     }));
+  };
+
+  // 수취인 정보 저장 후 다음 페이지 이동
+  const handleSubmit = (e) => {
+    e?.preventDefault?.(); // form submit / 버튼 클릭 둘 다 대응
+    if (isFormValid) {
+      const submissionData = {
+        ...formData,
+        recipientPhoneNo: formData.phoneNo, // Redux에는 recipientPhoneNo로 저장
+        recipientPhoneCc, // Redux에는 "+1" 형태의 recipientPhoneCc 저장
+      };
+
+      dispatch(setRecipientData(submissionData));
+      console.log("작성된 폼", submissionData);
+
+      router.push("/send/information/bank"); // 수취 은행 페이지로 이동
+    } else {
+      console.log("모든 입력 칸이 채워져야 됩니다");
+    }
   };
 
   return (
@@ -177,8 +177,8 @@ export default function RecipientPage() {
                     </label>
                     <input
                       type="text"
-                      name="name"
-                      value={formData.name}
+                      name="recipientName"
+                      value={formData.recipientName}
                       onChange={handleChange}
                       placeholder="영문으로 입력하세요"
                       className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
@@ -192,6 +192,7 @@ export default function RecipientPage() {
                       name="phonecodeDisplay"
                       disabled={true}
                       value={displayPhoneCode}
+                      readOnly
                       className={`w-[20%] px-3 py-3 bg-[#F7F8FA] text-sm focus:outline-none ${
                         !displayPhoneCode ? "text-[#86909C]" : "text-black"
                       }`}
@@ -201,8 +202,8 @@ export default function RecipientPage() {
                     <input
                       type="text"
                       inputMode="numeric"
-                      name="phone"
-                      value={formData.phone}
+                      name="phoneNo"
+                      value={formData.phoneNo}
                       onChange={handleChange}
                       placeholder="전화번호를 입력하세요"
                       className="w-[80%] px-4 py-3 bg-[#F7F8FA] text-black placeholder:text-[#86909C] focus:outline-none"
@@ -216,12 +217,12 @@ export default function RecipientPage() {
                     </label>
                     <div className="relative w-full">
                       <input
-                        name="address"
-                        value={formData.address}
+                        name="recipientAddress"
+                        value={formData.recipientAddress}
                         placeholder="주소를 입력하세요"
                         onChange={handleChange}
                         className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
-                          formData.address === ""
+                          formData.recipientAddress === ""
                             ? "text-[#86909C]"
                             : "text-black"
                         }`}

@@ -67,12 +67,12 @@ export default function SendMainPage() {
               icon="file"
               onClick={() => router.push("/send/history")}
             />
-            <SendBtn
+            {/* <SendBtn
               title="정기 해외 송금 취소 · 변경"
               subtitle="등록된 정보를 수정하거나 취소해요"
               icon="setting"
               onClick={() => console.log("변경 클릭")}
-            />
+            /> */}
           </div>
         </BottomSheet>
       </div>

@@ -1,15 +1,26 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 import { US, CN, JP } from "country-flag-icons/react/3x2";
 import BottomBar from "../components/BottomBar";
-import { useRouter } from "next/navigation";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import clsx from "clsx";
+import { setCountryData } from "@/src/store/features/send/sendSlice";
 
 export default function ChooseCountryPage() {
   const [selectedCountry, setSelectedCountry] = useState(""); // 기본 선택값 없음
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  // 선택된 국가를 Redux에 저장 후 송금 유형 페이지로 이동
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(setCountryData(selectedCountry));
+
+    router.push("/send/information/type");
+  };
 
   return (
     <div>
@@ -77,7 +88,7 @@ export default function ChooseCountryPage() {
               <CN className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
               <div className="flex flex-col items-start justify-center">
                 <span className=" text-[18px] font-semibold text-[#1F2329]">
-                  중국 CHY
+                  중국 CNY
                 </span>
                 <span className="text-sm font-medium text-[#86909C]">위안</span>
               </div>
@@ -113,11 +124,7 @@ export default function ChooseCountryPage() {
       {/* 하단 버튼 */}
       <footer className="pt-20">
         {selectedCountry !== "" && (
-          <BottomBar
-            label="선택"
-            onClick={() => router.push("/send/information/type")}
-            isActive={true}
-          />
+          <BottomBar label="선택" onClick={handleSubmit} isActive={true} />
         )}
       </footer>
     </div>

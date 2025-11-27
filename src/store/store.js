@@ -12,7 +12,7 @@ export function makeStore(preloadedState) {
       ocr,
       user,
       simplepw,
-      send, // New reducer
+      send,
     },
     preloadedState,
     devTools: process.env.NODE_ENV !== "production",
