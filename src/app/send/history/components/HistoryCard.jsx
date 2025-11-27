@@ -51,11 +51,9 @@ export default function HistoryCard({
       <div className="flex items-start justify-between mb-6">
         {/* 송금 주기 */}
         <span className="text-lg font-bold text-[#4E5969]">
-          {history.regRemType === "MONTHLY"
-            ? `매월 ${history.scheduledDate}일`
-            : history.regRemType === "WEEKLY"
-            ? `매주 ${history.scheduledDay}`
-            : ""}
+          {history.regRemType === "MONTHLY" &&
+            `매월 ${history.scheduledDate}일`}
+          {history.regRemType === "WEEKLY" && `매주 ${history.scheduledDay}`}
         </span>
 
         {/* 수취 통화 코드 with 더보기아이콘 */}
@@ -79,7 +77,9 @@ export default function HistoryCard({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
                 <DropdownMenuItem
-                  onClick={() => router.push(`/send/history/${history.id}`)}
+                  onClick={() =>
+                    router.push(`/send/history/details/${history.regRemId}`)
+                  }
                   className="cursor-pointer gap-2"
                 >
                   <FileText className="w-4 h-4" />

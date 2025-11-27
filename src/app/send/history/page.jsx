@@ -7,10 +7,13 @@ import HistoryCard from "./components/HistoryCard";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import credittoApi from "../../api/axios";
 
-export default function RecurringPage() {
+export default function HistoryPage() {
   const [choose, setChoose] = useState(false);
+  const accessToken = sessionStorage.getItem("accessToken");
+  console.log("accessToken: ", accessToken);
 
   // ✅ 계좌 연동해서 보여주기
+  // ✅ 아마도 sessionStorage에서 꺼내와서 쓰는 거 같음
   const [selectedAccount, setSelectedAccount] = useState("");
   const accounts = ["1002-123-123124", "1002-346-346234"];
 
@@ -45,7 +48,7 @@ export default function RecurringPage() {
     };
 
     fetchRemittanceHistory();
-  }, []); // 빈 배열 → 페이지 렌더 시 1회 실행
+  }, [accessToken]); // 빈 배열 → 페이지 렌더 시 1회 실행
 
   return (
     <div className="min-h-dvh flex flex-col bg-white">
@@ -95,7 +98,15 @@ export default function RecurringPage() {
               history={history}
               chooseState={choose}
               onChangeChooseState={setChoose}
-              onClick={() => router.push(`/send/history/${history.id}`)}
+              onClick={() =>
+                router.push(
+                  `/send/history/details/${history.regRemId}` +
+                    `?recipientName=${encodeURIComponent(
+                      history.recipientName
+                    )}` +
+                    `&accountNo=${encodeURIComponent(history.accountNo)}`
+                )
+              }
             />
           ))}
         </main>

@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux";
 import { loginMode } from "../store/features/simplepw/simplepwSlice";
 import { useEffect } from "react";
 
-
 export default function SplashPage({ hasSerial }) {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -15,6 +14,7 @@ export default function SplashPage({ hasSerial }) {
   useEffect(() => {
     const accessToken = sessionStorage.getItem("accessToken");
     if (accessToken) {
+      console.log("accessToken: ", accessToken);
       router.replace("/main"); // 뒤로가기 시 다시 로그인 페이지로 오지 않도록 replace 사용
     }
   }, [router]);
@@ -30,12 +30,7 @@ export default function SplashPage({ hasSerial }) {
 
   return (
     <>
-      <Image
-        src="/접속로딩1.svg"
-        alt="logo"
-        fill
-        className="w-full h-[50%]"
-      />
+      <Image src="/접속로딩1.svg" alt="logo" fill className="w-full h-[50%]" />
 
       <div className="relative z-10">
         <div
