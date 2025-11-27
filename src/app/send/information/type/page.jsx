@@ -37,18 +37,16 @@ export default function TypePage() {
   const router = useRouter();
   const dispatch = useDispatch();
   const selectedCountry = useSelector((state) => state.send.selectedCountry); // 선택된 국가 가져오기
-  console.log("해외 송금 국가: ", selectedCountry);
+  const receiveCurrency = currency[selectedCountry]; // 수취 통화 코드
+  const sendCurrency = "KRW"; // 송금 통화 코드를 KRW로 고정
 
   // 송금 유형 정보값 상태 관리
   const [formData, setFormData] = useState({
     accountNo: "", // 송금 계좌(계좌 페이지에 설정되어있기 때문에 거기서 가져오면 될 듯)
-    sendCurrency: "KRW", // 송금 통화 코드를 KRW로 고정
-    receiveCurrency: currency[selectedCountry] || "", // 수취 통화 코드
     sendAmount: "", // 외화 거래 금액
     regRemType: "", // 송금 주기
     scheduled: 0 || "", // 송금 주기 상세(달별/주별 정기 송금일)
     startedDate: "", // 송금 시작일
-    regRemStatus: "ACTIVE", // 정기 송금 설정(수정 시 PAUSED/CANCELLED로 변경 가능 -> ENUM 타입)
   });
 
   // const hasScheduled =
@@ -60,12 +58,11 @@ export default function TypePage() {
 
   // 폼 유효성 검사
   const isFormValid =
-    (formData.accountNo.trim() !== "" &&
-      formData.sendCurrency.trim() !== "" &&
-      formData.sendAmount.trim() !== "" &&
-      formData.regRemStatus.trim() !== "" &&
-      formData.scheduled > 0) ||
-    (formData.scheduled.trim() !== "" && formData.startedDate.trim() !== "");
+    formData.accountNo.trim() !== "" &&
+    formData.sendAmount.trim() !== "" &&
+    formData.regRemType.trim() !== "" &&
+    formData.startedDate.trim() !== "" &&
+    formData.scheduled !== "";
 
   // 공통 input 변경 핸들러
   const handleChange = (e) => {
@@ -102,8 +99,37 @@ export default function TypePage() {
     e.preventDefault();
 
     if (isFormValid) {
+      // 콤마 제거 후 숫자로 변환
+      const removeAmount = formData.sendAmount.replace(/,/g, "");
+      const numericAmount = Number(removeAmount);
+
+      // MONTHLY와 WEEKLY에 따라 scheduledDate와 scheduledDay 분리
+      let scheduledDate = null;
+      let scheduledDay = null;
+
+      if (formData.regRemType === "MONTHLY" && formData.scheduled) {
+        scheduledDate = Number(formData.scheduled); // 숫자로 변환
+      }
+
+      if (formData.regRemType === "WEEKLY" && formData.scheduled) {
+        scheduledDay = formData.scheduled; // 문자열이기 때문에 그대로 저장
+      }
+
+      const submissionData = {
+        accountNo: formData.accountNo,
+        sendCurrency,
+        receiveCurrency,
+        sendAmount: numericAmount,
+        regRemType: formData.regRemType,
+        scheduledDate, // MONTHLY일 때만 값, 나머지는 null
+        scheduledDay, // WEEKLY일 때만 값, 나머지는 null
+        startedDate: formData.startedDate,
+      };
+
+      console.log("작성된 폼: ", submissionData);
+
       // 정기 해외 송금 신규 등록 요청바디 저장
-      dispatch(setTypeData(formData));
+      dispatch(setTypeData(submissionData));
 
       router.push("/send/information/remittance");
     } else {
@@ -179,8 +205,8 @@ export default function TypePage() {
                 <div className="relative w-full">
                   <input
                     name="sendCurrency"
-                    value={formData.sendCurrency}
-                    onChange={handleChange}
+                    value={sendCurrency}
+                    readOnly
                     className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
                       formData.sendCurrency === ""
                         ? "text-[#86909C]"
@@ -198,8 +224,8 @@ export default function TypePage() {
                 <div className="relative w-full">
                   <input
                     name="receiveCurrency"
-                    value={formData.receiveCurrency}
-                    onChange={handleChange}
+                    value={receiveCurrency}
+                    readOnly
                     placeholder="수취 통화 코드를 입력하세요(USD, CNY, JPY)"
                     className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none placeholder:text-[#86909C] focus:outline-none ${
                       formData.receiveCurrency === ""

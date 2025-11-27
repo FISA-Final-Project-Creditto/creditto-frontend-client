@@ -9,6 +9,13 @@ import BottomBar from "../../components/BottomBar";
 import Modal from "../../components/Modal";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { setBankData } from "@/src/store/features/send/sendSlice";
+import {
+  selectTypeData,
+  selectClientData,
+  selectRecipientData,
+  selectBankData,
+} from "@/src/store/features/send/sendSelectors";
+import credittoApi from "@/src/app/api/axios";
 
 // 국가별 은행 목록
 const BANK_OPTIONS = {
@@ -17,7 +24,7 @@ const BANK_OPTIONS = {
     { name: "뱅크 오브 아메리카", code: "BOFAUS3N" },
     { name: "웰스 파고", code: "WFBIUS6S" },
   ],
-  CHN: [
+  CNY: [
     { name: "교통은행", code: "COMMCNSH" },
     { name: "중국은행", code: "BKCHCNBJ" },
     { name: "중국농업은행", code: "ABOCCNBJ" },
@@ -29,15 +36,19 @@ const BANK_OPTIONS = {
   ],
 };
 
-const countries = {
-  USD: "USA",
-  CNY: "China",
-  JPY: "Japan",
-};
+// 테스트용 임시 데이터
+// ✅ TODO: 합칠 때 sessionStorage에서 가져오기
+const accessToken = "엑세스 토큰";
 
 export default function BankPage() {
   const router = useRouter();
   const dispatch = useDispatch();
+
+  // selector로 데이터 가져오기
+  const typeData = useSelector(selectTypeData);
+  const clientData = useSelector(selectClientData);
+  const recipientData = useSelector(selectRecipientData);
+  const bankData = useSelector(selectBankData);
 
   // 수취 통화 코드 가져오기
   const receiveCurrency = useSelector((state) => state.send.receiveCurrency);
@@ -99,7 +110,27 @@ export default function BankPage() {
     }));
   };
 
-  const handleConfirm = () => {};
+  const handleConfirm = async () => {
+    const res = await credittoApi.post(
+      "/api/remittance/scheduled/add",
+      {
+        ...typeData,
+        ...clientData,
+        ...recipientData,
+        ...bankData,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    if (res.code === 200) {
+      // 신청 결과 페이지로 이동
+      router.push("/send/result");
+    }
+  };
 
   return (
     <div className="flex min-h-dvh justify-center bg-[#e5e5e5]">
@@ -218,7 +249,7 @@ export default function BankPage() {
                 ‘예'를 클릭하실 경우 앞서 산출한 우대환율이 
                 적용됩니다."
                   onClose={() => setIsModalOpen(false)}
-                  onConfirm={() => router.push("/send/result")}
+                  onConfirm={handleConfirm}
                 />
               )}
             </section>

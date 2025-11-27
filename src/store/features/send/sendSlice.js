@@ -12,7 +12,6 @@ const initialState = {
   scheduledDate: null, // 정기 송금일(매일)
   scheduledDay: null, // 정기 송금일(매주)
   startedDate: null, // 송금 시작일
-  regRemStatus: "ACTIVE", // 정기 송금 설정
 
   // ----- 송금인 -----
   clientName: null, // 송금인 이름
@@ -24,6 +23,7 @@ const initialState = {
   recipientPhoneCc: null, // 수취인 전화코드
   recipientPhoneNo: null, // 수취인 전화번호
   recipientAddress: null, // 수취인 주소
+  recipientCountry: null, // 수취인 국적
 
   // ----- 수취 은행 -----
   recipientBankName: null, // 수취 은행명

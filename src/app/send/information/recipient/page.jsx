@@ -17,7 +17,7 @@ const phoneCodes = {
 
 const countries = {
   USD: "USA",
-  CHN: "CHINA",
+  CNY: "CHINA",
   JPY: "JAPAN",
 };
 
