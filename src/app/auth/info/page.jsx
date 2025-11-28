@@ -85,6 +85,7 @@ export default function InfoInputPage() {
         countryCode: matched?.countryCode ?? "KOR",
         phoneNo: formData.phoneNumber, // phoneNumber를 phoneNo로 변경
         address: formData.address,
+        isAgreed: true, // 인증서 동의 여부
         // name: "이우리",
         // birthDate: "2001-01-12",
         // countryCode: "KOR",
@@ -93,21 +94,22 @@ export default function InfoInputPage() {
       };
 
       const res = await registerUser(data);
-      console.log("data: ", data);
 
-      dispatch(
-        setUserData({
-          name: formData.name,
-          birthDate: formData.birthDate,
-          phoneNumber: formData.phoneNumber,
-          address: formData.address,
-          externalUserId: res.data.externalUserId,
-        })
-      );
+      if (res && res.data) {
+        console.log("유저 등록 성공: ", res.data);
+        console.log("userId: ", res.data.data.userId);
 
-      if (res && res.code == 200) {
+        dispatch(
+          setUserData({
+            name: formData.name,
+            birthDate: formData.birthDate,
+            phoneNumber: formData.phoneNumber,
+            address: formData.address,
+            userId: res.data.data.userId,
+          })
+        );
+
         router.push("/auth/pw");
-        // console.log("성공");
       }
     } catch (error) {
       console.error("Failed to register user:", error);

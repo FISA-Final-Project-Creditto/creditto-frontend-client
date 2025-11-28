@@ -4,19 +4,20 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useSelector } from "react-redux";
-import api, { issueCertificate } from "../../api/axios";
+import api, { issueCertificate, registerUser } from "../../api/axios";
 
 const SecurePinKeyboard = dynamic(
   () => import("./components/SecurePinKeyboard"),
   { ssr: false } // 키보드는 클라이언트에서만 렌더 → hydration 에러 방지
 );
 
-export default function SecurePage({ length = 6 }) { // serialNumber prop 제거
-  
+export default function SecurePage({ length = 6 }) {
+  // serialNumber prop 제거
+
   const settingMode = useSelector((state) => state.simplepw.settingMode);
   const loginMode = useSelector((state) => state.simplepw.loginMode);
-  console.log("settingMode", settingMode)
-  console.log("loginMode",loginMode)
+  console.log("settingMode", settingMode);
+  console.log("loginMode", loginMode);
   // Redux 스토어에서 serialNumber를 가져옵니다.
   const serialNumber = useSelector((state) => state.user.serialNumber);
 
@@ -34,44 +35,69 @@ export default function SecurePage({ length = 6 }) { // serialNumber prop 제거
 
   // 6자리 완료 시 1차 or 2차 처리
   const emitChange = useCallback(
-    async(v) => {
+    async (v) => {
       setPin(v);
 
-      // 아직 6자리가 안 됐으면 업데이트만
+      // 아직 6자리가 안 됐으면 아무 처리 안 함
       if (v.length < length) return;
 
-      // [분기] 비밀번호 설정 모드
+      // 비밀번호 설정 모드일 때만 처리
       if (settingMode) {
         // ① 첫 번째 입력 완료
         if (step === 1) {
           setFirstPin(v); // 첫 PIN 저장
-          setStep(2); // 두 번째 입력으로 전환
-          setPin(""); // 입력창 초기화
+          setStep(2); // 두 번째 입력 단계로 전환
+          setPin(""); // 입력값 초기화
           setErrorMessage(""); // 에러 메시지 초기화
-          setShuffleToken((t) => t + 1);
+          setShuffleToken((t) => t + 1); // 키패드 셔플
           return;
         }
 
-   // ② 두 번째 입력 완료 → 첫 입력과 비교
-      if (step === 2) {
-        if (v === firstPin) {
-          // 성공
-          // 인증서 발급 API 호출
+        // ② 두 번째 입력 단계
+        if (step === 2) {
+          // 두 번째 입력이 첫 번째 입력과 일치하는 경우
+          if (v === firstPin) {
+            try {
+              const data = {
+                userId: userData.userId,
+                name: userData.name,
+                birthDate: userData.birthDate,
+                phoneNo: userData.phoneNumber,
+                simplePassword: v,
+                isAgreed: true,
+              };
 
-          // 실패 → 리셋
-          // ✅ TODO: 에러 메세지가 UI에 표시되도록 개선
-          setPin("");
-          setIsShaking(true);
-          setFirstPin(null);
-          setStep(1);
+              // 인증서 발급 API 호출
+              const res = await issueCertificate(data);
+              console.log("인증서 발급 결과:", res);
+
+              router.push("/auth/loading");
+            } catch (err) {
+              console.error("인증서 발급 실패:", err);
+              setPin("");
+              setFirstPin(null);
+              setStep(1);
+              setIsShaking(true);
+              setErrorMessage(
+                "인증서 발급 중 오류가 발생했습니다. 다시 시도해주세요."
+              );
+              setShuffleToken((t) => t + 1);
+            }
+          } else {
+            // 두 번째 입력이 첫 번째와 불일치하는 경우
+            setPin("");
+            setIsShaking(true);
+            setFirstPin(null);
+            setStep(1);
+            setErrorMessage("비밀번호가 일치하지 않습니다. 다시 설정해주세요.");
+            setShuffleToken((t) => t + 1);
+          }
+
+          return;
         }
-
-        setShuffleToken((t) => t + 1);
-      router.push("/auth/loading")
-      }
       }
     },
-    [length, step, firstPin, router, settingMode]
+    [length, step, firstPin, router, settingMode, userData]
   );
 
   // 키보드에서 숫자 버튼 클릭 시 실행
@@ -104,14 +130,13 @@ export default function SecurePage({ length = 6 }) { // serialNumber prop 제거
   useEffect(() => {
     const attemptLogin = async () => {
       try {
-             console.log("시리얼 넘버", serialNumber)
+        console.log("시리얼 넘버", serialNumber);
         console.log("🔵 [로그인] 입력된 비밀번호로 로그인 시도:", pin);
         if (!serialNumber) {
           setErrorMessage("인증서 정보를 찾을 수 없습니다.");
           setIsShaking(true);
           return;
         }
-   
 
         const params = new URLSearchParams();
         params.append("grant_type", "certificate");
@@ -119,7 +144,7 @@ export default function SecurePage({ length = 6 }) { // serialNumber prop 제거
         params.append("simple_password", pin);
         params.append("client_id", process.env.NEXT_PUBLIC_CLIENT_ID);
         params.append("client_secret", process.env.NEXT_PUBLIC_CLIENT_SECRET);
-        
+
         // params에 담긴 값들을 문자열 형태로 확인합니다.
         console.log("🚀 전송될 파라미터:", params.toString());
 
@@ -130,7 +155,7 @@ export default function SecurePage({ length = 6 }) { // serialNumber prop 제거
         });
 
         if (response.data) {
-          console.log("무슨 데이타?",response.data);
+          console.log("무슨 데이타?", response.data);
           sessionStorage.setItem("accessToken", response.data.access_token);
           sessionStorage.setItem("refreshToken", response.data.refresh_token);
           router.push("/main"); // 성공 시 메인 페이지로 이동
@@ -148,7 +173,7 @@ export default function SecurePage({ length = 6 }) { // serialNumber prop 제거
     if (loginMode && pin.length === length) {
       attemptLogin();
     }
-  }, [pin, length, loginMode, router, serialNumber]); // 의존성 배열에 serialNumber 추가
+  }, [pin, length, settingMode, loginMode, router, serialNumber]); // 의존성 배열에 serialNumber 추가
 
   // 붙여넣기/복사/자르기 차단
   useEffect(() => {
@@ -168,7 +193,7 @@ export default function SecurePage({ length = 6 }) { // serialNumber prop 제거
   // 물리 키보드 입력 처리 (숫자/백스페이스/엔터)
   const onPhysicalKey = (e) => {
     e.preventDefault();
-    if (e.key === "Backspace") return onBackspace();    
+    if (e.key === "Backspace") return onBackspace();
     if (/^[0-9]$/.test(e.key)) return onDigit(e.key);
   };
 
@@ -177,7 +202,6 @@ export default function SecurePage({ length = 6 }) { // serialNumber prop 제거
       className="min-h-dvh flex flex-col pt-[6.25rem]  bg-white"
       onContextMenu={(e) => e.preventDefault()}
     >
-      
       {/* 숨겨진 입력(포커스 트랩) */}
       <input
         ref={hiddenInputRef}
@@ -209,7 +233,9 @@ export default function SecurePage({ length = 6 }) { // serialNumber prop 제거
           )}
 
           {step === 2 && !errorMessage && (
-            <p className="text-[#4E5969] text-sm mt-1">확인을 위해 한번 더 입력해주세요.</p>
+            <p className="text-[#4E5969] text-sm mt-1">
+              확인을 위해 한번 더 입력해주세요.
+            </p>
           )}
           {errorMessage && (
             <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
@@ -235,9 +261,7 @@ export default function SecurePage({ length = 6 }) { // serialNumber prop 제거
               />
             ))}
           </div>
-          
         </div>
-        
       </div>
 
       <div className="flex-1" onClick={() => hiddenInputRef.current?.focus()} />
