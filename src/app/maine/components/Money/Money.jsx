@@ -1,9 +1,18 @@
 'use client'
 import { Eye, EyeOff } from 'lucide-react';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
-export default function Money({ accounts }) {
+export default function Money({  }) {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
+  const [accounts, setAccounts] = useState([]);
+
+  useEffect(() => {
+    // 클라이언트 사이드에서만 sessionStorage에 접근합니다.
+    const storedAccounts = sessionStorage.getItem('accounts');
+    if (storedAccounts) {
+      setAccounts(JSON.parse(storedAccounts));
+    }
+  }, []);
 
   const toggleBalanceVisibility = () => {
     setIsBalanceVisible((prev) => !prev);

@@ -23,16 +23,16 @@ const fadeInVariants = {
 const CreditCard = React.forwardRef(
   ({ className, cardNumber, cardHolder, expiryDate, variant = "default", ...props }, ref) => {
     const [isVisible, setIsVisible] = React.useState(false)
-    const account = sessionStorage.getItem("account")
+    const accountsString = sessionStorage.getItem("accounts")
 
     const getMaskedNumber = () => {
-
-
-      if(!account){
+      if(!accountsString){
         return `계좌연결 후 사용 가능`
       }
       else{
-        return `${account}`
+        const accounts = JSON.parse(accountsString);
+        // 첫 번째 계좌의 계좌번호를 표시합니다.
+        return accounts[0]?.accountNo || '계좌 정보 없음';
       }
     }
 

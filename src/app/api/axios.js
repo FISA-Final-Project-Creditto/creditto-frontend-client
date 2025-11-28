@@ -66,7 +66,9 @@ export const registerUser = async (userData) => {
     const response = await api.post("/api/user/register", userData);
     console.log("유저등록 API 성공 응답값:", response.data);
     return response.data;
-  } catch (error) {}
+  } catch (error) {
+    return error;
+  }
 };
 
 // 인증서 발급 API

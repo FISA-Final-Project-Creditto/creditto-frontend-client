@@ -30,7 +30,8 @@ export default function ImportAccount() {
         // API 응답 데이터의 data 프로퍼티에 실제 계좌 배열이 들어있으므로, response.data.data를 저장합니다.
         if (response.data && response.data.data) {
           dispatch(setAccounts(response.data.data));
-          sessionStorage.setItem("account", response.data?.data[0]?.accountNo);
+          // 계좌 목록 전체를 JSON 문자열로 변환하여 sessionStorage에 저장합니다.
+          sessionStorage.setItem("accounts", JSON.stringify(response.data.data));
           console.log("계좌 정보 저장 성공:", response.data.data);
         }
       } catch (error) {

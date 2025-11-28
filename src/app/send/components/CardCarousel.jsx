@@ -146,7 +146,9 @@ export default function CardCarousel() {
                         title="바로 송금하기"
                         subtitle={"기다리지 않고\n지금 즉시 보내요"}
                         icon="plus"
-                        onClick={() => {}}
+                        onClick={() => {
+                          router.push("/send/one-off/choose");
+                        }}
                       />
                       <SendBtn
                         title="송금 내역 조회"

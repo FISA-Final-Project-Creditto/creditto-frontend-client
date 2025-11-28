@@ -12,6 +12,7 @@ export function makeStore(preloadedState) {
       counter,
       ocr,
       user,
+      send,
       simplepw,
       account
 
