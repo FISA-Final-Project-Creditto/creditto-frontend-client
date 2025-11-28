@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
-import Header from "../../../components/Header";
-import HistoryCard from "../../components/HistoryCard";
+import Header from "../../components/Header";
+import HistoryCard from "../components/HistoryCard";
 
 // 정기적으로 송금 내역을 보여주는 페이지
 export default function SendDetailPage({ params: paramsPromise }) {

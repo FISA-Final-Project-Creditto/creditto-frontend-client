@@ -9,9 +9,15 @@ import api, { credittoApi } from "../../api/axios";
 export default function AccountCreatePage() {
   const [accountName, setAccountName] = useState("");
   const [accountType, setAccountType] = useState(""); // 기본값을 빈 문자열로 설정
+  const [savedToken, setSavedToken] = useState(null);
   const dispatch = useDispatch();
   const router = useRouter();
-  const accessToken = sessionStorage.getItem("accessToken");
+  useEffect(() => {
+    const accessToken = sessionStorage.getItem("accessToken");
+    if (accessToken) {
+      setSavedToken(accessToken);
+    }
+  }, []);
 
   const CreateHandle = async (e) => {
     e.preventDefault(); //새로고침 방지
