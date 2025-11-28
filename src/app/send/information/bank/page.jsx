@@ -38,7 +38,7 @@ export default function BankPage() {
   const router = useRouter();
 
   // 수취 통화 코드 가져오기
-  const receivedCurrency = useSelector((state) => state.send.receivedCurrency);
+  const receivedCurrency = useSelector((state) => state.send?.receivedCurrency);
 
   // 해당 국가의 은행 가져오기
   const banks = BANK_OPTIONS[receivedCurrency] || [];

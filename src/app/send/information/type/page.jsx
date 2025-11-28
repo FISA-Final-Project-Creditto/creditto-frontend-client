@@ -27,7 +27,7 @@ const currency = {
 };
 
 // 연결된 계좌
-// ✅ TODO: useSelector로 계좌들을 가져오기
+// useSelector로 계좌들을 가져오기
 const connectedAccounts = ["1002-123-123124", "1002-346-346234"];
 
 export default function TypePage() {

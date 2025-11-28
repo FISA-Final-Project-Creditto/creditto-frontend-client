@@ -13,7 +13,8 @@ export function makeStore(preloadedState) {
       ocr,
       user,
       simplepw,
-      account
+      account,
+      send,
 
     },
     preloadedState,
