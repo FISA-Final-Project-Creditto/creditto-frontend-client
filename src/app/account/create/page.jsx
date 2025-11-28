@@ -29,7 +29,7 @@ export default function AccountCreatePage() {
       },
       {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${savedToken}`,
         },
       }
     );
@@ -103,7 +103,7 @@ export default function AccountCreatePage() {
           {AccountTypefield}
         </div>
         <footer>
-          <BottomBar label="계좌 생성하기" isActive={true} />
+          <BottomBar label="계좌 생성하기" isActive={!!savedToken} />
         </footer>
       </form>
     </>

@@ -51,7 +51,9 @@ export default function SendDetailPage({ params: paramsPromise }) {
       <section className="flex flex-col gap-4">
         <h1 className="text-left mt-[3.438rem] text-[1.563rem] text-[#1A3668] font-bold">
           정기 해외 송금 내역
-          <span className="text-lg text-[#86909C]">({detail.recipient})</span>
+          <span className="text-lg text-[#86909C]">
+            ({details[0].recipient})
+          </span>
         </h1>
 
         {/* 날짜 필터링 */}
