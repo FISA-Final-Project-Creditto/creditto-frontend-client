@@ -4,7 +4,6 @@ import { useRouter, useParams } from "next/navigation";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import api, { credittoApi } from "@/src/app/api/axios";
 
-
 function formatNumber(n) {
   // n이 유효한 숫자인지 확인하고, 아닐 경우 '0'을 반환합니다.
   if (typeof n !== "number" || isNaN(n)) {
@@ -87,13 +86,21 @@ export default function AccountDetailPage() {
                 <p className="font-semibold text-gray-900">
                   {accountData?.accountName}
                 </p>
-                <p className="text-sm text-gray-400">{accountData?.accountNo}</p>
+                <p className="text-sm text-gray-400">
+                  {accountData?.accountNo}
+                </p>
               </div>
+              <span className="ml-2 px-2 py-1 text-xs rounded bg-gray-100 text-gray-600">
+                {accountData?.accountType}
+              </span>
               <span className="ml-2 px-2 py-1 text-xs rounded bg-gray-100 text-gray-600">
                 {accountData?.accountType}
               </span>
             </div>
             <p className="mt-4 text-right text-2xl font-bold">
+              <span className="font-bold">
+                {formatNumber(accountData?.balance)}
+              </span>
               <span className="font-bold">
                 {formatNumber(accountData?.balance)}
               </span>
@@ -109,6 +116,11 @@ export default function AccountDetailPage() {
               placeholder="거래 내역 검색"
               className="flex-1 border-b pb-2 text-sm outline-none"
             />
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="text-sm"
+            ></select>
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
@@ -155,7 +167,9 @@ export default function AccountDetailPage() {
                         isDeposit ? "text-blue-600" : "text-red-500"
                       }`}
                     >
-                      <span className="font-bold">{formatNumber(tx.txnAmount)}</span>
+                      <span className="font-bold">
+                        {formatNumber(tx.txnAmount)}
+                      </span>
                       <span className="font-medium">원</span>
                     </p>
                     <p className="text-xs text-gray-400 pt-1">

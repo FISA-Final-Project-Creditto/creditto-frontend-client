@@ -12,7 +12,6 @@ import {
 } from "@/src/store/features/send/sendSlice";
 import BottomBar from "../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-import StepProgressBar from "../information/components/StepProgressbar";
 import { credittoApi } from "../../api/axios";
 
 // 요일
@@ -166,7 +165,7 @@ export default function TypePage() {
       dispatch(setSendInfo(submissionData));
       // 수취인 정보 저장
       dispatch(setRecipientInfo(recipientData));
-      
+
       // API 요청 형식에 맞게 데이터 구조화
       const requestData = {
         accountNo: formData.senderAccountNO,
@@ -184,11 +183,15 @@ export default function TypePage() {
 
       try {
         const accessToken = sessionStorage.getItem("accessToken");
-        const res = await credittoApi.post(`/api/remittance/once`, requestData, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const res = await credittoApi.post(
+          `/api/remittance/once`,
+          requestData,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
         console.log("전송 반응:", res.data);
       } catch (error) {
         console.error("송금 요청 실패:", error);

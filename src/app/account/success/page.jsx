@@ -17,18 +17,16 @@ export default function AccountSuccessPage() {
             <br />
             <span className="block text-lg font-normal text-gray-500 mb-32">
               이제 Creditto의 생활을 시작해 보세요
-
             </span>
           </p>
           <div>
             <DotLottieReact
-      src="https://lottie.host/2e4e1311-14a0-432f-a5c8-6c0207d8d93a/OWH3nKX1g0.lottie"
+              src="https://lottie.host/2e4e1311-14a0-432f-a5c8-6c0207d8d93a/OWH3nKX1g0.lottie"
               loop
               autoplay
             />
           </div>
         </div>
-
 
         <footer>
           <BottomBar

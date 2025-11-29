@@ -3,16 +3,19 @@
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import { Globe, Repeat } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react"; // ✅ useEffect 추가
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux"; // ✅ 계좌 가져오기
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import SendBtn from "./SendBtn";
+import SendBtn from "../regular/components/SendBtn";
 
 // 송금 유형 데이터
 const transferTypes = [
   {
     id: "regular",
     title: "정기 해외 송금",
+    subtitle: "매주 · 매달 정기적으로",
+    description: "한 번만 등록하면\n약속한 날짜에 자동 송금",
     subtitle: "매주 · 매달 정기적으로",
     description: "한 번만 등록하면\n약속한 날짜에 자동 송금",
     icon: Repeat,
@@ -23,16 +26,40 @@ const transferTypes = [
     title: "일회성 해외 송금",
     subtitle: "원할 때 자유롭게",
     description: "기다릴 필요 없이\n즉시 송금",
+    subtitle: "원할 때 자유롭게",
+    description: "기다릴 필요 없이\n즉시 송금",
     icon: Globe,
     color: "bg-gradient-to-br from-[#4D6389] to-[#99A6BC]",
   },
 ];
 
-// onSelectType: 카드의 id를 상위로 올려주는 콜백
 export default function CardCarousel() {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+
+  // 연동된 계좌 정보 가져오기
+  const accounts = useSelector((state) => state.account.accounts);
+
+  // 페이지 진입 시 연동 계좌 있는지 체크
+  useEffect(() => {
+    // accounts가 아직 로딩 중이거나 undefined/null이면 일단 패스
+    if (!Array.isArray(accounts)) return;
+
+    if (accounts.length === 0) {
+      alert("연동된 계좌가 없습니다.\n먼저 계좌를 연결해 주세요.");
+      router.push("/");
+    }
+  }, [accounts, router]);
+
+  const handleGoToChoose = () => {
+    if (!Array.isArray(accounts) || accounts.length === 0) {
+      alert("연동된 계좌가 없습니다.\n먼저 계좌를 연결해 주세요.");
+      router.push("/");
+      return;
+    }
+    router.push("/send/choose");
+  };
 
   return (
     <div className="flex-1 flex justify-center relative">
@@ -45,6 +72,7 @@ export default function CardCarousel() {
               key={type.id}
               className={clsx(
                 "absolute w-full max-w-[300px] h-[400px] rounded-3xl shadow-2xl cursor-pointer [transform-style:preserve-3d]",
+                "absolute w-full max-w-[300px] h-[400px] rounded-3xl shadow-2xl cursor-pointer [transform-style:preserve-3d]",
                 isActive ? "shadow-blue-200" : "shadow-none"
               )}
               initial={{ x: 100, opacity: 0 }}
@@ -53,6 +81,13 @@ export default function CardCarousel() {
                 scale: isActive ? 1 : 0.85,
                 opacity: isActive ? 1 : 0.4,
                 zIndex: isActive ? 10 : 0,
+                rotateY: isActive
+                  ? isFlipped
+                    ? 180
+                    : 0
+                  : activeIndex === 0
+                  ? -10
+                  : 10,
                 rotateY: isActive
                   ? isFlipped
                     ? 180
@@ -71,7 +106,6 @@ export default function CardCarousel() {
                 }
               }}
               drag={isActive && !isFlipped ? "x" : false}
-              dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0}
               dragMomentum={false}
               onDragEnd={(e, info) => {
@@ -81,12 +115,36 @@ export default function CardCarousel() {
                 ) {
                   setActiveIndex((prev) => prev + 1);
                   setIsFlipped(false);
+                  setIsFlipped(false);
                 } else if (info.offset.x > 50 && activeIndex > 0) {
                   setActiveIndex((prev) => prev - 1);
+                  setIsFlipped(false);
                   setIsFlipped(false);
                 }
               }}
             >
+              {/* 카드 앞면 */}
+              <div
+                className={clsx(
+                  "absolute w-full h-full rounded-3xl p-8 translate-z-0",
+                  type.color
+                )}
+              >
+                <div>
+                  <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-12 backdrop-blur-sm">
+                    <type.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-medium mb-3 backdrop-blur-sm">
+                    {type.subtitle}
+                  </span>
+                  <h3 className="text-2xl font-bold text-white mb-2">
+                    {type.title}
+                  </h3>
+                  <p className="text-white/80 whitespace-pre-line leading-relaxed">
+                    {type.description}
+                  </p>
+                </div>
+              </div>
               {/* 카드 앞면 */}
               <div
                 className={clsx(
@@ -129,7 +187,7 @@ export default function CardCarousel() {
                         title="새로운 송금 등록"
                         subtitle={"원하는 날짜와\n금액을 설정해요"}
                         icon="plus"
-                        onClick={() => router.push("/send/choose")}
+                        onClick={handleGoToChoose}
                       />
                       <SendBtn
                         title="송금 조회 · 관리"
@@ -146,9 +204,7 @@ export default function CardCarousel() {
                         title="바로 송금하기"
                         subtitle={"기다리지 않고\n지금 즉시 보내요"}
                         icon="plus"
-                        onClick={() => {
-                          router.push("/send/one-off/choose");
-                        }}
+                        onClick={() => {}}
                       />
                       <SendBtn
                         title="송금 내역 조회"

@@ -125,11 +125,7 @@ export default function PermissionPage() {
       </div>
 
       <footer>
-        <BottomBar
-          label="다음"
-          onClick={handleNext}
-          isActive={true}
-        />
+        <BottomBar label="다음" onClick={handleNext} isActive={true} />
       </footer>
     </>
   );
