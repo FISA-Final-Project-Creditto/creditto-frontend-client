@@ -37,8 +37,10 @@ export default function TypePage() {
   const receiveCurrency = currency[selectedCountry]; // 수취 통화 코드
   const sendCurrency = "KRW"; // 송금 통화 코드를 KRW로 고정
 
-  const accounts = useSelector((state) => state.account.accounts); // 연결된 계좌 정보
-  const connectedAccounts = accounts.map((acc) => acc.accountNo) || []; // 계좌 번호만 모아놓은 리스트
+  const accounts = useSelector((state) => state.account.accounts);
+  const connectedAccounts = Array.isArray(accounts)
+    ? accounts.map((acc) => acc.accountNo)
+    : [];
 
   // 송금 유형 정보값 상태 관리
   const [formData, setFormData] = useState({

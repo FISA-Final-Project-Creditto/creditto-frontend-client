@@ -4,7 +4,7 @@ const initialState = {
   accounts: null,
   status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
   error: null,
-  balance : 0,
+  balance: 0,
 };
 
 export const accountSlice = createSlice({
