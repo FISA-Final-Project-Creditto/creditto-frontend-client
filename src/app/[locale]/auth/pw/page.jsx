@@ -2,22 +2,25 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
-import { useSelector } from "react-redux";
+import dynamic from "next/dynamic"; 
+import { useDispatch, useSelector } from "react-redux";
 import api, { issueCertificate, registerUser } from "../../../api/axios";
+import { resetVerification } from "@/src/store/features/simplepw/simplepwSlice";
 
 const SecurePinKeyboard = dynamic(
   () => import("./components/SecurePinKeyboard"),
   { ssr: false } // 키보드는 클라이언트에서만 렌더 → hydration 에러 방지
 );
 
-export default function SecurePage({ length = 6 }) {
-  // serialNumber prop 제거
+export default function SecurePage({ length = 6 }) { 
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-  const settingMode = useSelector((state) => state.simplepw.settingMode);
-  const loginMode = useSelector((state) => state.simplepw.loginMode);
-  console.log("settingMode", settingMode);
-  console.log("loginMode", loginMode);
+  // 목적지 기반 인증을 위한 새로운 Redux 상태
+  const { isVerificationRequired, redirectPath, mode } = useSelector((state) => state.simplepw);
+  // 비밀번호 '설정' 모드인지 확인
+  const isSettingMode = mode === 'setting';
+
   // Redux 스토어에서 serialNumber를 가져옵니다.
   const serialNumber = useSelector((state) => state.user.serialNumber);
 
@@ -29,7 +32,6 @@ export default function SecurePage({ length = 6 }) {
   const [shuffleToken, setShuffleToken] = useState(1); // 키보드 섞기 트리거용 토큰
 
   const hiddenInputRef = useRef(null); // 숨겨진 input (포커스 트랩용)
-  const router = useRouter();
 
   const userData = useSelector((state) => state.user); // Redux 스토어에서 userSlice 필드들 가져옴
 
@@ -42,7 +44,7 @@ export default function SecurePage({ length = 6 }) {
       if (v.length < length) return;
 
       // 비밀번호 설정 모드일 때만 처리
-      if (settingMode) {
+      if (isSettingMode) {
         // ① 첫 번째 입력 완료
         if (step === 1) {
           setFirstPin(v); // 첫 PIN 저장
@@ -71,6 +73,7 @@ export default function SecurePage({ length = 6 }) {
               const res = await issueCertificate(data);
               console.log("인증서 발급 결과:", res);
 
+              dispatch(resetVerification()); // 모드 초기화
               router.push("/auth/loading");
             } catch (err) {
               console.error("인증서 발급 실패:", err);
@@ -97,7 +100,7 @@ export default function SecurePage({ length = 6 }) {
         }
       }
     },
-    [length, step, firstPin, router, settingMode, userData]
+    [length, step, firstPin, router, isSettingMode, userData, dispatch]
   );
 
   // 키보드에서 숫자 버튼 클릭 시 실행
@@ -126,54 +129,53 @@ export default function SecurePage({ length = 6 }) {
     emitChange(pin);
   }, [pin, emitChange]);
 
-  // 로그인 모드에서 PIN 6자리가 입력되면 로그인 시도
+  // [리팩토링] 범용 비밀번호 검증 및 리디렉션 로직
   useEffect(() => {
-    const attemptLogin = async () => {
+    const verifyAndRedirect = async () => {
       try {
-        console.log("시리얼 넘버", serialNumber);
-        console.log("🔵 [로그인] 입력된 비밀번호로 로그인 시도:", pin);
+        console.log(serialNumber)
         if (!serialNumber) {
           setErrorMessage("인증서 정보를 찾을 수 없습니다.");
           setIsShaking(true);
           return;
         }
 
+        // 비밀번호 검증을 위한 파라미터 설정
         const params = new URLSearchParams();
         params.append("grant_type", "certificate");
         params.append("certificate_serial", serialNumber);
         params.append("simple_password", pin);
         params.append("client_id", process.env.NEXT_PUBLIC_CLIENT_ID);
         params.append("client_secret", process.env.NEXT_PUBLIC_CLIENT_SECRET);
-
-        // params에 담긴 값들을 문자열 형태로 확인합니다.
-        console.log("🚀 전송될 파라미터:", params.toString());
-
+        
         const response = await api.post("/oauth2/token", params, {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
         });
 
-        if (response.data) {
-          console.log("무슨 데이타?", response.data);
+        // 검증 성공!
+        dispatch(resetVerification()); // 사용한 인증 모드 상태 초기화
+
+        // 만약 목적지가 '/main'이면(로그인 시도), 토큰을 세션 스토리지에 저장
+        if (redirectPath === '/main') {
           sessionStorage.setItem("accessToken", response.data.access_token);
           sessionStorage.setItem("refreshToken", response.data.refresh_token);
-          router.push("/main"); // 성공 시 메인 페이지로 이동
         }
-        // api.post에서 4xx, 5xx 에러는 catch 블록으로 빠짐
+
+        // 저장된 목적지(redirectPath)로 이동. 없으면 기본값으로 /main
+        router.push(redirectPath || "/main");
+
       } catch (error) {
-        console.error("❌ [로그인] 요청 실패 또는 비밀번호 불일치:", error);
+        console.error("❌ 비밀번호 검증 실패:", error);
         setPin("");
         setIsShaking(true);
-        setErrorMessage("비밀번호가 올바르지 않거나 오류가 발생했습니다.");
+        setErrorMessage("비밀번호가 올바르지 않습니다.");
       }
     };
 
-    // 로그인 모드이고, pin이 6자리가 되었을 때만 실행
-    if (loginMode && pin.length === length) {
-      attemptLogin();
+    if (isVerificationRequired && pin.length === length) {
+      verifyAndRedirect();
     }
-  }, [pin, length, settingMode, loginMode, router, serialNumber]); // 의존성 배열에 serialNumber 추가
+  }, [pin, isVerificationRequired, redirectPath, serialNumber, length, router, dispatch]);
 
   // 붙여넣기/복사/자르기 차단
   useEffect(() => {
@@ -204,7 +206,7 @@ export default function SecurePage({ length = 6 }) {
     >
       {/* 숨겨진 입력(포커스 트랩) */}
       <input
-        ref={hiddenInputRef}
+        ref={hiddenInputRef} 
         inputMode="numeric"
         autoComplete="one-time-code"
         className="sr-only"
@@ -213,7 +215,7 @@ export default function SecurePage({ length = 6 }) {
       />
       {/* 상단: 타이틀/서브타이틀/인디케이터 */}
       <div>
-        {settingMode && (
+        {isSettingMode && (
           <h1 className="text-[1.375rem] font-medium text-black leading-snug mb-[1.875rem]">
             인증서 로그인을 위한
             <br />
@@ -221,12 +223,13 @@ export default function SecurePage({ length = 6 }) {
           </h1>
         )}
         <div className="flex flex-col items-center ">
-          {loginMode && (
+          {isVerificationRequired && (
             <p className="text-[#4E5969] mt-6">
               간편 비밀번호 6자리를 입력하세요
             </p>
           )}
-          {settingMode && step === 1 && (
+
+          {isSettingMode && step === 1 && (
             <p className="text-[#4E5969] mt-6">
               사용할 간편 비밀번호 6자리를 입력하세요
             </p>

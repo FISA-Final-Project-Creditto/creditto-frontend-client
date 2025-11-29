@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { loginMode } from "@/src/store/features/simplepw/simplepwSlice";
+import { useDispatch } from "react-redux"; 
+import { requireVerification } from "@/src/store/features/simplepw/simplepwSlice";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 
@@ -23,7 +23,8 @@ export default function SplashPage({ hasSerial }) {
     if (!hasSerial) {
       router.push("/login");
     } else {
-      dispatch(loginMode());
+      // 비밀번호 확인을 요청하고, 성공 시 '/main'으로 이동하도록 설정
+      dispatch(requireVerification("/main"));
       router.push("/auth/pw");
     }
   };

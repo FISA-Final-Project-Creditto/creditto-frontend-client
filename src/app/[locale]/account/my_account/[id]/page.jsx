@@ -90,17 +90,13 @@ export default function AccountDetailPage() {
                   {accountData?.accountNo}
                 </p>
               </div>
-              <span className="ml-2 px-2 py-1 text-xs rounded bg-gray-100 text-gray-600">
-                {accountData?.accountType}
-              </span>
+
               <span className="ml-2 px-2 py-1 text-xs rounded bg-gray-100 text-gray-600">
                 {accountData?.accountType}
               </span>
             </div>
             <p className="mt-4 text-right text-2xl font-bold">
-              <span className="font-bold">
-                {formatNumber(accountData?.balance)}
-              </span>
+           
               <span className="font-bold">
                 {formatNumber(accountData?.balance)}
               </span>
