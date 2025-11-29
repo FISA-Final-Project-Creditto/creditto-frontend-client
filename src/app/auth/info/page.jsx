@@ -93,7 +93,7 @@ export default function InfoInputPage() {
       };
 
       const res = await registerUser(data);
-      console.log("data: ", data);
+      console.log("data: ", res);
 
       dispatch(
         setUserData({
@@ -101,7 +101,6 @@ export default function InfoInputPage() {
           birthDate: formData.birthDate,
           phoneNumber: formData.phoneNumber,
           address: formData.address,
-          externalUserId: res.data.externalUserId,
         })
       );
 
