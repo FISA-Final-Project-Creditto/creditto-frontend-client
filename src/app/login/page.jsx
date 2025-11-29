@@ -23,35 +23,34 @@ export default function LoginPage() {
     }
   }, [router]);
 
-const LoginHandle = async (e) => {
+  const LoginHandle = async (e) => {
     e.preventDefault();
     try {
-    const res = await api.post("/api/certificate/serialNumber", {
-      username: name,
-      phoneNo: phoneNo
-    });
-    
-    console.log("데이터 정보:", res.data); // 서버 응답 확인
+      const res = await api.post("/api/certificate/serialNumber", {
+        username: name,
+        phoneNo: phoneNo,
+      });
 
-    // 요청 성공 후 다음 로직을 여기에 구현합니다.
-    // 예를 들어, 응답 데이터에 특정 값이 있을 때 페이지를 이동시킬 수 있습니다.
-    // API 응답 데이터에 serialNumber가 있다고 가정합니다. (실제 키 이름은 API 명세에 맞게 확인 필요)
-    if (res.data) {
-      alert("본인 인증에 성공했습니다.");
-      // 1. Redux 스토어에 serialNumber 저장
-      console.log("serialNumber:", res.data.data.certificate_serial)
-      dispatch(setSerialNumber(res.data.data.certificate_serial));
-      dispatch(loginMode());
-      // dispatch(loginMode()); // loginMode는 여기서 설정할 필요가 없으므로 제거합니다.
-      // 2. 비밀번호 입력 페이지로 이동
-      
-      router.push("/auth/pw"); // 비밀번호 입력 페이지로 이동
+      console.log("데이터 정보:", res.data); // 서버 응답 확인
+
+      // 요청 성공 후 다음 로직을 여기에 구현합니다.
+      // 예를 들어, 응답 데이터에 특정 값이 있을 때 페이지를 이동시킬 수 있습니다.
+      // API 응답 데이터에 serialNumber가 있다고 가정합니다. (실제 키 이름은 API 명세에 맞게 확인 필요)
+      if (res.data) {
+        alert("본인 인증에 성공했습니다.");
+        // 1. Redux 스토어에 serialNumber 저장
+        console.log("serialNumber:", res.data.data.certificate_serial);
+        dispatch(setSerialNumber(res.data.data.certificate_serial));
+        dispatch(loginMode());
+        // dispatch(loginMode()); // loginMode는 여기서 설정할 필요가 없으므로 제거합니다.
+        // 2. 비밀번호 입력 페이지로 이동
+
+        router.push("/auth/pw"); // 비밀번호 입력 페이지로 이동
+      }
+    } catch (err) {
+      console.error("요청 실패:", err);
     }
-
-  } catch (err) {
-    console.error("요청 실패:", err);
-  }
-};
+  };
 
   const NameField = (
     <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
@@ -121,17 +120,14 @@ const LoginHandle = async (e) => {
               <br />
               정보를 입력해주세요
             </h1>
-  
+
             {/* 입력 필드 */}
             {NameField}
             {PhoneField}
           </div>
-      <footer>
-             <BottomBar
-               label="로그인"
-               isActive={true}
-             />
-           </footer>
+          <footer>
+            <BottomBar label="로그인" isActive={true} />
+          </footer>
         </form>
       </div>
     </main>

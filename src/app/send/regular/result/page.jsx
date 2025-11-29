@@ -1,7 +1,7 @@
 "use client";
 
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-import BottomBar from "../components/BottomBar";
+import BottomBar from "../../components/BottomBar";
 import Term from "../components/Term";
 import Divider from "./components/Divider";
 import InfoRow from "./components/InfoRow";

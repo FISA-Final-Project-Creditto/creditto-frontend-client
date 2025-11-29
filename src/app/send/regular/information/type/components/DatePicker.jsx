@@ -5,7 +5,7 @@ import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { format } from "date-fns";
 import { Calendar, X } from "lucide-react";
-import BottomBar from "../../../components/BottomBar";
+import BottomBar from "../../../../components/BottomBar";
 
 export default function DatePicker({ value, onChange }) {
   const [isOpen, setIsOpen] = useState(false); // 달력 모달 open 상태

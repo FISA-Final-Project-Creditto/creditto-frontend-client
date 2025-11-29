@@ -7,7 +7,7 @@ import { useState, useEffect } from "react"; // ✅ useEffect 추가
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux"; // ✅ 계좌 가져오기
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import SendBtn from "./SendBtn";
+import SendBtn from "../regular/components/SendBtn";
 
 // 송금 유형 데이터
 const transferTypes = [

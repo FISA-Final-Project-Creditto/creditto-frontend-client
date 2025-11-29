@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { ChevronDown } from "lucide-react";
-import StepProgressBar from "../components/StepProgressbar";
+import StepProgressBar from "../../../components/StepProgressbar";
 import DatePicker from "./components/DatePicker";
-import BottomBar from "../../components/BottomBar";
+import BottomBar from "../../../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { setTypeData } from "@/src/store/features/send/sendSlice";
 

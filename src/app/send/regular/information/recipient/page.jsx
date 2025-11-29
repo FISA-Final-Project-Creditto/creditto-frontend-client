@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import StepProgressBar from "../components/StepProgressbar";
-import BottomBar from "../../components/BottomBar";
+import StepProgressBar from "../../../components/StepProgressbar";
+import BottomBar from "../../../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { setRecipientData } from "@/src/store/features/send/sendSlice";

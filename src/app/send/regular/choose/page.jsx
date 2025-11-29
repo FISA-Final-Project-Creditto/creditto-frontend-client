@@ -4,10 +4,9 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { US, CN, JP } from "country-flag-icons/react/3x2";
-import BottomBar from "../components/BottomBar";
+import BottomBar from "../../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import clsx from "clsx";
-import { useDispatch } from "react-redux";
 import {
   setReceivedCurrency,
   setSelectedCountry,

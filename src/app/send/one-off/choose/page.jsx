@@ -59,15 +59,31 @@ export default function ChooseCountryPage() {
             송금하실 국가의 통화를 선택해주세요.
           </p>
         </section>
-<section className="flex flex-col gap-6">
-            
-          </section>
+        <section className="flex flex-col gap-6"></section>
         {/* 선택 국가 리스트 */}
         <article className="flex flex-col gap-4">
           {[
-            { code: "US", currency: "USD", name: "미국", currencyName: "달러", Icon: US },
-            { code: "CN", currency: "CNY", name: "중국", currencyName: "위안", Icon: CN },
-            { code: "JP", currency: "JPY", name: "일본", currencyName: "엔", Icon: JP },
+            {
+              code: "US",
+              currency: "USD",
+              name: "미국",
+              currencyName: "달러",
+              Icon: US,
+            },
+            {
+              code: "CN",
+              currency: "CNY",
+              name: "중국",
+              currencyName: "위안",
+              Icon: CN,
+            },
+            {
+              code: "JP",
+              currency: "JPY",
+              name: "일본",
+              currencyName: "엔",
+              Icon: JP,
+            },
           ].map(({ code, currency, name, currencyName, Icon }) => (
             <div key={code}>
               <button
