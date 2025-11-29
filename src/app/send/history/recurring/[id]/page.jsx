@@ -3,9 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
-import RegSendHistoryItem from "../components/RegSendHistoryItem";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { setSendHistoryData } from "@/src/store/features/sendHistory/sendHistorySlice";
+import { credittoApi } from "@/src/app/api/axios";
+import RegSendHistoryItem from "../../components/RegSendHistoryItem";
+import RecurringHistory from "../components/RecurringHistory";
 
 // 정기적으로 송금 내역을 보여주는 페이지
 export default function RecurringPage({ params: paramsPromise }) {
@@ -14,14 +16,12 @@ export default function RecurringPage({ params: paramsPromise }) {
 
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const dispatch = useDispatch();
-
-  const accessToken = sessionStorage.getItem("accessToken");
 
   // 하나의 정기송금 설정에 대한 송금 기록 내역들
   // ✅ TODO: 실제 이름은 details로 수정
   const [realDetails, setRealDetails] = useState([]);
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
   // 수취인과 수취 계좌번호 가져오기
   const recipientName = searchParams.get("recipientName");
@@ -67,11 +67,14 @@ export default function RecurringPage({ params: paramsPromise }) {
 
   const detail = details.find((h) => h.id === parseInt(id)); // 부모에게 전달받은 params(id)와 histories에서 동일한 id값을 가진 history 찾기
 
-  // 페이지 접속 시 최초 1회 API 조회
+  // 하나의 정기송금 설정에 대한 송금 기록 조회
   useEffect(() => {
     const fetchRegSendHistory = async () => {
       try {
+        const accessToken = sessionStorage.getItem("accessToken");
+
         setIsLoading(true); // API 응답 기다리는 동안 로딩 진행
+
         const res = await credittoApi.get(`/api/remittance/scheduled/${id}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -79,6 +82,7 @@ export default function RecurringPage({ params: paramsPromise }) {
         });
 
         if (res.data.code === 200) {
+          console.log("특정 정기송금 기록 조회 성공: ", res.data);
           setRealDetails(res.data.data); // 내역 리스트에 저장
 
           // Redux 스토어에 저장
@@ -98,7 +102,12 @@ export default function RecurringPage({ params: paramsPromise }) {
     };
 
     fetchRegSendHistory();
-  }, [id, dispatch, accessToken, recipientName, recipientAccountNo]); // 빈 배열 → 페이지 렌더 시 1회 실행
+  }, [id, dispatch, recipientName, recipientAccountNo]); // 빈 배열 → 페이지 렌더 시 1회 실행
+
+  // 리스트 아이템 클릭 시 모달 열기
+  const handleHistoryItemClick = async (item) => {
+    setIsHistoryModalOpen(true);
+  };
 
   return (
     <div className="min-h-dvh flex flex-col bg-white">
@@ -140,7 +149,10 @@ export default function RecurringPage({ params: paramsPromise }) {
 
       {/* 정기 송금 내역 */}
       <main className="space-y-[1.875rem] mb-[2.813rem] px-8 mt-[2.875rem]">
-        <RegSendHistoryItem details={details} />
+        <RegSendHistoryItem
+          details={details}
+          onItemClick={handleHistoryItemClick}
+        />
       </main>
 
       {/* 정기 송금 완료 컴포넌트 */}
@@ -156,6 +168,25 @@ export default function RecurringPage({ params: paramsPromise }) {
           </span>
         </div>
       </div>
+
+      {/* RecurringHistory 모달 오버레이 */}
+      {isHistoryModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          onClick={() => setIsHistoryModalOpen(false)} // 바깥 클릭 시 닫기
+        >
+          <div
+            className="w-full max-w-[440px] max-h-[90vh] bg-white rounded-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()} // 안쪽 클릭 시 전파 막기
+          >
+            <RecurringHistory
+              // 필요하면 props로 데이터도 넘길 수 있음
+              // remittanceData={...}
+              onClose={() => setIsHistoryModalOpen(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

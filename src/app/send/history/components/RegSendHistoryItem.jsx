@@ -3,7 +3,7 @@
 import { ChevronRight } from "lucide-react";
 
 // 정기 해외 송금 내역
-export default function RegSendHistoryItem({ details = [] }) {
+export default function RegSendHistoryItem({ details = [], onItemClick }) {
   // 날짜 포맷터: "2025-11-25" → "11.25"
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
@@ -27,6 +27,7 @@ export default function RegSendHistoryItem({ details = [] }) {
         <article
           key={index}
           className="flex items-center justify-between py-2 rounded-lg"
+          onClick={() => onItemClick && onItemClick(item)}
         >
           {/* 송금 날짜 */}
           <div className="flex flex-col">

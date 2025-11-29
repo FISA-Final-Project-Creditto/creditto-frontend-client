@@ -4,6 +4,7 @@ const initialState = {
   regRemId: null,
   recipientName: null,
   recipientAccountNo: null,
+  detailedHistory: [],
 };
 
 export const sendHistorySlice = createSlice({
@@ -14,9 +15,14 @@ export const sendHistorySlice = createSlice({
     setSendHistoryData: (state, action) => {
       Object.assign(state, action.payload);
     },
+
+    // 등록한 정기 해외 송금 내역 리스트
+    setDetailData: (state, action) => {
+      state.detailedHistory = action.payload;
+    },
   },
 });
 
-export const { setSendHistoryData } = sendHistorySlice.actions;
+export const { setSendHistoryData, setDetailData } = sendHistorySlice.actions;
 
 export default sendHistorySlice.reducer;

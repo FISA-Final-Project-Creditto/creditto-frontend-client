@@ -2,14 +2,26 @@
 
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import BottomBar from "../components/BottomBar";
-import Header from "../components/Header";
 import Term from "../components/Term";
 import Divider from "./components/Divider";
 import InfoRow from "./components/InfoRow";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import {
+  selectBankData,
+  selectClientData,
+  selectRecipientData,
+  selectTypeData,
+} from "@/src/store/features/send/sendSelectors";
 
 export default function ResultPage() {
   const router = useRouter();
+
+  // selector로 데이터 가져오기
+  const typeData = useSelector(selectTypeData);
+  const clientData = useSelector(selectClientData);
+  const recipientData = useSelector(selectRecipientData);
+  const bankData = useSelector(selectBankData);
 
   return (
     <main className="min-h-dvh flex flex-col bg-white">
@@ -32,12 +44,23 @@ export default function ResultPage() {
         <section className="border border-[#86909C] rounded-xl px-[1.563rem] py-5 mb-[2.188rem]">
           {/* 송금 유형 정보 */}
           <div className="space-y-3.75">
-            <InfoRow label="출금 계좌" value="123-4567-89" />
-            <InfoRow label="수취 통화 코드" value="USD" />
-            <InfoRow label="송금 통화 코드" value="USD" />
-            <InfoRow label="외화 거래 금액" value="100,000" />
-            <InfoRow label="송금 주기" value="매월 10일" />
-            <InfoRow label="송금 시작일" value="2025년 10월 29일" />
+            <InfoRow label="출금 계좌" value={typeData.accountNo} />
+            <InfoRow label="수취 통화 코드" value={typeData.receiveCurrency} />
+            <InfoRow label="송금 통화 코드" value={typeData.sendCurrency} />
+            <InfoRow label="외화 거래 금액" value={typeData.sendAmount} />
+            {typeData.regRemType === "MONTHLY" ? (
+              <InfoRow
+                label="송금 주기"
+                value={`매월 ${typeData.scheduledDate}일`}
+              />
+            ) : (
+              <InfoRow
+                label="송금 주기"
+                value={`매주 ${typeData.scheduledDay}`}
+              />
+            )}
+
+            <InfoRow label="송금 시작일" value={typeData.startedDate} />
           </div>
 
           <Divider />
@@ -48,19 +71,9 @@ export default function ResultPage() {
               송금인 정보
             </h3>
             <div className="space-y-3.75">
-              <InfoRow label="이름" value="Richard Park" />
-              <InfoRow label="국가" value="미국(USA)" />
-              <InfoRow label="거주도시" value="Los Angeles" />
-              <InfoRow
-                label="주소 (우편번호)"
-                value={
-                  <span className="text-right">
-                    Busan, Rodeo-street, 124
-                    <br />
-                    103-102 (21345)
-                  </span>
-                }
-              />
+              <InfoRow label="이름" value={clientData.clientName} />
+              <InfoRow label="국가" value={clientData.clientCountry} />
+              <InfoRow label="주소" value={clientData.clientAddress} />
             </div>
           </div>
 
@@ -72,21 +85,19 @@ export default function ResultPage() {
               수신인 정보
             </h3>
             <div className="space-y-3.75">
+              <InfoRow label="국가" value={recipientData.recipientCountry} />
+              <InfoRow label="이름" value={recipientData.recipientName} />
               <InfoRow
-                label="국가"
-                value={
-                  <span className="flex items-center justify-end gap-2">
-                    <span className="text-xl">🇺🇸</span>
-                    United States
-                  </span>
-                }
+                label="전화번호"
+                value={`${recipientData.recipientPhoneCc} ${recipientData.recipientPhoneNo}`}
               />
-              <InfoRow label="이름" value="Bob Kim" />
-              <InfoRow label="전화번호" value="+1 32-123-4211" />
-              <InfoRow label="통화 코드" value="USD" />
-              <InfoRow label="수취 은행명" value="JP모건 체이스" />
-              <InfoRow label="수취 은행 코드" value="JPMCUS33" />
-              <InfoRow label="계좌 번호" value="1022-104-102481" />
+              <InfoRow label="통화 코드" value={typeData.receiveCurrency} />
+              <InfoRow label="수취 은행명" value={bankData.recipientBankName} />
+              <InfoRow
+                label="수취 은행 코드"
+                value={bankData.recipientBankCode}
+              />
+              <InfoRow label="계좌 번호" value={bankData.recipientAccountNo} />
             </div>
           </div>
         </section>

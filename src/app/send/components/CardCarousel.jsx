@@ -3,8 +3,9 @@
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import { Globe, Repeat } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react"; // ✅ useEffect 추가
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux"; // ✅ 계좌 가져오기
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import SendBtn from "./SendBtn";
 
@@ -28,11 +29,33 @@ const transferTypes = [
   },
 ];
 
-// onSelectType: 카드의 id를 상위로 올려주는 콜백
 export default function CardCarousel() {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+
+  // 연동된 계좌 정보 가져오기
+  const accounts = useSelector((state) => state.account.accounts);
+
+  // 페이지 진입 시 연동 계좌 있는지 체크
+  useEffect(() => {
+    // accounts가 아직 로딩 중이거나 undefined/null이면 일단 패스
+    if (!Array.isArray(accounts)) return;
+
+    if (accounts.length === 0) {
+      alert("연동된 계좌가 없습니다.\n먼저 계좌를 연결해 주세요.");
+      router.push("/");
+    }
+  }, [accounts, router]);
+
+  const handleGoToChoose = () => {
+    if (!Array.isArray(accounts) || accounts.length === 0) {
+      alert("연동된 계좌가 없습니다.\n먼저 계좌를 연결해 주세요.");
+      router.push("/");
+      return;
+    }
+    router.push("/send/choose");
+  };
 
   return (
     <div className="flex-1 flex justify-center relative">
@@ -129,7 +152,7 @@ export default function CardCarousel() {
                         title="새로운 송금 등록"
                         subtitle={"원하는 날짜와\n금액을 설정해요"}
                         icon="plus"
-                        onClick={() => router.push("/send/choose")}
+                        onClick={handleGoToChoose}
                       />
                       <SendBtn
                         title="송금 조회 · 관리"

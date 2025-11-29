@@ -43,9 +43,9 @@ export default function ImportAccount() {
       fetchAccounts();
     }
   }, [dispatch, status]);
-  const handleAccount = ()=>{
-    router.push("/account/create")
-  }
+  const handleAccount = () => {
+    router.push("/account/create");
+  };
 
   return (
     <div className="w-full px-4 py-6">
@@ -85,13 +85,16 @@ export default function ImportAccount() {
         ) : (
           <div className="text-center text-gray-500 py-8">
             <div className=" w-full h-full bg-blue-300 ">
-            <p>연결된 계좌가 없습니다.</p>
+              <p>연결된 계좌가 없습니다.</p>
             </div>
             <footer>
-              <BottomBar label="계좌 개설하러 가기"  onClick={handleAccount}  isActive={true} />
+              <BottomBar
+                label="계좌 개설하러 가기"
+                onClick={handleAccount}
+                isActive={true}
+              />
             </footer>
           </div>
-          
         )}
       </div>
     </div>

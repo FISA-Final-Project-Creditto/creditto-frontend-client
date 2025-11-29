@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { ChevronDown } from "lucide-react";
@@ -26,9 +26,8 @@ const currency = {
   JP: "JPY",
 };
 
-// 연결된 계좌
-// ✅ TODO: useSelector로 계좌들을 가져오기
-const connectedAccounts = ["1002-123-123124", "1002-346-346234"];
+// 연결된 계좌 (TODO: 나중에 실제 계좌 리스트로 교체)
+// const connectedAccounts = ["1002-123-123124", "1002-346-346234"];
 
 export default function TypePage() {
   const router = useRouter();
@@ -38,13 +37,16 @@ export default function TypePage() {
   const receiveCurrency = currency[selectedCountry]; // 수취 통화 코드
   const sendCurrency = "KRW"; // 송금 통화 코드를 KRW로 고정
 
+  const accounts = useSelector((state) => state.account.accounts); // 연결된 계좌 정보
+  const connectedAccounts = accounts.map((acc) => acc.accountNo) || []; // 계좌 번호만 모아놓은 리스트
+
   // 송금 유형 정보값 상태 관리
   const [formData, setFormData] = useState({
     accountNo: "", // 송금 계좌
-    sendAmount: "", // 외화 거래 금액 (문자열 + 콤마포맷)
+    sendAmount: "", // 외화 거래 금액 (문자열 + 콤마 포맷)
     regRemType: "", // 송금 주기
     scheduled: "", // 송금 주기 상세(날짜 or 요일)
-    startedDate: "", // 송금 시작일 (YYYY-MM-DD 예상)
+    startedDate: "", // 송금 시작일 (YYYY-MM-DD)
   });
 
   // 폼 유효성 검사
@@ -56,9 +58,7 @@ export default function TypePage() {
     formData.scheduled !== "";
 
   // 공통 input 변경 핸들러
-  const handleChange = (
-    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
-  ) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
 
     setFormData((prevData) => ({
@@ -67,8 +67,8 @@ export default function TypePage() {
     }));
   };
 
-  // 송금 금액(외화) 변경 핸들러
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // 송금 금액(외화) 변경 핸들러 (숫자만 받게 + 3자리 콤마)
+  const handleAmountChange = (e) => {
     const { value } = e.target;
     const rawValue = value.replace(/[^0-9]/g, "");
 
@@ -82,7 +82,7 @@ export default function TypePage() {
   };
 
   // 날짜 변경 핸들러
-  const handleDateChange = (date: string) => {
+  const handleDateChange = (date) => {
     setFormData((prev) => ({
       ...prev,
       startedDate: date,
@@ -90,7 +90,7 @@ export default function TypePage() {
   };
 
   // 송금 유형 저장 후 다음 페이지로 이동
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!isFormValid) {
@@ -103,8 +103,8 @@ export default function TypePage() {
     const numericAmount = Number(removeAmount);
 
     // MONTHLY와 WEEKLY에 따라 scheduledDate와 scheduledDay 분리
-    let scheduledDate: number | null = null;
-    let scheduledDay: string | null = null;
+    let scheduledDate = null;
+    let scheduledDay = null;
 
     if (formData.regRemType === "MONTHLY" && formData.scheduled) {
       scheduledDate = Number(formData.scheduled); // 숫자 (1~31)

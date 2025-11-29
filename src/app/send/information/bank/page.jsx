@@ -4,7 +4,6 @@ import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { useDispatch, useSelector } from "react-redux";
 import StepProgressBar from "../components/StepProgressbar";
 import BottomBar from "../../components/BottomBar";
 import Modal from "../../components/Modal";
@@ -16,7 +15,7 @@ import {
   selectRecipientData,
   selectBankData,
 } from "@/src/store/features/send/sendSelectors";
-import credittoApi from "@/src/app/api/axios";
+import { credittoApi } from "@/src/app/api/axios";
 
 // 국가별 은행 목록
 const BANK_OPTIONS = {
@@ -36,10 +35,6 @@ const BANK_OPTIONS = {
     { name: "미즈호은행", code: "MHCBJPJT" },
   ],
 };
-
-// 테스트용 임시 데이터
-// ✅ TODO: 합칠 때 sessionStorage에서 가져오기
-const accessToken = "엑세스 토큰";
 
 export default function BankPage() {
   const router = useRouter();
@@ -115,24 +110,34 @@ export default function BankPage() {
   };
 
   const handleConfirm = async () => {
-    const res = await credittoApi.post(
-      "/api/remittance/scheduled/add",
-      {
-        ...typeData,
-        ...clientData,
-        ...recipientData,
-        ...bankData,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+      console.log("accessToken: ", accessToken);
+      if (!accessToken) {
+        console.error("Access Token이 없습니다.");
+        return;
       }
-    );
+      const res = await credittoApi.post(
+        "/api/remittance/scheduled/add",
+        {
+          ...typeData,
+          ...clientData,
+          ...recipientData,
+          ...bankData,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
-    if (res.code === 200) {
-      // 신청 결과 페이지로 이동
-      router.push("/send/result");
+      if (res.data.code === 200) {
+        // 신청 결과 페이지로 이동
+        router.push("/send/result");
+      }
+    } catch (error) {
+      console.log("정기 해외 송금 신청 실패: ", error.response);
     }
   };
 

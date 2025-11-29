@@ -14,12 +14,12 @@ export default function LoadingPage() {
   }, [router]);
 
   return (
-    <div className="h-[100dvh] flex justify-center items-center bg-[#e5e5e5]">
+    <div className="h-[100dvh] flex justify-center items-center bg-[#e5e5e5] px-8">
       <main
         className="w-full max-w-[440px] min-h-[100dvh] mx-auto flex flex-col items-start bg-white gap-20
       "
       >
-        <h1 className="text-[1.375rem] text-left font-bold text-[#1A3668] mt-30">
+        <h1 className="text-[1.375rem] text-left font-bold text-[#1A3668] mt-30 px-8">
           신청 내용을 확인하고 있어요
         </h1>
 

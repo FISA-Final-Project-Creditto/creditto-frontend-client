@@ -10,8 +10,8 @@ import sendHistory from "./features/sendHistory/sendHistorySlice";
 export function makeStore(preloadedState) {
   return configureStore({
     reducer: {
-      counter,
       ocr,
+      counter,
       user,
       simplepw,
       send,

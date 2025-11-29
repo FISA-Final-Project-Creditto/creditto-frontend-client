@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { CN, JP, US } from "country-flag-icons/react/3x2";
 import { FileText, MoreVertical, Trash2 } from "lucide-react";
 import Modal from "../../components/Modal";
@@ -10,7 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
+import { credittoApi } from "@/src/app/api/axios";
 
 // 수취 통화 코드에 맞게 국기로 전환
 const CurrencyFlag = {
@@ -21,32 +22,53 @@ const CurrencyFlag = {
 
 export default function HistoryCard({
   history,
-  chooseState,
-  onChangeChooseState,
   onClick,
+  onDeleteSuccess, // 삭제 성공 시 호출 콜백
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
 
   const FlagComponent = CurrencyFlag[history.receivedCurrency]; // 해당 국기 컴포넌트
 
-  // 내역 삭제 함수
-  const handleDeleteConfirm = () => {
-    console.log(`[v0] ${history.id}번 송금 내역 삭제 확인`);
-    // TODO: 삭제 로직 작성
+  // 내역 취소 함수
+  const handleDeleteConfirm = async () => {
+    console.log(`${history.regRemId}번 송금 내역 삭제 확인`);
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+
+      const res = await credittoApi.delete(
+        `/api/remittance/scheduled/${history.regRemId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (res.data.code === 200) {
+        console.log("송금 내역이 잘 취소되었습니다.");
+
+        setIsModalOpen(false); // 모달 닫기
+
+        // 상위 컴포넌트(HistoryPage)에게 삭제됐다고 알림
+        if (onDeleteSuccess) {
+          onDeleteSuccess(history.regRemId);
+        }
+      }
+    } catch (error) {
+      console.log("정기 해외 송금 설정 취소 API 실패", error);
+    }
   };
 
   // 모달 닫을 때 발생하는 함수
   const handleModal = () => {
     setIsModalOpen(false); // 모달 닫기
-
-    onChangeChooseState(false); // 선택 버튼으로 변경
   };
 
   return (
     <div
       className="border border-[#86909C] rounded-xl px-5 py-[0.938rem]"
-      onClick={chooseState ? undefined : onClick}
+      onClick={onClick}
     >
       <div className="flex items-start justify-between mb-6">
         {/* 송금 주기 */}

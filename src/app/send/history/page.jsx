@@ -5,32 +5,39 @@ import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import HistoryCard from "./components/HistoryCard";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-import credittoApi from "../../api/axios";
+import { credittoApi } from "@/src/app/api/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setDetailData } from "@/src/store/features/sendHistory/sendHistorySlice";
 
 export default function HistoryPage() {
-  const [choose, setChoose] = useState(false);
-  const accessToken = sessionStorage.getItem("accessToken");
-  console.log("accessToken: ", accessToken);
-
-  // ✅ 계좌 연동해서 보여주기
-  // ✅ 아마도 sessionStorage에서 꺼내와서 쓰는 거 같음
-  const [selectedAccount, setSelectedAccount] = useState("");
-  const accounts = ["1002-123-123124", "1002-346-346234"];
-
-  // 실제 송금 리스트를 담는 곳
-  const [histories, setHistories] = useState([]);
+  const [histories, setHistories] = useState([]); // 정기 송금 설정 목록 상태
+  const [selectedAccount, setSelectedAccount] = useState(""); // 선택된 계좌 번호 상태
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
 
   const router = useRouter();
+  const dispatch = useDispatch();
 
-  // 로딩 / 에러 상태
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  // ✅ sessionStorage에서 가져오는 방법으로 변경
+  const accounts = useSelector((state) => state.account.accounts); // Redux에서 저장된 연동계좌 목록 조회
+  const connectedAccounts = accounts?.map((acc) => acc.accountNo) ?? []; // 계좌 번호만 추출
+  console.log("connectedAccounts: ", connectedAccounts);
 
-  // 페이지 접속 시 최초 1회 API 조회
+  // 연동된 계좌가 없을 때 메인 페이지로 이동 처리
+  // ✅ TODO: UI로 보여줘야 함
+  useEffect(() => {
+    if (!accounts || accounts.length === 0) {
+      alert("연동된 계좌가 없습니다. 계좌 연동 후 이용해주세요.");
+      router.replace("/");
+    }
+  }, [accounts, router]);
+
+  // 사용자 정기 송금 설정 내역 조회
   useEffect(() => {
     const fetchRemittanceHistory = async () => {
       try {
+        const accessToken = sessionStorage.getItem("accessToken");
         setIsLoading(true);
+
         const res = await credittoApi.get("/api/remittance/scheduled", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -38,7 +45,11 @@ export default function HistoryPage() {
         });
 
         if (res.data.code === 200) {
-          setHistories(res.data.data);
+          console.log("정기송금 설정 내역: ", res.data.data);
+
+          setHistories(res.data.data); // 현재 페이지 표시용 정기 송금 설정 목록 저장
+
+          dispatch(setDetailData(res.data.data)); // 상세 페이지에서 사용할 정기 송금 설정 목록 Redux 저장
         }
       } catch (error) {
         console.log("사용자 정기송금 설정 내역 조회 실패: ", error);
@@ -48,11 +59,22 @@ export default function HistoryPage() {
     };
 
     fetchRemittanceHistory();
-  }, [accessToken]); // 빈 배열 → 페이지 렌더 시 1회 실행
+  }, [dispatch]);
+
+  // histories가 배열인지 계산
+  const safeHistories = Array.isArray(histories) ? histories : [];
+
+  // 선택된 계좌 번호에 따라 정기 송금 설정 목록 추출
+  const filteredHistories =
+    selectedAccount === ""
+      ? safeHistories
+      : safeHistories.filter(
+          (item) => String(item.accountNo) === String(selectedAccount)
+        );
 
   return (
     <div className="min-h-dvh flex flex-col bg-white">
-      {/* 상단바 */}
+      {/* 상단바 영역 */}
       <header>
         <AppHeader
           title="정기 송금 내역"
@@ -61,7 +83,7 @@ export default function HistoryPage() {
         />
       </header>
 
-      {/* Content */}
+      {/* 페이지 제목 및 계좌 선택 영역 */}
       <section className="flex flex-col gap-4 px-8">
         <h1 className="text-left mt-[3.438rem] text-[1.563rem] text-[#1A3668] font-bold">
           등록된 정기 송금
@@ -69,49 +91,80 @@ export default function HistoryPage() {
 
         <div className="flex items-center justify-between mb-[2.813rem]">
           <div className="relative inline-block">
-            {/* 연동된 계좌 선택 */}
+            {/* 연동된 계좌 선택 셀렉트 박스 */}
             <select
               className="flex items-center gap-2 px-2 py-1 bg-[#E5E6EB] rounded-sm text-sm font-medium text-black appearance-none pr-6 cursor-pointer"
               value={selectedAccount}
               onChange={(e) => setSelectedAccount(e.target.value)}
             >
               <option value="">계좌를 선택하세요</option>
-              {accounts.map((account) => (
+              {connectedAccounts.map((account) => (
                 <option key={account} value={account}>
                   {account}
                 </option>
               ))}
             </select>
 
-            {/* 기존처럼 오른쪽에 아이콘 겹치기 */}
+            {/* 드롭다운 */}
             <ChevronDown className="w-4 h-4 text-black absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
         </div>
       </section>
 
-      {/* 해외 송금 전체 내역(계좌 선택 시 보여짐) */}
-      {selectedAccount && (
-        <main className="space-y-[1.875rem] px-8">
-          {histories.map((history) => (
+      {/* 정기 송금 설정 카드 목록 영역 */}
+      <main className="space-y-[1.875rem] px-8">
+        {isLoading && (
+          <p className="text-sm text-[#86909C]">정기 송금 내역 불러오는 중</p>
+        )}
+
+        {/* 계좌 선택 전에는 아무 것도 표시하지 않음 */}
+        {!isLoading && selectedAccount === "" && (
+          <p className="text-sm text-[#86909C] mt-4">
+            계좌를 선택하면 내역이 표시됩니다
+          </p>
+        )}
+
+        {/* 계좌 선택 후, 필터링 결과가 없을 때 */}
+        {!isLoading &&
+          selectedAccount !== "" &&
+          filteredHistories.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-10 text-center">
+              <p className="text-base font-medium text-[#4E5969]">
+                정기 송금 내역이 없습니다
+              </p>
+              <p className="text-sm text-[#86909C] mt-1">
+                다른 계좌를 선택하거나 신규 송금을 등록해주세요
+              </p>
+            </div>
+          )}
+
+        {/* 계좌 선택 후, 필터된 목록 표시 */}
+        {!isLoading &&
+          selectedAccount !== "" &&
+          filteredHistories.length > 0 &&
+          filteredHistories.map((history) => (
             <HistoryCard
               key={history.regRemId}
               history={history}
-              chooseState={choose}
-              onChangeChooseState={setChoose}
               onClick={() =>
                 router.push(
-                  `/send/history/details/${history.regRemId}` +
+                  `/send/history/recurring/${history.regRemId}` +
                     `?recipientName=${encodeURIComponent(
                       history.recipientName
                     )}` +
                     `&accountNo=${encodeURIComponent(history.accountNo)}`
                 )
               }
+              onDeleteSuccess={(deleteId) => {
+                setHistories((prev) =>
+                  Array.isArray(prev)
+                    ? prev.filter((item) => item.regRemId !== deleteId)
+                    : []
+                );
+              }}
             />
           ))}
-        </main>
-      )}
+      </main>
     </div>
   );
 }
-1;
