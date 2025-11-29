@@ -32,7 +32,7 @@ const currency = {
 
 export default function TypePage() {
   const [showKRWAmount, setShowKRWAmount] = useState(false); // 금액 작성 여부
-  const [exchangeRate, setExchangeRate] = useState(0); // 환율이 적용된 금액
+  const [krwAmount, setKrwAmount] = useState(0); // 환율 적용된 원화 금액
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -76,15 +76,20 @@ export default function TypePage() {
   // 송금 금액(외화) 변경 핸들러 (숫자만 받게 + 3자리 콤마)
   const handleAmountChange = (e) => {
     const { value } = e.target;
-    const rawValue = value.replace(/[^0-9]/g, "");
+    const rawValue = value.replace(/[^0-9]/g, ""); // 숫자만 남기기(문자 제거)
 
     if (rawValue === "") {
       setFormData((prev) => ({ ...prev, sendAmount: "" }));
+      setShowKRWAmount(false);
+      setKrwAmount(0);
       return;
     }
 
-    const formattedValue = new Intl.NumberFormat().format(Number(rawValue));
+    const formattedValue = new Intl.NumberFormat("ko-KR").format(
+      Number(rawValue)
+    ); // 숫자 포맷팅(3자리 콤마)
     setFormData((prev) => ({ ...prev, sendAmount: formattedValue }));
+    setShowKRWAmount(false); // 새로 입력 시작 -> 다시 숨김
   };
 
   // 날짜 변경 핸들러
@@ -137,24 +142,19 @@ export default function TypePage() {
     // 정기 해외 송금 신규 등록 요청바디 저장
     dispatch(setTypeData(submissionData));
 
-    router.push("send/regular/information/remittance");
+    router.push("/send/regular/information/remittance");
   };
 
   useEffect(() => {
-    const handleAmountComplete = async () => {
-      // 외화 거래 금액이 작성되자 않으면 작성 미완료로 인식
-      if (!formData.sendAmount || formData.sendAmount.trim() === "") {
+    const fetchExchange = () => {
+      // 수취 통화 코드가 없거나, 금액이 비어 있으면 아무 것도 하지 않음
+      if (!receiveCurrency || !formData.sendAmount.trim()) {
         setShowKRWAmount(false);
+        setKrwAmount(0);
         return;
       }
 
-      // 작성되고 5초 뒤에 작성 완료로 인식
-      const timer = setTimeout(() => {
-        setShowKRWAmount(true);
-      }, 500);
-
-      // 환율 조회
-      if (showKRWAmount) {
+      const timer = setTimeout(async () => {
         try {
           const accessToken = sessionStorage.getItem("accessToken");
 
@@ -167,22 +167,41 @@ export default function TypePage() {
             }
           );
 
-          const responseData = res.data; // 응답값 데이터(한번 더 들어가야 함)
-          if (responseData.code === 200) {
-            setExchangeRate(responseData.data.exchangeRate);
-            console.log("환율이 적용된 금액: ", exchangeRate);
+          const { code, data } = res.data;
+
+          if (code === 200 && data && data.exchangeRate) {
+            const rate = data.exchangeRate; // 예: 1 USD = 1464.8 KRW
+
+            const raw = formData.sendAmount.replace(/,/g, "");
+            const amount = Number(raw);
+
+            if (!amount) {
+              setShowKRWAmount(false);
+              setKrwAmount(0);
+              return;
+            }
+
+            const krw = amount * rate; // 외화 * 환율 = 원화
+            setKrwAmount(krw);
+            setShowKRWAmount(true); // 환율 보여줌
+            console.log("환율이 적용된 금액(원화): ", krw);
+          } else {
+            setShowKRWAmount(false);
+            setKrwAmount(0);
           }
         } catch (error) {
           console.log("환율 조회 실패", error);
+          setShowKRWAmount(false);
+          setKrwAmount(0);
         }
-      }
+      }, 500); // 0.5초 동안 입력이 없으면 "작성 완료"로 인식
 
-      // 다음 입력이 들어오면 초기화
-      return () => clearTimeout(time);
+      // 다음 입력이 들어오면 타이머 취소 (디바운스)
+      return () => clearTimeout(timer);
     };
 
-    handleAmountComplete();
-  });
+    fetchExchange();
+  }, [formData.sendAmount, receiveCurrency]);
 
   return (
     <main>
@@ -296,7 +315,7 @@ export default function TypePage() {
                 {/* 환율 적용된 금액(원화) */}
                 {showKRWAmount && (
                   <p className="text-sm text-[#334D79] text-left font-semibold">
-                    원화: {exchangeRate} KRW
+                    원화: {new Intl.NumberFormat().format(krwAmount)} KRW
                   </p>
                 )}
               </section>
