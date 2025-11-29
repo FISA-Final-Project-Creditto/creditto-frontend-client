@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic"; 
+import dynamic from "next/dynamic";
 import { useDispatch, useSelector } from "react-redux";
 import api, { issueCertificate, registerUser } from "../../../api/axios";
 import { resetVerification } from "@/src/store/features/simplepw/simplepwSlice";
@@ -12,14 +12,16 @@ const SecurePinKeyboard = dynamic(
   { ssr: false } // 키보드는 클라이언트에서만 렌더 → hydration 에러 방지
 );
 
-export default function SecurePage({ length = 6 }) { 
+export default function SecurePage({ length = 6 }) {
   const dispatch = useDispatch();
   const router = useRouter();
 
   // 목적지 기반 인증을 위한 새로운 Redux 상태
-  const { isVerificationRequired, redirectPath, mode } = useSelector((state) => state.simplepw);
+  const { isVerificationRequired, redirectPath, mode } = useSelector(
+    (state) => state.simplepw
+  );
   // 비밀번호 '설정' 모드인지 확인
-  const isSettingMode = mode === 'setting';
+  const isSettingMode = mode === "setting";
 
   // Redux 스토어에서 serialNumber를 가져옵니다.
   const serialNumber = useSelector((state) => state.user.serialNumber);
@@ -133,7 +135,7 @@ export default function SecurePage({ length = 6 }) {
   useEffect(() => {
     const verifyAndRedirect = async () => {
       try {
-        console.log(serialNumber)
+        console.log(serialNumber);
         if (!serialNumber) {
           setErrorMessage("인증서 정보를 찾을 수 없습니다.");
           setIsShaking(true);
@@ -147,7 +149,7 @@ export default function SecurePage({ length = 6 }) {
         params.append("simple_password", pin);
         params.append("client_id", process.env.NEXT_PUBLIC_CLIENT_ID);
         params.append("client_secret", process.env.NEXT_PUBLIC_CLIENT_SECRET);
-        
+
         const response = await api.post("/oauth2/token", params, {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
         });
@@ -155,9 +157,8 @@ export default function SecurePage({ length = 6 }) {
         // 검증 성공!
         dispatch(resetVerification()); // 사용한 인증 모드 상태 초기화
 
-
         // 만약 목적지가 '/main'이면(로그인 시도), 토큰을 세션 스토리지에 저장
-        if (redirectPath === '/main') {
+        if (redirectPath === "/main") {
           sessionStorage.setItem("accessToken", response.data.access_token);
           sessionStorage.setItem("refreshToken", response.data.refresh_token);
           sessionStorage.setItem("userId", response.data.user_id);
@@ -165,7 +166,6 @@ export default function SecurePage({ length = 6 }) {
 
         // 저장된 목적지(redirectPath)로 이동. 없으면 기본값으로 /main
         router.push(redirectPath || "/main");
-
       } catch (error) {
         console.error("❌ 비밀번호 검증 실패:", error);
         setPin("");
@@ -177,7 +177,15 @@ export default function SecurePage({ length = 6 }) {
     if (isVerificationRequired && pin.length === length) {
       verifyAndRedirect();
     }
-  }, [pin, isVerificationRequired, redirectPath, serialNumber, length, router, dispatch]);
+  }, [
+    pin,
+    isVerificationRequired,
+    redirectPath,
+    serialNumber,
+    length,
+    router,
+    dispatch,
+  ]);
 
   // 붙여넣기/복사/자르기 차단
   useEffect(() => {
@@ -208,7 +216,7 @@ export default function SecurePage({ length = 6 }) {
     >
       {/* 숨겨진 입력(포커스 트랩) */}
       <input
-        ref={hiddenInputRef} 
+        ref={hiddenInputRef}
         inputMode="numeric"
         autoComplete="one-time-code"
         className="sr-only"

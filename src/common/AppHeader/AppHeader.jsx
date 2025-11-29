@@ -1,5 +1,4 @@
 "use client";
-
 import Hambuger from "@/src/app/[locale]/main/components/Hambuger";
 import { ChevronLeft } from "lucide-react";
 import React from "react";
