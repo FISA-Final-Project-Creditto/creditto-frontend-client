@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 export default function MainPage() {
   const router = useRouter();
   // Redux 스토어에서 계좌 정보를 가져옵니다.
-  const accounts = useSelector((state) => state.account.accounts);
+  // const accounts = useSelector((state) => state.account.accounts);
 
 
   useEffect(()=>{
@@ -22,7 +22,7 @@ export default function MainPage() {
     }
 
     // 가져온 계좌 정보를 콘솔에 출력하여 확인
-    console.log("메인 페이지에서 확인한 계좌 정보:", accounts);
+    // console.log("메인 페이지에서 확인한 계좌 정보:", accounts);
   })
   return (
     <>
@@ -31,7 +31,7 @@ export default function MainPage() {
 
 
         <div className="px-5 mt-2">
-           <Money accounts={accounts} />
+           <Money />
           <RoundedIconTabs   />
           <FunctionButton />
         </div>
