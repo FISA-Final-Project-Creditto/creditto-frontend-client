@@ -145,8 +145,7 @@ export default function ScanPage() {
         isFileRejected: false,
         error: {
           message: e.error || t("analysisFailed"),
-          description:
-            e.details?.error || e.message || t("tryAgain"),
+          description: e.details?.error || e.message || t("tryAgain"),
         },
         data: null,
         parsedData: null,
