@@ -93,8 +93,14 @@ export default function AccountDetailPage() {
               <span className="ml-2 px-2 py-1 text-xs rounded bg-gray-100 text-gray-600">
                 {accountData?.accountType}
               </span>
+              <span className="ml-2 px-2 py-1 text-xs rounded bg-gray-100 text-gray-600">
+                {accountData?.accountType}
+              </span>
             </div>
             <p className="mt-4 text-right text-2xl font-bold">
+              <span className="font-bold">
+                {formatNumber(accountData?.balance)}
+              </span>
               <span className="font-bold">
                 {formatNumber(accountData?.balance)}
               </span>
@@ -110,6 +116,11 @@ export default function AccountDetailPage() {
               placeholder="거래 내역 검색"
               className="flex-1 border-b pb-2 text-sm outline-none"
             />
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="text-sm"
+            ></select>
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}

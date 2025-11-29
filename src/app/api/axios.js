@@ -48,7 +48,7 @@ api.interceptors.response.use(
 
 // authApi 인스턴스에도 필요하다면 별도의 인터셉터를 추가할 수 있습니다.
 credittoApi.interceptors.request.use((config) => {
-  console.log("API 요청 전송:", config.data);
+  console.log("인증 API 요청 전송:", config.url);
   return config;
 });
 
@@ -56,15 +56,16 @@ credittoApi.interceptors.request.use((config) => {
 // 다른 파일에서 import api from '...' 형태로 계속 사용할 수 있습니다.
 export default api;
 
-const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL; // 공통 주소
+const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 // 유저 등록
 export const registerUser = async (userData) => {
   try {
     const response = await api.post(`${baseURL}/api/user/register`, userData);
     console.log("유저등록 API 성공 응답값:", response.data);
-    return response;
+    return response.data;
   } catch (error) {
-    console.log("유저등록 API 실패: ", error);
+    return error;
   }
 };
 

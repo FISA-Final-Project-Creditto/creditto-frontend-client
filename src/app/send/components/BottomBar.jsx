@@ -14,4 +14,3 @@ export default function BottomBar({ label, onClick, isActive = false }) {
     </div>
   );
 }
-2;

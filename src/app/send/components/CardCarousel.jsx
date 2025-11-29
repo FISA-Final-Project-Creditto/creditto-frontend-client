@@ -16,12 +16,16 @@ const transferTypes = [
     title: "정기 해외 송금",
     subtitle: "매주 · 매달 정기적으로",
     description: "한 번만 등록하면\n약속한 날짜에 자동 송금",
+    subtitle: "매주 · 매달 정기적으로",
+    description: "한 번만 등록하면\n약속한 날짜에 자동 송금",
     icon: Repeat,
     color: "bg-gradient-to-br from-[#002057] to-[#334D79]",
   },
   {
     id: "one-time",
     title: "일회성 해외 송금",
+    subtitle: "원할 때 자유롭게",
+    description: "기다릴 필요 없이\n즉시 송금",
     subtitle: "원할 때 자유롭게",
     description: "기다릴 필요 없이\n즉시 송금",
     icon: Globe,
@@ -68,6 +72,7 @@ export default function CardCarousel() {
               key={type.id}
               className={clsx(
                 "absolute w-full max-w-[300px] h-[400px] rounded-3xl shadow-2xl cursor-pointer [transform-style:preserve-3d]",
+                "absolute w-full max-w-[300px] h-[400px] rounded-3xl shadow-2xl cursor-pointer [transform-style:preserve-3d]",
                 isActive ? "shadow-blue-200" : "shadow-none"
               )}
               initial={{ x: 100, opacity: 0 }}
@@ -76,6 +81,13 @@ export default function CardCarousel() {
                 scale: isActive ? 1 : 0.85,
                 opacity: isActive ? 1 : 0.4,
                 zIndex: isActive ? 10 : 0,
+                rotateY: isActive
+                  ? isFlipped
+                    ? 180
+                    : 0
+                  : activeIndex === 0
+                  ? -10
+                  : 10,
                 rotateY: isActive
                   ? isFlipped
                     ? 180
@@ -94,7 +106,6 @@ export default function CardCarousel() {
                 }
               }}
               drag={isActive && !isFlipped ? "x" : false}
-              dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0}
               dragMomentum={false}
               onDragEnd={(e, info) => {
@@ -104,12 +115,36 @@ export default function CardCarousel() {
                 ) {
                   setActiveIndex((prev) => prev + 1);
                   setIsFlipped(false);
+                  setIsFlipped(false);
                 } else if (info.offset.x > 50 && activeIndex > 0) {
                   setActiveIndex((prev) => prev - 1);
+                  setIsFlipped(false);
                   setIsFlipped(false);
                 }
               }}
             >
+              {/* 카드 앞면 */}
+              <div
+                className={clsx(
+                  "absolute w-full h-full rounded-3xl p-8 translate-z-0",
+                  type.color
+                )}
+              >
+                <div>
+                  <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-12 backdrop-blur-sm">
+                    <type.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-medium mb-3 backdrop-blur-sm">
+                    {type.subtitle}
+                  </span>
+                  <h3 className="text-2xl font-bold text-white mb-2">
+                    {type.title}
+                  </h3>
+                  <p className="text-white/80 whitespace-pre-line leading-relaxed">
+                    {type.description}
+                  </p>
+                </div>
+              </div>
               {/* 카드 앞면 */}
               <div
                 className={clsx(

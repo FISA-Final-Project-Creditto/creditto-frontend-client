@@ -7,18 +7,28 @@ import { US, CN, JP } from "country-flag-icons/react/3x2";
 import BottomBar from "../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import clsx from "clsx";
-import { setCountryData } from "@/src/store/features/send/sendSlice";
+import { useDispatch } from "react-redux";
+import {
+  setReceivedCurrency,
+  setSelectedCountry,
+} from "@/src/store/features/send/sendSlice";
 
 export default function ChooseCountryPage() {
-  const [selectedCountry, setSelectedCountry] = useState(""); // 기본 선택값 없음
+  const [localSelectedCountry, setLocalSelectedCountry] = useState(""); // 이름 변경
   const router = useRouter();
   const dispatch = useDispatch();
 
-  // 선택된 국가를 Redux에 저장 후 송금 유형 페이지로 이동
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(setCountryData(selectedCountry));
-
+  const handleSelectButtonClick = () => {
+    const currencyMap = {
+      US: "USD",
+      CN: "CHN",
+      JP: "JPY",
+    };
+    const currency = currencyMap[localSelectedCountry];
+    if (currency) {
+      dispatch(setReceivedCurrency(currency));
+      dispatch(setSelectedCountry(localSelectedCountry)); // Redux 액션 호출
+    }
     router.push("/send/information/type");
   };
 
@@ -51,12 +61,12 @@ export default function ChooseCountryPage() {
           <button
             className="flex w-full items-center justify-between"
             type="button"
-            onClick={() => setSelectedCountry("US")}
+            onClick={() => setLocalSelectedCountry("US")}
           >
             <div
               className={clsx(
                 "w-full flex items-center gap-10 border px-3 py-3 rounded-lg",
-                selectedCountry === "US"
+                localSelectedCountry === "US"
                   ? "border-[#4485EE]"
                   : " border-[#C9CDD4]"
               )}
@@ -75,12 +85,12 @@ export default function ChooseCountryPage() {
           <button
             className="flex w-full items-center justify-between"
             type="button"
-            onClick={() => setSelectedCountry("CN")}
+            onClick={() => setLocalSelectedCountry("CN")}
           >
             <div
               className={clsx(
                 "w-full flex items-center gap-10 border px-3 py-3 rounded-lg",
-                selectedCountry === "CN"
+                localSelectedCountry === "CN"
                   ? "border-[#4485EE]"
                   : " border-[#C9CDD4]"
               )}
@@ -99,12 +109,12 @@ export default function ChooseCountryPage() {
           <button
             className="flex w-full items-center justify-between"
             type="button"
-            onClick={() => setSelectedCountry("JP")}
+            onClick={() => setLocalSelectedCountry("JP")}
           >
             <div
               className={clsx(
                 "w-full flex items-center gap-10 border px-3 py-3 rounded-lg",
-                selectedCountry === "JP"
+                localSelectedCountry === "JP"
                   ? "border-[#4485EE]"
                   : " border-[#C9CDD4]"
               )}
@@ -123,8 +133,12 @@ export default function ChooseCountryPage() {
 
       {/* 하단 버튼 */}
       <footer className="pt-20">
-        {selectedCountry !== "" && (
-          <BottomBar label="선택" onClick={handleSubmit} isActive={true} />
+        {localSelectedCountry !== "" && (
+          <BottomBar
+            label="선택"
+            onClick={handleSelectButtonClick}
+            isActive={true}
+          />
         )}
       </footer>
     </div>
