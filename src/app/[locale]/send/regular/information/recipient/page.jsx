@@ -163,9 +163,6 @@ export default function RecipientPage() {
           <main className="flex-1 pt-4 pb-6 overflow-y-auto">
             <section className="flex flex-col gap-[2.188rem]">
               <h1 className="text-left text-[1.563rem] font-bold">
-                <span className="text-[#1A3668]">
-                  {t("common.remittance")}
-                </span>{" "}
                 {t("regular.information.title")}
               </h1>
 

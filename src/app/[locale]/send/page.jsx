@@ -21,10 +21,8 @@ export default function SendMainPage() {
       <div className="flex-1 flex flex-col px-5 relative">
         {/* 타이틀 */}
         <div className="pt-8 pb-12">
-          <h2 className="text-[1.625rem] font-bold text-black leading-tight text-balance">
+          <h2 className="text-[1.625rem] font-bold text-black leading-tight text-balance whitespace-pre-line">
             <span className="text-[#405881]">{t("pageSubtitle")}</span>
-            <br />
-            {t("pageDescription")}
           </h2>
           <p className="mt-2 text-[#86909C] text-sm leading-relaxed">
             {t("pageDescription")}

@@ -100,9 +100,6 @@ export default function RemittancePage() {
 
         <section className="flex flex-col gap-[2.188rem] mt-4">
           <h1 className="text-left text-[1.563rem] font-bold">
-            <span className="text-[#1A3668]">
-              {t("common.remittance")}
-            </span>{" "}
             {t("regular.information.title")}
           </h1>
 
@@ -168,9 +165,7 @@ export default function RemittancePage() {
                     name="address"
                     value={formData.address}
                     readOnly
-                    placeholder={t(
-                      "regular.information.addressPlaceholder"
-                    )}
+                    placeholder={t("regular.information.addressPlaceholder")}
                     className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
                   />
                 </div>

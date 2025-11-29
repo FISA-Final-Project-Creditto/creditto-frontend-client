@@ -47,8 +47,8 @@ export default function ChooseCountryPage() {
 
       <main className="flex flex-col gap-[2.188rem] px-5">
         <section>
-          <h1 className="text-left mt-[3.75rem] text-[1.563rem] font-bold">
-            <span className="text-[#1A3668]">{t("common.remittance")}</span>{" "}
+          <h1 className="text-left mt-[3.75rem] text-[1.563rem] font-bold whitespace-pre-line">
+            {/* <span className="text-[#1A3668]">{t("common.remittance")}</span>{" "} */}
             {t("chooseCountry.title")}
           </h1>
           <p className="text-sm text-left text-[#86909C]">
