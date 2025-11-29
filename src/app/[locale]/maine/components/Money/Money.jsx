@@ -2,6 +2,7 @@
 import { credittoApi } from "@/src/app/api/axios";
 import { Eye, EyeOff } from "lucide-react";
 import React, { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 export default function Money({}) {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
@@ -10,8 +11,7 @@ export default function Money({}) {
     balance: null,
     accountCount: 0,
   });
-
-
+  const t = useTranslations("maine");
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -43,21 +43,20 @@ export default function Money({}) {
     setIsBalanceVisible((prev) => !prev);
   };
 
-
   const renderBalance = () => {
     if (isLoading) {
-      return "잔액 조회 중...";
+      return t("money.loading");
     }
 
     // B. 예전에 썼는데 지금은 계좌 끊음 (onboarding=true, accountCount=0)
     if (accountState.accountCount === 0) {
-      return "연동된 계좌가 없습니다.";
+      return t("money.noAccount");
     }
 
     // C, D. 계좌 연동했고, 잔액이 0원이거나 그 이상
     // balance가 null인 경우는 API 에러로 간주하여 다른 메시지를 보여줄 수도 있습니다.
     if (accountState.balance === null) {
-      return "잔액을 불러올 수 없습니다.";
+      return t("money.cantLoad");
     }
     
     const formattedBalance = new Intl.NumberFormat("ko-KR", {
@@ -75,7 +74,7 @@ export default function Money({}) {
   return (
     <div className="w-full bg-card border bg-gradient-to-br from-[#1A3668] via-[#1A3668] to-[#1A3668]/80 border-border rounded-t-2xl h-14 flex items-center shadow justify-between px-5">
       <div className="flex items-center gap-3">
-        <p className="text-base text-white font-medium">계좌잔액</p>
+        <p className="text-base text-white font-medium">{t("money.balance")}</p>
         <h4 className="text-base font-normal text-white">{renderBalance()}</h4>
       </div>
       <button

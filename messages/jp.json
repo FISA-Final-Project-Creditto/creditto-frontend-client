@@ -1,5 +1,536 @@
 {
   "greeting": "こんにちは!",
   "signUp": "会員登録",
-  "logIn": "サインイン"
+  "logIn": "サインイン",
+  "login": {
+    "alert": {
+      "alreadyLoggedIn": "すでにログインしています。メインページに移動します。",
+      "authSuccess": "認証に成功しました。"
+    },
+    "auth": {
+      "title": "本人確認",
+      "instructionPart1": "本人確認のために",
+      "instructionPart2": "情報を入力してください"
+    },
+    "name": {
+      "label": "名前",
+      "placeholder": "名前を入力してください"
+    },
+    "phone": {
+      "label": "電話番号",
+      "placeholder": "010-0000-0000"
+    },
+    "button": {
+      "login": "ログイン"
+    },
+    "bottomSheet": {
+      "title": "携帯電話本人確認利用規約",
+      "next": "次へ",
+      "agreeAll": "携帯電話本人確認利用規約にすべて同意",
+      "terms1": "サービス利用規約に同意（必須）",
+      "terms2": "個人情報の収集および利用に同意（必須）",
+      "terms3": "固有識別情報の処理に同意（必須）",
+      "terms4": "本人確認サービスの利用に同意（任意）",
+      "agreeAndContinue": "同意して続行"
+    }
+  },
+  "main": {
+    "loginRequired": "ログインが必要です",
+    "functionButton": {
+      "loan": "ローン",
+      "creditScore": "信用スコア"
+    },
+    "loanButton": {
+      "title": "おすすめのローン商品",
+      "subtitle": "自分にぴったりのローン"
+    },
+    "mainCarousel": {
+      "creditScoreLink": "信用スコア",
+      "credittoScore": "Credittoスコア",
+      "accountConnectionLink": "口座連携"
+    },
+    "goExchangeButton": {
+      "title": "為替レートグラフ",
+      "subtitle": "アメリカ、中国、日本の様々な為替レートを一度に！"
+    },
+    "moneyExchange": {
+      "title": "両替"
+    },
+    "realTimeExchange": {
+      "exchangeRateAPI": "為替レートAPI連携予定"
+    },
+    "tabs": {
+      "home": "ホーム",
+      "simplePayment": "簡単決済",
+      "location": "位置",
+      "name": "名前",
+      "naverMapAPI": "NaverマップAPI連携予定"
+    }
+  },
+  "maine": {
+    "greeting": "こんにちは",
+    "userName": "チョン・ヨンジュン様",
+    "monthlyUsage": "月間利用額",
+    "thisMonth": "今月",
+    "usageCount": "件利用",
+    "send": "送金",
+    "loan": "ローン",
+    "invest": "投資",
+    "recommendedProducts": "おすすめ商品",
+    "seeMore": "もっと見る",
+    "mediumInterestCreditLoan": "中金利信用ローン",
+    "loanInterestRate": "年4.5%〜8.9%",
+    "savingsProduct": "積立商品",
+    "savingsInterestRate": "年4.2%の利率",
+    "exchangeRate": "為替レート",
+    "refresh": "更新",
+    "usdTrend": "USD推移",
+    "money": {
+      "loading": "残高照会中...",
+      "noAccount": "連携された口座がありません。",
+      "cantLoad": "残高を読み込めません。",
+      "balance": "口座残高"
+    },
+    "creditChart": {
+      "score": "点",
+      "month": "{month}月"
+    },
+    "credit": {
+      "credittoScore": "Credittoスコア",
+      "maxScore": "最高{maxScore}点",
+      "grade": "等級",
+      "excellent": "優秀",
+      "creditRating": "信用度評価",
+      "comparison": "先月比+20点上昇"
+    },
+    "sendButton": {
+      "label": "海外送金"
+    }
+  },
+  "send": {
+    "common": {
+      "remittance": "海外送金",
+      "next": "次へ",
+      "name": "名前",
+      "country": "国",
+      "address": "住所",
+      "phoneNumber": "電話番号",
+      "accountNumber": "口座番号",
+      "day": "日",
+      "dayOfWeek": {
+        "MONDAY": "月曜日",
+        "TUESDAY": "火曜日",
+        "WEDNESDAY": "水曜日",
+        "THURSDAY": "木曜日",
+        "FRIDAY": "金曜日"
+      },
+      "status": {
+        "ACTIVE": "正常",
+        "DELAYED": "遅延",
+        "PAUSED": "一時停止",
+        "CANCELLED": "キャンセル"
+      },
+      "selectAccount": "口座を選択してください",
+      "noLinkedAccount": "連携された口座がありません。",
+      "pageTitle": "海外送金・照会",
+      "pageSubtitle": "どのような海外送金が必要ですか？",
+      "pageDescription": "送金申請から履歴管理まで可能です",
+      "confirm": "確認",
+      "yes": "はい",
+      "no": "いいえ",
+      "notice": "注意事項",
+      "noticeContent": "海外SWIFT送金時、入力された情報が正しくない場合、海外送金が正常に処理されないことがあります。その場合、誤りは顧客にあり、その事項は利用規約に従って処理されます。"
+    },
+    "main": {
+      "regularTitle": "定期海外送金",
+      "regularSubtitle": "毎週・毎月定期的に",
+      "regularDescription": "一度登録すれば\n約束の日付に自動送金",
+      "oneOffTitle": "一回限りの海外送金",
+      "oneOffSubtitle": "好きな時に自由に",
+      "oneOffDescription": "待つ必要なく\nすぐに送金",
+      "noLinkedAccountAlert": "連携された口座がありません。\nまず口座を連携してください。",
+      "newTransfer": "新規送金登録",
+      "newTransferSubtitle": "希望の日付と\n金額を設定します",
+      "historyTitle": "送金照会・管理",
+      "historySubtitle": "送金履歴と\n申請情報を一目で",
+      "sendNow": "すぐに送金",
+      "sendNowSubtitle": "待たずに\n今すぐ送金",
+      "historyOneOffTitle": "送金履歴照会",
+      "historyOneOffSubtitle": "これまでの\n送金記録をまとめて見る"
+    },
+    "chooseCountry": {
+      "title": "海外送金先の国を選択してください",
+      "subtitle": "送金先の国の通貨を選択してください。",
+      "usa": "アメリカ USD",
+      "dollar": "ドル",
+      "china": "中国 CNY",
+      "yuan": "元",
+      "japan": "日本 JPY",
+      "yen": "円",
+      "select": "選択",
+      "selectBank": "銀行選択"
+    },
+    "regular": {
+      "result": {
+        "title": "定期海外送金",
+        "subtitle": "申請結果",
+        "account": "出金口座",
+        "receiveCurrency": "受取通貨コード",
+        "sendCurrency": "送金通貨コード",
+        "amount": "外貨取引金額",
+        "cycle": "送金周期",
+        "monthly": "毎月",
+        "weekly": "毎週",
+        "startDate": "送金開始日",
+        "senderInfo": "送金者情報",
+        "recipientInfo": "受取人情報",
+        "bankName": "受取銀行名",
+        "bankCode": "受取銀行コード"
+      },
+      "loading": {
+        "title": "申請内容を確認しています"
+      },
+      "information": {
+        "title": "海外送金の基本情報を入力してください",
+        "type": "送金タイプ",
+        "account": "送金口座",
+        "sendCurrency": "送金通貨コード",
+        "receiveCurrency": "受取通貨コード",
+        "receiveCurrencyPlaceholder": "受取通貨コードを入力してください (USD, CNY, JPY)",
+        "amount": "外貨取引金額({currency})",
+        "amountPlaceholder": "送金する金額を入力してください",
+        "appliedRate": "ウォン: {amount} KRW",
+        "cycle": "送金周期",
+        "cyclePlaceholder": "送金周期を選択してください（毎月/毎週）",
+        "monthly": "毎月",
+        "weekly": "毎週",
+        "cycleDetail": "送金周期詳細",
+        "cycleDetailPlaceholder": "送金周期の詳細時点を選択してください",
+        "weekdayWarning": "ウリィ銀行は平日のみ送金可能ですので、ご利用の際はご注意ください",
+        "monthEndWarning": "該当日付がその月にない場合、自動的にその月の最終日に実行されます",
+        "startDate": "送金開始日",
+        "remitterTitle": "送金者",
+        "remitterSubtitle": "国内滞在情報を入力してください",
+        "fullName": "氏名 (Full Name)",
+        "englishNamePlaceholder": "英語で入力してください",
+        "nationality": "国籍 (Nationality)",
+        "address": "住所 (Address)",
+        "addressPlaceholder": "送金者の居住住所を入力してください",
+        "detailAddress": "詳細住所",
+        "detailAddressPlaceholder": "住所を入力してください",
+        "recipientTitle": "受取人",
+        "recipientSubtitle": "受取人情報を入力してください",
+        "recipientPhonePlaceholder": "電話番号を入力してください",
+        "recipientAddressPlaceholder": "住所を入力してください",
+        "bankInfoTitle": "海外銀行情報の入力",
+        "bankInfoSubtitle": "入金先の海外銀行情報を入力してください",
+        "bankName": "銀行名 (Bank Name)",
+        "bankNamePlaceholder": "銀行名を選択してください",
+        "noCurrencyWarning": "まず通貨コードを選択してください",
+        "bankCode": "銀行コード",
+        "accountNumberPlaceholder": "口座番号を入力してください",
+        "modalTitle": "定期海外送金",
+        "modalMessage": "定期海外送金サービスを申し込みますか？\n「はい」をクリックすると、先に算出した優遇為替レートが適用されます。"
+      },
+      "history": {
+        "title": "定期送金履歴",
+        "registered": "登録済みの定期送金",
+        "loading": "定期送金履歴を読み込み中...",
+        "selectAccountPrompt": "口座を選択すると履歴が表示されます",
+        "noHistory": "定期送金履歴がありません",
+        "noHistorySubtitle": "別の口座を選択するか、新規送金を登録してください",
+        "noLinkedAccount": "連携された口座がありません。口座を連携してからご利用ください。",
+        "detailTitle": "海外送金履歴",
+        "editFailed": "編集に失敗しました。もう一度お試しください。",
+        "editError": "編集中にエラーが発生しました。",
+        "loadingDetail": "定期送金設定情報を読み込み中...",
+        "save": "保存",
+        "cancel": "キャンセル",
+        "editSuccess": "定期送金設定が変更されました。",
+        "more": "もっと見る",
+        "viewDetails": "詳細を見る",
+        "cancelRemittance": "解約する",
+        "to": "To. {name}",
+        "cancelModalTitle": "定期海外送金の解約",
+        "cancelModalMessage": "送金を解約しますか？\n解約後は復旧できませんので、慎重に選択してください。",
+        "noRemittanceHistory": "まだ送金履歴がありません。",
+        "exchangeRate": "為替レート {rate}ウォン",
+        "recurringTitle": "定期海外送金履歴",
+        "recipient": "受取人",
+        "recipientAccount": "受取人口座番号",
+        "completed": "6ヶ月の定期送金完了",
+        "creditScoreUp": "信用度スコア +50",
+        "recurringDetailTitle": "送金詳細情報",
+        "remittanceAmount": "送金額",
+        "fee": "手数料",
+        "status": "送金処理状況"
+      },
+      "term": {
+        "title": "利用規約同意書ページ"
+      }
+    },
+    "oneOff": {
+      "choose": {
+        "bankJPMorgan": "JPモルガン・チェース",
+        "bankBOA": "バンク・オブ・アメリカ",
+        "bankWellsFargo": "ウェルズ・ファーゴ",
+        "bankBOC": "交通銀行",
+        "bankICBC": "中国工商銀行",
+        "bankABC": "中国農業銀行",
+        "bankMUFG": "三菱UFJ銀行",
+        "bankSMBC": "三井住友銀行",
+        "bankMizuho": "みずほ銀行",
+        "countryUSA": "アメリカ",
+        "countryChina": "中国",
+        "countryJapan": "日本"
+      },
+      "form": {
+        "account": "送金口座",
+        "accountPlaceholder": "口座を選択してください",
+        "receiveCurrency": "受取通貨コード",
+        "amount": "外貨取引金額",
+        "amountPlaceholder": "送金する金額を入力してください",
+        "startDate": "送金開始日"
+      },
+      "page": {
+        "requestFailed": "送金リクエスト失敗：",
+        "requestError": "送金リクエスト中にエラーが発生しました。",
+        "fillAllFields": "すべての入力欄を埋める必要があります",
+        "title": "誰に送りますか？",
+        "recipientAccount": "口座番号入力",
+        "recipientName": "受取人名（英語）",
+        "recipientNamePlaceholder": "受取人の英語名を入力してください",
+        "recipientPhone": "受取人電話番号",
+        "countryCodeKorea": "韓国 (+82)",
+        "countryCodeUSA": "アメリカ (+1)",
+        "countryCodeChina": "中国 (+86)",
+        "countryCodeJapan": "日本 (+81)",
+        "phonePlaceholder": "電話番号を入力してください",
+        "date": "送金日入力"
+      }
+    },
+    "components": {
+      "creditPointBanner": {
+        "expectedCredit": "予想信用度",
+        "point": "点"
+      },
+      "complete": {
+        "title": "申請が完了しました",
+        "currentScore": "現在の申請スコア：",
+        "months12": "12ヶ月定期送金時",
+        "months18": "18ヶ月定期送金時",
+        "months24": "24ヶ月定期送金時",
+        "complete": "完了"
+      },
+      "addressModal": {
+        "title": "住所検索"
+      }
+    }
+  },
+  "account": {
+    "connection": {
+      "title": "口座連携",
+      "wonClick": "WONクリック ",
+      "withOneClick": "ワンクリックで",
+      "description": "{name}様の口座を連携できます。",
+      "wooriLogo": "ウリィ銀行ロゴ",
+      "complete": "完了"
+    },
+    "create": {
+      "title": "口座開設",
+      "nameLabel": "口座名",
+      "namePlaceholder": "口座名を入力してください",
+      "typeLabel": "口座の種類",
+      "typePlaceholder": "口座の種類を選択してください",
+      "deposit": "入出金口座",
+      "savings": "積立口座",
+      "loan": "ローン口座",
+      "investment": "投資口座",
+      "instruction1": "口座開設のために",
+      "instruction2": "情報を入力してください",
+      "button": "口座開設"
+    },
+    "myAccount": {
+      "title": "マイ口座",
+      "historyTitle": "口座履歴照会",
+      "currency": "ウォン",
+      "searchPlaceholder": "取引履歴検索",
+      "all": "すべて",
+      "deposit": "入金",
+      "withdrawal": "出金",
+      "noHistory": "取引履歴がありません。",
+      "wooriBank": "ウリィ銀行預金・積金",
+      "wooriLogo": "ウリィ銀行ロゴ",
+      "noLinkedAccount": "連携された口座がありません。",
+      "goToCreate": "口座開設に行く"
+    },
+    "success": {
+      "title": "口座が開설되었습니다！",
+      "description": "さあ、Credittoのある生活を始めましょう。",
+      "toMain": "メイン画面へ"
+    },
+    "import": {
+      "noAccessToken": "アクセストークンがありません。",
+      "saveSuccess": "口座情報の保存に成功しました：",
+      "fetchFail": "口座情報の取得に失敗しました："
+    }
+  },
+  "signup": {
+    "agree": {
+      "title": "規約に同意",
+      "agreeAll": "すべての規約に同意",
+      "terms1": "(必須) Creditto サービス利用規約",
+      "terms2": "(必須) 個人情報の収集および利用に同意",
+      "terms3": "(必須) 個人情報の取り扱い委託に同意",
+      "terms4": "(任意) 広告性情報の受信に同意",
+      "next": "次へ"
+    },
+    "loading": {
+      "title": "お客様の情報を確認しています",
+      "description": "少々お待ちください"
+    },
+    "permission": {
+      "cameraGranted": "カメラの権限を許可",
+      "cameraDenied": "カメラの権限が拒否/エラー",
+      "geolocationNotSupported": "位置情報がサポートされていません",
+      "locationAllowed": "位置情報を許可: {lat}, {lon}",
+      "locationDenied": "位置情報が拒否/エラー: {code}",
+      "title": "アクセス権",
+      "description1": "サービスを利用するために",
+      "description2": "アプリアクセス権限を確認してください",
+      "optional": "選択権限",
+      "camera": "カメラ",
+      "cameraDescription": "身分証明書の撮影、QRコードの認識、写真での送金、\nビデオ相談などに使用",
+      "location": "位置",
+      "locationDescription": "お近くの営業店やATMを探すために使用",
+      "microphone": "マイク",
+      "microphoneDescription": "ビデオ相談時の音声認識に使用",
+      "next": "次へ"
+    },
+    "phone": {
+      "nameLabel": "お客様のお名前を教えてください",
+      "birthdayLabel": "お客様の誕生日を教えてください",
+      "phoneLabel": "お客様の電話番号を入力してください",
+      "name": "名前",
+      "birthdate": "生年月日",
+      "birthdatePlaceholder": "YYYY-MM-DD",
+      "phoneNumber": "携帯電話番号",
+      "phonePlaceholder": "010-0000-0000",
+      "authTitle": "本人確認"
+    },
+    "sms": {
+      "timer": "3:00",
+      "success": "認証に成功しました",
+      "title": "SMS認証",
+      "description": "SMSで受信した\n6桁の認証番号を入力してください",
+      "label": "認証番号",
+      "placeholder": "000000",
+      "requestCode": "認証コードを要求",
+      "reRequestCode": "再リクエスト",
+      "verify": "認証する"
+    },
+    "success": {
+      "title": "登録が完了しました",
+      "description": "Credittoのサービスを利用するには、\n証明書の発行が必要です",
+      "doItLater": "後でやります",
+      "issueCertificate": "証明書を発行する"
+    }
+  },
+  "auth": {
+    "info": {
+      "title": "身分証明書情報入力",
+      "previewImage": "プレビュー画像",
+      "name": "名前",
+      "birthdate": "生年月日",
+      "alienRegistrationNumber": "外国人登録番号",
+      "phoneNumber": "電話番号",
+      "address": "住所",
+      "areaOfResidence": "滞在地域",
+      "setSimplePassword": "簡易パスワード設定",
+      "userRegistrationSuccess": "ユーザー登録成功：",
+      "userId": "ユーザーID：",
+      "failedToRegisterUser": "ユーザー登録に失敗しました："
+    },
+    "infoInput": {
+      "namePlaceholder": "名前を大文字で入力してください",
+      "birthdatePlaceholder": "生年月日を入力してください（8桁）",
+      "alienRegistrationNumberPlaceholder": "外国人登録番号を入力してください",
+      "addressPlaceholder": "外国人登録証明書に記載されている住所を入力してください",
+      "areaOfResidencePlaceholder": "滞在地域を入力してください"
+    },
+    "loading": {
+      "title": "お客様の情報を確認しています",
+      "description": "少々お待ちください"
+    },
+    "ocrBottomSheet": {
+      "title": "Creditto証明書を作成します"
+    },
+    "identification": {
+      "title": "身分証明書（外国人登録証明書）を\nご用意ください",
+      "description": "非対面登録のため身分証明書の撮影が必要です",
+      "idCardExample": "身分証明書の例",
+      "importAlienRegistrationCard": "外国人登録証明書をインポート"
+    },
+    "ocrStep": {
+      "title": "証明書の発行は以下の順序で進行します",
+      "step1Title": "非対面実名確認",
+      "step1Subtitle": "外国人登録証明書をご用意ください",
+      "step2Title": "簡易パスワード設定",
+      "step2Subtitle": "6桁の簡易パスワードを設定します。",
+      "issueCertificate": "証明書を発行する",
+      "dialogDescription": "一度作成するとn年間使用できます",
+      "terms1": "[必須] 本人確認サービス規約および同意事項",
+      "terms2": "[必須] Creditto電子認証サービス規約",
+      "terms3": "[必須] 個人情報の収集・利用同意（Creditto証明書）",
+      "terms4": "[必須] 固有識別情報処理同意",
+      "issueLater": "後で発行"
+    },
+    "scan": {
+      "frontendError": "フロントエンド requestOCR エラー（完全なエラーオブジェクト）：",
+      "notAlienRegistrationCard": "外国人登録証明書の画像ではありません。",
+      "uploadValidImage": "正しい外国人登録証明書の画像をアップロードしてください。",
+      "handleSelectFileError": "handleSelectFile エラー：",
+      "analysisFailed": "分析に失敗しました。",
+      "tryAgain": "しばらくしてからもう一度お試しください。",
+      "retakePhoto": "再撮影",
+      "confirm": "確認",
+      "infoCorrect": "以下の情報でよろしいですか？",
+      "alienRegistrationNumber": "外国人登録番号",
+      "name": "名前",
+      "gender": "性別",
+      "countryRegion": "国/地域",
+      "issueDate": "発行日",
+      "visaType": "ビザの種類",
+      "issuingAuthority": "発行機関"
+    },
+    "scanPreview": {
+      "preview": "プレビュー",
+      "analyzing": "分析中..."
+    },
+    "uploadBox": {
+      "supportedFormats": "サポート形式：JPG · JPEG · PNG"
+    },
+    "password": {
+      "title1": "証明書ログインの簡易パスワードを設定します",
+      "title2": "",
+      "enter6DigitPin": "6桁の簡易パスワードを入力してください",
+      "enter6DigitPinToUse": "使用する6桁の簡易パスワードを入力してください",
+      "enterAgainForConfirmation": "確認のためにもう一度入力してください。",
+      "passwordsDoNotMatch": "パスワードが一致しません。もう一度設定してください。",
+      "certificateNotFound": "証明書情報が見つかりません。",
+      "certificateIssueError": "証明書発行中にエラーが発生しました。もう一度お試しください。",
+      "passwordIncorrectOrError": "パスワードが正しくないか、エラーが発生しました。"
+    },
+    "securePinKeyboard": {
+      "clearAll": "全削除",
+      "delete": "消去",
+      "enterLabel": "{label}を入力"
+    },
+    "authSuccess": {
+      "title": "証明書が発行されました",
+      "description": "これで全てのサービスをご利用いただけます",
+      "idCardExample": "身分証明書の例",
+      "start": "始める"
+    }
+  }
 }

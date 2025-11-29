@@ -1,33 +1,35 @@
 "use client";
 
 import InfoDisplayField from "./InfoDisplayField";
+import { useTranslations } from "next-intl";
 
 export default function ParsedInfoSection({ parsedData }) {
+  const t = useTranslations("auth.scan");
   return (
     <div className="flex flex-col text-left">
-      <h1 className="text-2xl font-bold mb-[20px]">아래 정보가 맞나요?</h1>
+      <h1 className="text-2xl font-bold mb-[20px]">{t("infoCorrect")}</h1>
 
       <div className="flex flex-col items-start space-y-[0.938rem]">
         <InfoDisplayField
-          label="외국인등록번호"
+          label={t("alienRegistrationNumber")}
           value={parsedData?.alienRegNum ?? ""}
         />
-        <InfoDisplayField label="이름" value={parsedData?.name ?? ""} />
-        <InfoDisplayField label="성별" value={parsedData?.sex ?? ""} />
+        <InfoDisplayField label={t("name")} value={parsedData?.name ?? ""} />
+        <InfoDisplayField label={t("gender")} value={parsedData?.sex ?? ""} />
         <InfoDisplayField
-          label="국가 / 지역"
+          label={t("countryRegion")}
           value={parsedData?.nationality ?? ""}
         />
         <InfoDisplayField
-          label="발급 일자"
+          label={t("issueDate")}
           value={parsedData?.issueDateIso || parsedData?.issueDateRaw || "-"}
         />
         <InfoDisplayField
-          label="비자 유형"
+          label={t("visaType")}
           value={parsedData?.visaType ?? ""}
         />
         <InfoDisplayField
-          label="발급 기관"
+          label={t("issuingAuthority")}
           value={parsedData?.authority ?? ""}
         />
       </div>

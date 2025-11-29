@@ -7,9 +7,11 @@ import FunctionButton from "./components/FunctionButton/FunctionButton";
 import Money from "../maine/components/Money/Money";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
+import { useTranslations } from "next-intl";
 
 export default function MainPage() {
   const router = useRouter();
+  const t = useTranslations("main");
   // Redux 스토어에서 계좌 정보를 가져옵니다.
   // const accounts = useSelector((state) => state.account.accounts);
 
@@ -17,7 +19,7 @@ export default function MainPage() {
   useEffect(()=>{
     const accessToken = sessionStorage.getItem("accessToken");
     if (!accessToken) {
-      alert("로그인이 필요합니다.");
+      alert(t("loginRequired"));
       router.replace("/");
     }
 

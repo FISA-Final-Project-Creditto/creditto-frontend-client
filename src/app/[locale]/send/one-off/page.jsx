@@ -13,15 +13,7 @@ import {
 import BottomBar from "../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { credittoApi } from "../../../api/axios";
-
-// 요일
-const DAYS = [
-  { name: "월요일", value: "MONDAY" },
-  { name: "화요일", value: "TUESDAY" },
-  { name: "수요일", value: "WEDNESDAY" },
-  { name: "목요일", value: "THRUSDAY" },
-  { name: "금요일", value: "FRIDAY" },
-];
+import { useTranslations } from "next-intl";
 
 // 국가별 통화 코드
 const currency = {
@@ -33,6 +25,16 @@ const currency = {
 export default function TypePage() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const t = useTranslations("send");
+
+  // 요일
+  const DAYS = [
+    { name: t("common.dayOfWeek.MONDAY"), value: "MONDAY" },
+    { name: t("common.dayOfWeek.TUESDAY"), value: "TUESDAY" },
+    { name: t("common.dayOfWeek.WEDNESDAY"), value: "WEDNESDAY" },
+    { name: t("common.dayOfWeek.THURSDAY"), value: "THURSDAY" },
+    { name: t("common.dayOfWeek.FRIDAY"), value: "FRIDAY" },
+  ];
 
   const selectedCountry = useSelector((state) => state.send.selectedCountry); // 선택된 국가 가져오기
   const recipientBankInfo = useSelector((state) => state.send.recipientInfo); // 선택된 은행 정보 가져오기
@@ -194,11 +196,11 @@ export default function TypePage() {
         );
         console.log("전송 반응:", res.data);
       } catch (error) {
-        console.error("송금 요청 실패:", error);
-        alert("송금 요청 중 오류가 발생했습니다.");
+        console.error(t("oneOff.page.requestFailed"), error);
+        alert(t("oneOff.page.requestError"));
       }
     } else {
-      console.log("모든 입력 칸이 채워져야 됩니다");
+      console.log(t("oneOff.page.fillAllFields"));
     }
   };
 
@@ -206,7 +208,7 @@ export default function TypePage() {
     <main>
       {/* 상단 바 */}
       <AppHeader
-        title="해외 송금"
+        title={t("common.remittance")}
         show={true}
         showHamburger={false}
         showBack={true}
@@ -227,7 +229,7 @@ export default function TypePage() {
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             <div className="flex flex-col items-start">
               <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                송금 계좌
+                {t("oneOff.form.account")}
               </label>
               <div className="relative w-full">
                 <select
@@ -240,7 +242,7 @@ export default function TypePage() {
                       : "text-black"
                   }`}
                 >
-                  <option value="">계좌를 선택하세요</option>
+                  <option value="">{t("oneOff.form.accountPlaceholder")}</option>
                   {connectedAccounts.map((account) => (
                     <option key={account.accountId} value={account.accountNo}>
                       {account.accountNo}
@@ -251,14 +253,14 @@ export default function TypePage() {
               </div>
             </div>
             <h2 className="text-left text-[1.563rem] text-[#1A3668] font-bold">
-              어떤 계좌로 보낼까요?
+              {t("oneOff.page.title")}
             </h2>
 
             {/* 입력칸 */}
 
             <div className="flex flex-col items-start">
               <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                계좌번호 입력
+                {t("oneOff.page.recipientAccount")}
               </label>
               <div className="relative w-full">
                 <input
@@ -277,20 +279,20 @@ export default function TypePage() {
 
             <div className="flex flex-col items-start">
               <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                받는 분 이름 (영문)
+                {t("oneOff.page.recipientName")}
               </label>
               <input
                 name="recipientName"
                 value={formData.recipientName}
                 onChange={handleChange}
-                placeholder="받는 분의 영문 이름을 입력하세요"
+                placeholder={t("oneOff.page.recipientNamePlaceholder")}
                 className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
               />
             </div>
 
             <div className="flex flex-col items-start">
               <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                받는 분 전화번호
+                {t("oneOff.page.recipientPhone")}
               </label>
               <div className="flex w-full gap-2">
                 <select
@@ -299,17 +301,17 @@ export default function TypePage() {
                   onChange={handleChange}
                   className="w-1/3 px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black focus:outline-none"
                 >
-                  <option value="+82">한국 (+82)</option>
-                  <option value="+1">미국 (+1)</option>
-                  <option value="+86">중국 (+86)</option>
-                  <option value="+81">일본 (+81)</option>
+                  <option value="+82">{t("oneOff.page.countryCodeKorea")}</option>
+                  <option value="+1">{t("oneOff.page.countryCodeUSA")}</option>
+                  <option value="+86">{t("oneOff.page.countryCodeChina")}</option>
+                  <option value="+81">{t("oneOff.page.countryCodeJapan")}</option>
                 </select>
                 <input
                   name="phoneNo"
                   type="tel"
                   value={formData.phoneNo}
                   onChange={handlePhoneNumberChange}
-                  placeholder="전화번호를 입력하세요"
+                  placeholder={t("oneOff.page.phonePlaceholder")}
                   className={`w-2/3 px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
                     formData.phoneNo === "" ? "text-[#86909C]" : "text-black"
                   }`}
@@ -319,7 +321,7 @@ export default function TypePage() {
 
             <div className="flex flex-col items-start">
               <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                송금날짜 입력
+                {t("oneOff.page.date")}
               </label>
               <DatePicker
                 value={formData.startDate}
@@ -329,7 +331,7 @@ export default function TypePage() {
             </div>
             <div className=" flex flex-col items-start">
               <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                수취 통화 코드
+                {t("oneOff.form.receiveCurrency")}
               </label>
               <div className="relative w-full">
                 <input
@@ -347,21 +349,25 @@ export default function TypePage() {
             </div>
             <div className="flex flex-col items-start">
               <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                외화 거래 금액
+                {t("oneOff.form.amount")}
               </label>
               <input
                 type="text"
                 inputMode="numeric"
                 value={formData.targetAmount}
                 onChange={handleAmountChange}
-                placeholder="송금할 금액을 입력하세요"
+                placeholder={t("oneOff.form.amountPlaceholder")}
                 className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
               />
             </div>
           </form>
         </section>
       </div>
-      <BottomBar label="다음" onClick={handleSubmit} isActive={isFormValid} />
+      <BottomBar
+        label={t("common.next")}
+        onClick={handleSubmit}
+        isActive={isFormValid}
+      />
     </main>
   );
 }

@@ -3,6 +3,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import api, { credittoApi } from "@/src/app/api/axios";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 function formatNumber(n) {
   // n이 유효한 숫자인지 확인하고, 아닐 경우 '0'을 반환합니다.
@@ -13,6 +15,7 @@ function formatNumber(n) {
 }
 
 export default function AccountDetailPage() {
+  const t = useTranslations("account.myAccount");
   const router = useRouter();
   const params = useParams(); // useParams()는 { id: '...' } 형태의 객체를 반환합니다.
   const accountId = params.id; // 객체에서 실제 id 값을 추출합니다.
@@ -55,18 +58,21 @@ export default function AccountDetailPage() {
   }, [accountId]); // accountId가 변경될 때마다 useEffect가 다시 실행됩니다.
 
   const filtered = useMemo(() => {
-    return transactions?.filter((t) => {
-      if (filter === "in" && t.txnType !== "DEPOSIT") return false;
-      if (filter === "out" && t.txnType !== "WITHDRAWAL") return false;
+    if (!transactions) return [];
+    return transactions.filter((transaction) => {
+      if (filter === "in" && transaction.txnType !== "DEPOSIT") return false;
+      if (filter === "out" && transaction.txnType !== "WITHDRAWAL")
+        return false;
       if (!query) return true;
-      const title = t.txnType === "DEPOSIT" ? "입금" : "출금";
+      const title =
+        transaction.txnType === "DEPOSIT" ? t("deposit") : t("withdrawal");
       return title.includes(query);
     });
-  }, [transactions, query, filter]);
+  }, [transactions, query, filter, t]);
 
   return (
     <main className="min-h-[100dvh] flex flex-col">
-      <AppHeader title="계좌 내역 조회" show={true} showHamburger={false} />
+      <AppHeader title={t("historyTitle")} show={true} showHamburger={false} />
 
       {/* 스크롤 가능한 컨테이너: 화면을 넘을 때 세로 스크롤 발생 */}
       <div className="flex-1 overflow-auto">
@@ -77,9 +83,11 @@ export default function AccountDetailPage() {
           {/* 계좌 카드 */}
           <div className="mx-2 mb-4 rounded-lg border border-[#C9CDD4] p-4">
             <div className="flex items-center gap-4">
-              <img
+              <Image
                 src="/icon/woori.png"
-                alt=""
+                alt={t("wooriLogo")}
+                width={48}
+                height={48}
                 className="w-12 h-12 rounded-full"
               />
               <div className="flex-1">
@@ -90,17 +98,15 @@ export default function AccountDetailPage() {
                   {accountData?.accountNo}
                 </p>
               </div>
-
               <span className="ml-2 px-2 py-1 text-xs rounded bg-gray-100 text-gray-600">
                 {accountData?.accountType}
               </span>
             </div>
             <p className="mt-4 text-right text-2xl font-bold">
-           
               <span className="font-bold">
                 {formatNumber(accountData?.balance)}
               </span>
-              <span className="font-medium">원</span>
+              <span className="font-medium">{t("currency")}</span>
             </p>
           </div>
 
@@ -109,22 +115,17 @@ export default function AccountDetailPage() {
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="거래 내역 검색"
+              placeholder={t("searchPlaceholder")}
               className="flex-1 border-b pb-2 text-sm outline-none"
             />
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
               className="text-sm"
-            ></select>
-            <select
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-              className="text-sm"
             >
-              <option value="all">전체</option>
-              <option value="in">입금</option>
-              <option value="out">출금</option>
+              <option value="all">{t("all")}</option>
+              <option value="in">{t("deposit")}</option>
+              <option value="out">{t("withdrawal")}</option>
             </select>
           </div>
 
@@ -132,18 +133,16 @@ export default function AccountDetailPage() {
 
           {/* 거래 리스트 */}
           <div className="px-2 space-y-6">
-            {transactions?.length === 0 && (
-              <p className="text-center text-gray-400 py-8">
-                거래내역이 없습니다.
-              </p>
+            {filtered.length === 0 && (
+              <p className="text-center text-gray-400 py-8">{t("noHistory")}</p>
             )}
 
-            {filtered?.map((tx) => {
+            {filtered.map((tx) => {
               const isDeposit = tx.txnType === "DEPOSIT";
-              const title = isDeposit ? "입금" : "출금";
+              const title = isDeposit ? t("deposit") : t("withdrawal");
               return (
                 <div
-                  key={tx.typeId}
+                  key={tx.txnTime}
                   className="flex items-start justify-between"
                 >
                   <div>
@@ -166,10 +165,11 @@ export default function AccountDetailPage() {
                       <span className="font-bold">
                         {formatNumber(tx.txnAmount)}
                       </span>
-                      <span className="font-medium">원</span>
+                      <span className="font-medium">{t("currency")}</span>
                     </p>
                     <p className="text-xs text-gray-400 pt-1">
-                      {formatNumber(tx.balance)}원
+                      {formatNumber(tx.balance)}
+                      {t("currency")}
                     </p>
                   </div>
                 </div>

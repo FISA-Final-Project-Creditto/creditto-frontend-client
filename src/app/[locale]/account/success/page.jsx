@@ -4,8 +4,10 @@ import React from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useRouter } from "next/navigation";
 import BottomBar from "../../send/components/BottomBar";
+import { useTranslations } from "next-intl";
 
 export default function AccountSuccessPage() {
+  const t = useTranslations("account.success");
   const router = useRouter();
   return (
     <main className="h-[100dvh] flex justify-end items-center bg-[#e5e5e5]">
@@ -13,10 +15,10 @@ export default function AccountSuccessPage() {
         <h1 className="text-[22px] font-semibold text-gray-900 mt-17"></h1>
         <div className=" flex-1 px-10 pt-16 pb-10">
           <p className="text-2xl font-semibold leading-relaxed text-gray-900 text-left">
-            계좌가 생성되었어요 !
+            {t("title")}
             <br />
             <span className="block text-lg font-normal text-gray-500 mb-32">
-              이제 Creditto의 생활을 시작해 보세요
+              {t("description")}
             </span>
           </p>
           <div>
@@ -30,7 +32,7 @@ export default function AccountSuccessPage() {
 
         <footer>
           <BottomBar
-            label="메인 화면으로"
+            label={t("toMain")}
             onClick={() => {
               router.push("/main");
             }}

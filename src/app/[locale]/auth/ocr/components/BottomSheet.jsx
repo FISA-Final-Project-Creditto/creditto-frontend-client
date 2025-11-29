@@ -2,8 +2,10 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 export default function BottomSheet({ open, onOpenChange, children }) {
+  const t = useTranslations("auth.ocrBottomSheet");
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal forceMount>
@@ -33,7 +35,7 @@ export default function BottomSheet({ open, onOpenChange, children }) {
                 transition={{ type: "spring", damping: 30, stiffness: 320 }}
               >
                 <Dialog.Title className="text-[22px] font-semibold pt-[1.875rem] mb-[15px]">
-                  크레디토 인증서를 만들게요
+                  {t("title")}
                 </Dialog.Title>
                 {/* drag handle */}
                 {children}

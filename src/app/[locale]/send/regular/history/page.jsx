@@ -8,11 +8,13 @@ import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { credittoApi } from "@/src/app/api/axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setDetailData } from "@/src/store/features/sendHistory/sendHistorySlice";
+import { useTranslations } from "next-intl";
 
 export default function HistoryPage() {
   const [histories, setHistories] = useState([]); // 정기 송금 설정 목록 상태
   const [selectedAccount, setSelectedAccount] = useState(""); // 선택된 계좌 번호 상태
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
+  const t = useTranslations("send");
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -25,10 +27,10 @@ export default function HistoryPage() {
   // ✅ TODO: UI로 보여줘야 함
   useEffect(() => {
     if (!accounts || accounts.length === 0) {
-      alert("연동된 계좌가 없습니다. 계좌 연동 후 이용해주세요.");
+      alert(t("regular.history.noLinkedAccount"));
       router.replace("/");
     }
-  }, [accounts, router]);
+  }, [accounts, router, t]);
 
   // 사용자 정기 송금 설정 내역 조회
   useEffect(() => {
@@ -76,7 +78,7 @@ export default function HistoryPage() {
       {/* 상단바 영역 */}
       <header>
         <AppHeader
-          title="정기 송금 내역"
+          title={t("regular.history.title")}
           showBack={true}
           showHamburger={false}
         />
@@ -85,7 +87,7 @@ export default function HistoryPage() {
       {/* 페이지 제목 및 계좌 선택 영역 */}
       <section className="flex flex-col gap-4 px-8">
         <h1 className="text-left mt-[3.438rem] text-[1.563rem] text-[#1A3668] font-bold">
-          등록된 정기 송금
+          {t("regular.history.registered")}
         </h1>
 
         <div className="flex items-center justify-between mb-[2.813rem]">
@@ -96,7 +98,7 @@ export default function HistoryPage() {
               value={selectedAccount}
               onChange={(e) => setSelectedAccount(e.target.value)}
             >
-              <option value="">계좌를 선택하세요</option>
+              <option value="">{t("common.selectAccount")}</option>
               {connectedAccounts.map((account) => (
                 <option key={account} value={account}>
                   {account}
@@ -113,13 +115,15 @@ export default function HistoryPage() {
       {/* 정기 송금 설정 카드 목록 영역 */}
       <main className="space-y-[1.875rem] px-8">
         {isLoading && (
-          <p className="text-sm text-[#86909C]">정기 송금 내역 불러오는 중</p>
+          <p className="text-sm text-[#86909C]">
+            {t("regular.history.loading")}
+          </p>
         )}
 
         {/* 계좌 선택 전에는 아무 것도 표시하지 않음 */}
         {!isLoading && selectedAccount === "" && (
           <p className="text-sm text-[#86909C] mt-4">
-            계좌를 선택하면 내역이 표시됩니다
+            {t("regular.history.selectAccountPrompt")}
           </p>
         )}
 
@@ -129,10 +133,10 @@ export default function HistoryPage() {
           filteredHistories.length === 0 && (
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <p className="text-base font-medium text-[#4E5969]">
-                정기 송금 내역이 없습니다
+                {t("regular.history.noHistory")}
               </p>
               <p className="text-sm text-[#86909C] mt-1">
-                다른 계좌를 선택하거나 신규 송금을 등록해주세요
+                {t("regular.history.noHistorySubtitle")}
               </p>
             </div>
           )}

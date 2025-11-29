@@ -2,9 +2,11 @@
 
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 const Modal = ({ title, message, onClose, onConfirm }) => {
   const router = useRouter();
+  const t = useTranslations("send.common");
 
   // 모달 내부를 눌렀을 때 모달이 꺼지는 것을 방지
   const preventOffModal = (event) => {
@@ -51,7 +53,7 @@ const Modal = ({ title, message, onClose, onConfirm }) => {
             className="w-full h-[2.875rem] bg-[#F2F3F5] text-[#1A3668] text-[0.875rem] font-bold rounded-bl-[12px]"
             onClick={onClose}
           >
-            아니요
+            {t("no")}
           </button>
 
           {/* 예 */}
@@ -59,7 +61,7 @@ const Modal = ({ title, message, onClose, onConfirm }) => {
             className="w-full h-[2.875rem] bg-[#1A3668] text-white text-[0.875rem] font-bold rounded-br-[12px]"
             onClick={handleConfirm}
           >
-            예
+            {t("yes")}
           </button>
         </section>
       </main>

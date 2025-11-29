@@ -4,13 +4,15 @@ import RealTimeExchange from "./RealTimeExchange/RealTimeExchange";
 import GoExchangeButton from "./GoExchangeButton/GoExchangeButton";
 import GradientSparkleButton from "@/src/app/[locale]/maine/components/Send/SendButton";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function MoneyExchange() {
   const router = useRouter();
+  const t = useTranslations("main.moneyExchange");
   return (
     <div className="w-full h-[346px] bg-[#F3F6FB] flex flex-col justify-start items-center">
       <div className="w-full h-[83px] font-bold text-[26px] text-[#2E5796] text-left flex items-center px-7 ">
-        환전
+        {t("title")}
       </div>
       <RealTimeExchange />
       <GoExchangeButton />

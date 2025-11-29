@@ -4,8 +4,10 @@ import React from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useRouter } from "next/navigation";
 import BottomBar from "../../send/components/BottomBar";
+import { useTranslations } from "next-intl";
 
 export default function SuccessPage() {
+  const t = useTranslations("signup.success");
   const router = useRouter();
   return (
     <main className="h-[100dvh] flex justify-end items-center bg-[#e5e5e5]">
@@ -13,12 +15,10 @@ export default function SuccessPage() {
         <h1 className="text-[22px] font-semibold text-gray-900 mt-17"></h1>
         <div className=" flex-1 px-10 pt-16 pb-10">
           <p className="text-2xl font-semibold leading-relaxed text-gray-900 text-left">
-            가입이 완료되었어요
+            {t("title")}
             <br />
-            <span className="block text-lg font-normal text-gray-500 mb-32">
-              creditto의 서비스를 이용하기 위해서
-              <br />
-              인증서 발급이 필요해요
+            <span className="block text-lg font-normal text-gray-500 mb-32 whitespace-pre-line">
+              {t("description")}
             </span>
           </p>
           <div>
@@ -39,13 +39,13 @@ export default function SuccessPage() {
             }}
           >
             {" "}
-            다음에 할게요
+            {t("doItLater")}
           </div>
         </div>
 
         <footer>
           <BottomBar
-            label="인증서 발급하기"
+            label={t("issueCertificate")}
             onClick={() => {
               router.push("/auth/ocr/ocr-step");
             }}

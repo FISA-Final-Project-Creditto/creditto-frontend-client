@@ -3,8 +3,10 @@
 import DaumPostcode from "react-daum-postcode";
 import { MapPin, X } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
+import { useTranslations } from "next-intl";
 
 export default function AddressSearchModal({ open, onOpenChange, onComplete }) {
+  const t = useTranslations("send.components.addressModal");
   const handleComplete = (data) => {
     let fullAddress = data.address;
     let extraAddress = "";
@@ -28,7 +30,7 @@ export default function AddressSearchModal({ open, onOpenChange, onComplete }) {
       <DialogContent className="max-w-[600px] w-[90vw] p-0 gap-0 overflow-hidden rounded-xl border-0 shadow-2xl">
         <DialogTitle className="text-lg font-semibold text-white flex items-center gap-2">
           <MapPin className="w-5 h-5" />
-          주소 검색
+          {t("title")}
         </DialogTitle>
         <button
           onClick={() => onOpenChange(false)}

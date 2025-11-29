@@ -23,21 +23,23 @@ import {
   BarChart,
   Bar,
 } from 'recharts';
+import { useTranslations } from 'next-intl';
 
 
-
-const exchangeRateData = [
-  { date: '1월', KRW: 1200, JPY: 1000, CNY: 180 },
-  { date: '2월', KRW: 1210, JPY: 1010, CNY: 185 },
-  { date: '3월', KRW: 1195, JPY: 990, CNY: 175 },
-  { date: '4월', KRW: 1220, JPY: 1020, CNY: 190 },
-];
 
 export default function Dashboard() {
+  const t = useTranslations('maine');
   const [showBalance, setShowBalance] = useState(false);
   const creditScore = 750;
   const maxScore = 900;
   const scorePercentage = (creditScore / maxScore) * 100;
+  
+  const exchangeRateData = [
+    { date: t('creditChart.month', {month: 1}), KRW: 1200, JPY: 1000, CNY: 180 },
+    { date: t('creditChart.month', {month: 2}), KRW: 1210, JPY: 1010, CNY: 185 },
+    { date: t('creditChart.month', {month: 3}), KRW: 1195, JPY: 990, CNY: 175 },
+    { date: t('creditChart.month', {month: 4}), KRW: 1220, JPY: 1020, CNY: 190 },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/30">
@@ -45,8 +47,8 @@ export default function Dashboard() {
 
       <main className="px-4 py-4 pb-6 max-w-2xl mx-auto bg-[#e5e5e5]">
         <section className="mb-6">
-          <p className="text-xs text-muted-foreground mb-1">안녕하세요</p>
-          <h2 className="text-2xl font-bold text-foreground">정용준님</h2>
+          <p className="text-xs text-muted-foreground mb-1">{t('greeting')}</p>
+          <h2 className="text-2xl font-bold text-foreground">{t('userName')}</h2>
         </section>
 
       
@@ -55,32 +57,32 @@ export default function Dashboard() {
         
 
           <div className="bg-card border border-border rounded-2xl p-5">
-            <p className="text-xs text-muted-foreground font-medium mb-1">월 이용액</p>
+            <p className="text-xs text-muted-foreground font-medium mb-1">{t('monthlyUsage')}</p>
             <h4 className="text-3xl font-bold text-foreground mb-4">₩1,240,000</h4>
-            <div className="text-xs text-muted-foreground">이번 달 {3}건 사용</div>
+            <div className="text-xs text-muted-foreground">{t('thisMonth')} {3}{t('usageCount')}</div>
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-3 mb-6">
           <button className="bg-card border border-border rounded-2xl p-4 flex flex-col items-center gap-2 hover:bg-muted transition">
             <Send className="w-6 h-6 text-primary" />
-            <span className="text-xs font-medium">송금</span>
+            <span className="text-xs font-medium">{t('send')}</span>
           </button>
           <button className="bg-card border border-border rounded-2xl p-4 flex flex-col items-center gap-2 hover:bg-muted transition">
             <Wallet className="w-6 h-6 text-primary" />
-            <span className="text-xs font-medium">대출</span>
+            <span className="text-xs font-medium">{t('loan')}</span>
           </button>
           <button className="bg-card border border-border rounded-2xl p-4 flex flex-col items-center gap-2 hover:bg-muted transition">
             <TrendingUp className="w-6 h-6 text-primary" />
-            <span className="text-xs font-medium">투자</span>
+            <span className="text-xs font-medium">{t('invest')}</span>
           </button>
         </div>
 
         <div className="mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-foreground">추천 상품</h3>
+            <h3 className="font-semibold text-foreground">{t('recommendedProducts')}</h3>
             <button className="text-xs text-primary hover:underline flex items-center gap-1">
-              더보기
+              {t('seeMore')}
               <ChevronRight className="w-3 h-3" />
             </button>
           </div>
@@ -91,8 +93,8 @@ export default function Dashboard() {
                 <Wallet className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm text-foreground">중금리 신용대출</p>
-                <p className="text-xs text-muted-foreground mt-1">연 4.5% ~ 8.9%</p>
+                <p className="font-medium text-sm text-foreground">{t('mediumInterestCreditLoan')}</p>
+                <p className="text-xs text-muted-foreground mt-1">{t('loanInterestRate')}</p>
               </div>
               <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
             </div>
@@ -102,8 +104,8 @@ export default function Dashboard() {
                 <TrendingUp className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm text-foreground">적금 상품</p>
-                <p className="text-xs text-muted-foreground mt-1">연 4.2% 이율</p>
+                <p className="font-medium text-sm text-foreground">{t('savingsProduct')}</p>
+                <p className="text-xs text-muted-foreground mt-1">{t('savingsInterestRate')}</p>
               </div>
               <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
             </div>
@@ -112,13 +114,12 @@ export default function Dashboard() {
 
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-foreground">환율</h3>
-            <button className="text-xs text-primary hover:underline">새로고침</button>
+            <h3 className="font-semibold text-foreground">{t('exchangeRate')}</h3>
+            <button className="text-xs text-primary hover:underline">{t('refresh')}</button>
           </div>
 
           <div className="grid grid-cols-3 gap-3 mb-4">
-            {[
-              { currency: 'USD', code: 'USD', rate: 1250, change: 1.2, positive: true },
+            {[n              { currency: 'USD', code: 'USD', rate: 1250, change: 1.2, positive: true },
               { currency: 'JPY', code: 'JPY', rate: 8.5, change: -0.5, positive: false },
               { currency: 'EUR', code: 'EUR', rate: 1380, change: 2.1, positive: true },
             ].map((item) => (
@@ -142,7 +143,7 @@ export default function Dashboard() {
 
           {/* Mini chart */}
           <div className="bg-card border border-border rounded-2xl p-4">
-            <p className="text-xs text-muted-foreground font-medium mb-3">USD 추이</p>
+            <p className="text-xs text-muted-foreground font-medium mb-3">{t('usdTrend')}</p>
             <ResponsiveContainer width="100%" height={150}>
               <LineChart data={exchangeRateData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
