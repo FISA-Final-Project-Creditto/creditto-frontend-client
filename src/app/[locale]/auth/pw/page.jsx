@@ -185,7 +185,6 @@ export default function SecurePage({ length = 6 }) {
     length,
     router,
     dispatch,
-    t,
   ]);
 
   // 붙여넣기/복사/자르기 차단
