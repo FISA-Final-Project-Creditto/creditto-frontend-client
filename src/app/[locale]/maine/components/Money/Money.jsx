@@ -1,10 +1,36 @@
 "use client";
 import { credittoApi } from "@/src/app/api/axios";
+import { credittoApi } from "@/src/app/api/axios";
 import { Eye, EyeOff } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
 export default function Money({ accountState, isLoading }) {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
+  const [money, setMoney] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) return;
+        const response = await credittoApi.get("/api/accounts/me/balance", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        // API 응답 구조에 맞게 잔액을 추출하세요. 예: response.data.balance
+        setMoney(response.data.data);
+        console.log("반응 : ", response.data);
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+        setMoney(null); // 에러 발생 시 잔액 null로 설정
+      } finally {
+        setIsLoading(false); // 로딩 종료
+      }
+    };
+    fetchBalance();
+  }, []);
 
   const toggleBalanceVisibility = () => {
     setIsBalanceVisible((prev) => !prev);
