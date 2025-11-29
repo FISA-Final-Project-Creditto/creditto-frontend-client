@@ -109,7 +109,7 @@
   },
   "send": {
     "common": {
-      "remittance": "Overseas Remittance",
+      "remittance": "Regular Remittance",
       "next": "Next",
       "name": "Name",
       "country": "Country",
@@ -132,9 +132,9 @@
       },
       "selectAccount": "Select an account",
       "noLinkedAccount": "No linked accounts.",
-      "pageTitle": "Overseas Remittance/Inquiry",
-      "pageSubtitle": "What kind of overseas remittance do you need?",
-      "pageDescription": "From application to history management",
+      "pageTitle": "Send & Track remittances",
+      "pageSubtitle": "How would you like to\nsend money?",
+      "pageDescription": "Manage your remittances from start to finish",
       "confirm": "Confirm",
       "yes": "Yes",
       "no": "No",
@@ -142,25 +142,25 @@
       "noticeContent": "When sending money via SWIFT, if the information you entered is incorrect, the overseas remittance may not be processed normally. In this case, the mistake is on the customer's side, and the error will be handled according to the terms and conditions."
     },
     "main": {
-      "regularTitle": "Regular Overseas Remittance",
+      "regularTitle": "Recurring Remittances",
       "regularSubtitle": "Weekly · Monthly",
-      "regularDescription": "Register once and it will be sent automatically on the promised date",
-      "oneOffTitle": "One-time Overseas Remittance",
-      "oneOffSubtitle": "Freely whenever you want",
-      "oneOffDescription": "Send immediately without waiting",
+      "regularDescription": "Set it once for automatic payments on your chosen date",
+      "oneOffTitle": "One-time Remittance",
+      "oneOffSubtitle": "Remittance on Demand",
+      "oneOffDescription": "Send money instantly,\nno waiting required",
       "noLinkedAccountAlert": "No linked accounts.\nPlease link an account first.",
-      "newTransfer": "Register New Remittance",
-      "newTransferSubtitle": "Set your desired date and amount",
-      "historyTitle": "Inquire/Manage Remittance",
-      "historySubtitle": "View remittance history and application info at a glance",
+      "newTransfer": "New Remittance",
+      "newTransferSubtitle": "Select the date and amount",
+      "historyTitle": "Manage Remittances",
+      "historySubtitle": "See remittance history and details",
       "sendNow": "Send Now",
-      "sendNowSubtitle": "Send immediately without waiting",
-      "historyOneOffTitle": "Inquire Remittance History",
-      "historyOneOffSubtitle": "Review your past remittance records"
+      "sendNowSubtitle": "Send instantly without waiting",
+      "historyOneOffTitle": "View History",
+      "historyOneOffSubtitle": "See all your past remittance records"
     },
     "chooseCountry": {
-      "title": "Please select a country for overseas remittance",
-      "subtitle": "Please select the currency of the country you wish to send money to.",
+      "title": "Please select a country for remittance",
+      "subtitle": "Please select the currency of the country",
       "usa": "USA USD",
       "dollar": "Dollar",
       "china": "China CNY",
@@ -191,9 +191,9 @@
         "title": "We are checking your application details"
       },
       "information": {
-        "title": "Please enter the basic information for overseas remittance",
+        "title": "Please enter the basic information for remittance",
         "type": "Remittance Type",
-        "account": "Remittance Account",
+        "account": "Withdrawal Account",
         "sendCurrency": "Sending Currency Code",
         "receiveCurrency": "Receiving Currency Code",
         "receiveCurrencyPlaceholder": "Enter receiving currency code (USD, CNY, JPY)",
@@ -210,7 +210,7 @@
         "monthEndWarning": "If the selected date does not exist in a particular month, it will be automatically executed on the last day of that month.",
         "startDate": "Remittance Start Date",
         "remitterTitle": "Sender",
-        "remitterSubtitle": "Please enter your domestic residency information",
+        "remitterSubtitle": "Please enter your stay information",
         "fullName": "Full Name",
         "englishNamePlaceholder": "Enter in English",
         "nationality": "Nationality",
@@ -285,12 +285,13 @@
         "countryJapan": "Japan"
       },
       "form": {
-        "account": "Remittance Account",
+        "account": "Withdrawal Account",
         "accountPlaceholder": "Select an account",
         "receiveCurrency": "Receiving Currency Code",
         "amount": "Foreign Currency Amount",
         "amountPlaceholder": "Enter the amount to send",
-        "startDate": "Remittance Start Date"
+        "startDate": "Remittance Start Date",
+        "startDatePlaceholder": "Please select a date to start the remittance"
       },
       "page": {
         "requestFailed": "Remittance request failed:",

@@ -7,7 +7,6 @@ import { useTranslations } from "next-intl";
 
 export default function MyAccountPage() {
   const t = useTranslations("account.myAccount");
-  // const title = t("account.myAccount.title");
   return (
     <>
       <AppHeader

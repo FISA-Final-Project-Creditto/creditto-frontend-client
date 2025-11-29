@@ -133,7 +133,7 @@
       "selectAccount": "계좌를 선택하세요",
       "noLinkedAccount": "연동된 계좌가 없습니다.",
       "pageTitle": "해외 송금 · 조회",
-      "pageSubtitle": "어떤 해외 송금이 필요하신가요?",
+      "pageSubtitle": "어떤 해외 송금이\n필요하신가요?",
       "pageDescription": "송금 신청부터 내역 관리까지 가능해요",
       "confirm": "확인",
       "yes": "예",
@@ -159,8 +159,8 @@
       "historyOneOffSubtitle": "지금까지 보낸\n기록을 모아봐요"
     },
     "chooseCountry": {
-      "title": "해외 송금 국가를 선택해주세요",
-      "subtitle": "송금하실 국가의 통화를 선택해주세요.",
+      "title": "송금할 국가를 선택해주세요",
+      "subtitle": "송금하실 국가의 통화를 선택해주세요",
       "usa": "미국 USD",
       "dollar": "달러",
       "china": "중국 CNY",
@@ -290,7 +290,8 @@
         "receiveCurrency": "수취 통화 코드",
         "amount": "외화 거래 금액",
         "amountPlaceholder": "송금할 금액을 입력하세요",
-        "startDate": "송금 시작일"
+        "startDate": "송금 시작일",
+        "startDatePlaceholder": "송금을 시작할 날짜를 선택하세요"
       },
       "page": {
         "requestFailed": "송금 요청 실패:",

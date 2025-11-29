@@ -219,9 +219,6 @@ export default function TypePage() {
 
         <section className="flex flex-col gap-[2.188rem] mt-4">
           <h1 className="text-left text-[1.563rem] font-bold">
-            <span className="text-[#1A3668]">
-              {t("common.remittance")}
-            </span>{" "}
             {t("regular.information.title")}
           </h1>
 

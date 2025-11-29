@@ -133,7 +133,7 @@
       "selectAccount": "口座を選択してください",
       "noLinkedAccount": "連携された口座がありません。",
       "pageTitle": "海外送金・照会",
-      "pageSubtitle": "どのような海外送金が必要ですか？",
+      "pageSubtitle": "どのような海外送金が\n必要ですか？",
       "pageDescription": "送金申請から履歴管理まで可能です",
       "confirm": "確認",
       "yes": "はい",
@@ -151,16 +151,16 @@
       "noLinkedAccountAlert": "連携された口座がありません。\nまず口座を連携してください。",
       "newTransfer": "新規送金登録",
       "newTransferSubtitle": "希望の日付と\n金額を設定します",
-      "historyTitle": "送金照会・管理",
+      "historyTitle": "送金管理",
       "historySubtitle": "送金履歴と\n申請情報を一目で",
       "sendNow": "すぐに送金",
       "sendNowSubtitle": "待たずに\n今すぐ送金",
       "historyOneOffTitle": "送金履歴照会",
-      "historyOneOffSubtitle": "これまでの\n送金記録をまとめて見る"
+      "historyOneOffSubtitle": "これまでの\n送金履歴を確認"
     },
     "chooseCountry": {
-      "title": "海外送金先の国を選択してください",
-      "subtitle": "送金先の国の通貨を選択してください。",
+      "title": "先の国を選択してください",
+      "subtitle": "送金先の国の通貨を選択してください",
       "usa": "アメリカ USD",
       "dollar": "ドル",
       "china": "中国 CNY",
@@ -290,7 +290,8 @@
         "receiveCurrency": "受取通貨コード",
         "amount": "外貨取引金額",
         "amountPlaceholder": "送金する金額を入力してください",
-        "startDate": "送金開始日"
+        "startDate": "送金開始日",
+        "startDatePlaceholder": "送金を開始する日付を選択してください"
       },
       "page": {
         "requestFailed": "送金リクエスト失敗：",
