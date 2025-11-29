@@ -32,6 +32,8 @@ const currency = {
 
 export default function TypePage() {
   const [showKRWAmount, setShowKRWAmount] = useState(false); // 금액 작성 여부
+  const [exchangeRate, setExchangeRate] = useState(0); // 환율이 적용된 금액
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -165,8 +167,10 @@ export default function TypePage() {
             }
           );
 
-          if (res.code === 200) {
-            console.log(res.data.message);
+          const responseData = res.data; // 응답값 데이터(한번 더 들어가야 함)
+          if (responseData.code === 200) {
+            setExchangeRate(responseData.data.exchangeRate);
+            console.log("환율이 적용된 금액: ", exchangeRate);
           }
         } catch (error) {
           console.log("환율 조회 실패", error);
@@ -277,7 +281,7 @@ export default function TypePage() {
               <section className="flex flex-col gap-2">
                 <div className="flex flex-col items-start">
                   <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                    외화 거래 금액
+                    외화 거래 금액({receiveCurrency})
                   </label>
                   <input
                     type="text"
@@ -292,7 +296,7 @@ export default function TypePage() {
                 {/* 환율 적용된 금액(원화) */}
                 {showKRWAmount && (
                   <p className="text-sm text-[#334D79] text-left font-semibold">
-                    원화: 1000 KRW
+                    원화: {exchangeRate} KRW
                   </p>
                 )}
               </section>
