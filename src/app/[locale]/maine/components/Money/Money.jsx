@@ -2,11 +2,9 @@
 import { credittoApi } from "@/src/app/api/axios";
 import { Eye, EyeOff } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
 
 export default function Money({ accountState, isLoading }) {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
-  const t = useTranslations("maine");
 
   const toggleBalanceVisibility = () => {
     setIsBalanceVisible((prev) => !prev);
