@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 // 정기 해외 송금 내역
 export default function RemRecordList({ records = [], onRecordClick }) {

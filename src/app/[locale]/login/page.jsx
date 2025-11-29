@@ -7,8 +7,10 @@ import { useDispatch } from "react-redux";
 import { requireVerification } from "@/src/store/features/simplepw/simplepwSlice";
 import { setSerialNumber } from "@/src/store/features/signup/userSlice"; // 새로 만든 액션을 import 합니다.
 import BottomBar from "../send/components/BottomBar";
+import { useTranslations } from "next-intl";
 
 export default function LoginPage() {
+  const t = useTranslations("login");
   const [name, setName] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
   const dispatch = useDispatch();
@@ -18,10 +20,10 @@ export default function LoginPage() {
   useEffect(() => {
     const accessToken = sessionStorage.getItem("accessToken");
     if (accessToken) {
-      alert("이미 로그인되어 있습니다. 메인 페이지로 이동합니다.");
-      router.replace("/main"); // 뒤로가기 시 다시 로그인 페이지로 오지 않도록 replace 사용
+      alert(t("alert.alreadyLoggedIn"));
+      router.replace("/main");
     }
-  }, [router]);
+  }, [router, t]);
 
   const LoginHandle = async (e) => {
     e.preventDefault();
@@ -31,13 +33,13 @@ export default function LoginPage() {
         phoneNo: phoneNo,
       });
 
-      console.log("데이터 정보:", res.data); // 서버 응답 확인
+      // console.log("데이터 정보:", res.data);
 
       // 요청 성공 후 다음 로직을 여기에 구현합니다.
       // 예를 들어, 응답 데이터에 특정 값이 있을 때 페이지를 이동시킬 수 있습니다.
       // API 응답 데이터에 serialNumber가 있다고 가정합니다. (실제 키 이름은 API 명세에 맞게 확인 필요)
       if (res.data) {
-        alert("본인 인증에 성공했습니다.");
+        alert(t("alert.authSuccess"));
         // 1. Redux 스토어에 serialNumber 저장
         // console.log("serialNumber:", res.data.data.certificate_serial);
         dispatch(setSerialNumber(res.data.data.certificate_serial));
@@ -52,11 +54,11 @@ export default function LoginPage() {
 
   const NameField = (
     <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
-      <label className="text-sm text-gray-600">이름</label>
+      <label className="text-sm text-gray-600">{t("name.label")}</label>
       <input
         value={name}
         type="text"
-        placeholder="이름을 입력하세요"
+        placeholder={t("name.placeholder")}
         className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[20px] pb-1"
         onChange={(e) => setName(e.target.value)}
         onInput={(e) => {
@@ -74,11 +76,11 @@ export default function LoginPage() {
 
   const PhoneField = (
     <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
-      <label className="text-sm text-gray-600 ">휴대폰 번호</label>
+      <label className="text-sm text-gray-600 ">{t("phone.label")}</label>
       <input
         value={phoneNo}
         type="text"
-        placeholder="010-0000-0000"
+        placeholder={t("phone.placeholder")}
         className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[20px] pb-1 tracking-wider"
         onInput={(e) => {
           // 1️⃣ 숫자만 남기기
@@ -105,7 +107,7 @@ export default function LoginPage() {
     <main className="h-[100dvh] flex justify-center bg-[#e5e5e5]">
       <div className="w-full max-w-[440px] min-h-[100dvh] mx-auto flex  flex-col bg-white">
         <AppHeader
-          title="본인 인증"
+          title={t("auth.title")}
           show={true}
           showHamburger={true}
           showBack={true}
@@ -114,9 +116,9 @@ export default function LoginPage() {
           <div className="flex-1 px-8 pt-8 pb-10 text-left space-y-6">
             {/* 상단 문구 */}
             <h1 className="text-[20px] font-bold mb-5">
-              본인 인증을 위해
+              {t("auth.instructionPart1")}
               <br />
-              정보를 입력해주세요
+              {t("auth.instructionPart2")}
             </h1>
 
             {/* 입력 필드 */}
@@ -124,7 +126,7 @@ export default function LoginPage() {
             {PhoneField}
           </div>
           <footer>
-            <BottomBar label="로그인" isActive={true} />
+            <BottomBar label={t("button.login")} isActive={true} />
           </footer>
         </form>
       </div>

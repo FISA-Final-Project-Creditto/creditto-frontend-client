@@ -16,34 +16,31 @@ import {
   selectBankData,
 } from "@/src/store/features/send/sendSelectors";
 import { credittoApi } from "@/src/app/api/axios";
-
-// 국가별 은행 목록
-const BANK_OPTIONS = {
-  USD: [
-    { name: "JP모건 체이스", code: "JPMCUS33" },
-    { name: "뱅크 오브 아메리카", code: "BOFAUS3N" },
-    { name: "웰스 파고", code: "WFBIUS6S" },
-  ],
-  JPY: [
-    { name: "미쓰비시UFJ은행", code: "BOTKJPJT" },
-    { name: "미쓰이스미토모은행", code: "SMBCJPJT" },
-    { name: "미즈호은행", code: "MHCBJPJT" },
-  ],
-  MYR: [
-    { name: "메이뱅크", code: "MBBEMYKL" },
-    { name: "CIMB", code: "BNIAIDJA" },
-    { name: "퍼블릭 뱅크", code: "PBLLMYKA" },
-  ],
-  THB: [
-    { name: "방콕 은행", code: "BKKBTHB1" },
-    { name: "끄룽타이은행", code: "KRTHTHBK" },
-    { name: "시암 상업 은행", code: "SICOTHBK" },
-  ],
-};
+import { useTranslations } from "next-intl";
 
 export default function BankPage() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const t = useTranslations("send");
+
+  // 국가별 은행 목록
+  const BANK_OPTIONS = {
+    USD: [
+      { name: t("oneOff.choose.bankJPMorgan"), code: "JPMCUS33" },
+      { name: t("oneOff.choose.bankBOA"), code: "BOFAUS3N" },
+      { name: t("oneOff.choose.bankWellsFargo"), code: "WFBIUS6S" },
+    ],
+    CNY: [
+      { name: t("oneOff.choose.bankBOC"), code: "COMMCNSH" },
+      { name: t("oneOff.choose.bankICBC"), code: "BKCHCNBJ" },
+      { name: t("oneOff.choose.bankABC"), code: "ABOCCNBJ" },
+    ],
+    JPY: [
+      { name: t("oneOff.choose.bankMUFG"), code: "BOTKJPJT" },
+      { name: t("one-off.choose.bankSMBC"), code: "SMBCJPJT" },
+      { name: t("oneOff.choose.bankMizuho"), code: "MHCBJPJT" },
+    ],
+  };
 
   // selector로 데이터 가져오기
   const typeData = useSelector(selectTypeData);
@@ -153,7 +150,7 @@ export default function BankPage() {
         <header className="pt-[env(safe-area-inset-top)]">
           {/* 상단 바 */}
           <AppHeader
-            title="해외 송금"
+            title={t("common.remittance")}
             show={true}
             showHamburger={false}
             showBack={true}
@@ -168,21 +165,19 @@ export default function BankPage() {
           <main className="flex-1 pt-4 pb-6 overflow-y-auto">
             <section className="flex flex-col gap-[2.188rem]">
               <h1 className="text-left text-[1.563rem] font-bold">
-                <span className="text-[#1A3668]">해외 송금</span> 기본 정보를
-                <br />
-                입력해주세요
+                <span className="text-[#1A3668]">{t("common.remittance")}</span>{" "}
+                {t("regular.information.title")}
               </h1>
 
               <hr className="border-t border-[#E5E6EB]" />
 
               <section className="flex flex-col gap-6">
                 <h2 className="text-left text-[1.563rem] text-[#1A3668] font-bold">
-                  해외 은행 정보 입력
+                  {t("regular.information.bankInfoTitle")}
                 </h2>
 
                 <h3 className="text-left text-[1.125rem] text-black font-semibold">
-                  입금하시려는 해외 은행 정보를 <br />
-                  입력해 주세요
+                  {t("regular.information.bankInfoSubtitle")}
                 </h3>
 
                 {/* 입력칸 */}
@@ -193,7 +188,7 @@ export default function BankPage() {
                   {/* 수취 은행명 + 은행 코드 */}
                   <div className="flex flex-col items-start">
                     <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                      은행명 (Bank Name)
+                      {t("regular.information.bankName")}
                     </label>
 
                     <div className="flex w-full gap-2 items-center">
@@ -211,8 +206,8 @@ export default function BankPage() {
                         >
                           <option value="">
                             {banks.length > 0
-                              ? "은행명을 선택하세요"
-                              : "통화 코드를 먼저 선택하세요"}
+                              ? t("regular.information.bankNamePlaceholder")
+                              : t("regular.information.noCurrencyWarning")}
                           </option>
 
                           {banks.map((bank) => (
@@ -234,7 +229,8 @@ export default function BankPage() {
                             : "text-black"
                         }`}
                       >
-                        {formData.recipientBankCode || "은행 코드"}
+                        {formData.recipientBankCode ||
+                          t("regular.information.bankCode")}
                       </div>
                     </div>
                   </div>
@@ -242,14 +238,16 @@ export default function BankPage() {
                   {/* 계좌 번호 (Account Code) */}
                   <div className="flex flex-col items-start">
                     <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                      계좌 번호 (Account NO.)
+                      {t("common.accountNumber")}
                     </label>
                     <input
                       type="text"
                       name="recipientAccountNo"
                       value={formData.recipientAccountNo}
                       onChange={handleChange}
-                      placeholder="계좌번호를 입력하세요"
+                      placeholder={t(
+                        "regular.information.accountNumberPlaceholder"
+                      )}
                       className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
                     />
                   </div>
@@ -258,10 +256,8 @@ export default function BankPage() {
 
               {isModalOpen && (
                 <Modal
-                  title="해외 자동 송금"
-                  message="해외 자동 송금 서비스를 신청하시겠습니까?
-                ‘예'를 클릭하실 경우 앞서 산출한 우대환율이 
-                적용됩니다."
+                  title={t("regular.information.modalTitle")}
+                  message={t("regular.information.modalMessage")}
                   onClose={() => setIsModalOpen(false)}
                   onConfirm={handleConfirm}
                 />
@@ -269,7 +265,11 @@ export default function BankPage() {
             </section>
           </main>
         </div>
-        <BottomBar label="다음" onClick={handleSubmit} isActive={isFormValid} />
+        <BottomBar
+          label={t("common.next")}
+          onClick={handleSubmit}
+          isActive={isFormValid}
+        />
       </div>
     </div>
   );

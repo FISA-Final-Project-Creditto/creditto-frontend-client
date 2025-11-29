@@ -2,8 +2,10 @@
 import React, { useEffect } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function LoadingPage() {
+  const t = useTranslations("auth.loading");
   const router = useRouter();
 
   useEffect(() => {
@@ -16,10 +18,10 @@ export default function LoadingPage() {
       <div className="w-full max-w-[440px] mx-auto flex flex-col">
         <div className="flex-1 mt-5">
           <p className="text-2xl font-semibold leading-relaxed text-[#000000]">
-            고객님의 정보를 확인하고 있어요
+            {t("title")}
           </p>
           <div className="text-lg font-normal text-[#4E5969] mb-[2.5rem]">
-            잠시만 기다려 주세요
+            {t("description")}
           </div>
 
           {/* 🔹 Lottie 컨테이너 크기 고정 */}

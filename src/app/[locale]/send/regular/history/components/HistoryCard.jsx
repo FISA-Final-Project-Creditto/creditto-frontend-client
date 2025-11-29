@@ -12,20 +12,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { credittoApi } from "@/src/app/api/axios";
+import { useTranslations } from "next-intl";
 
 // 수취 통화 코드에 맞게 국기로 전환
 const CurrencyFlag = {
   JPY: JP,
   USD: US,
   CNY: CN,
-};
-
-const CONVERT_TO_DAY = {
-  MONDAY: "월요일",
-  TUESDAY: "화요일",
-  WEDNESDAY: "수요일",
-  THURSDAY: "목요일",
-  FRIDAY: "금요일",
 };
 
 export default function HistoryCard({
@@ -35,6 +28,15 @@ export default function HistoryCard({
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+  const t = useTranslations("send");
+
+  const CONVERT_TO_DAY = {
+    MONDAY: t("common.dayOfWeek.MONDAY"),
+    TUESDAY: t("common.dayOfWeek.TUESDAY"),
+    WEDNESDAY: t("common.dayOfWeek.WEDNESDAY"),
+    THURSDAY: t("common.dayOfWeek.THURSDAY"),
+    FRIDAY: t("common.dayOfWeek.FRIDAY"),
+  };
 
   const FlagComponent = CurrencyFlag[history.receivedCurrency]; // 해당 국기 컴포넌트
 
@@ -82,9 +84,13 @@ export default function HistoryCard({
         {/* 송금 주기 */}
         <span className="text-lg font-bold text-[#4E5969]">
           {history.regRemType === "MONTHLY" &&
-            `매월 ${history.scheduledDate}일`}
+            `${t("regular.result.monthly")} ${history.scheduledDate}${t(
+              "common.day"
+            )}`}
           {history.regRemType === "WEEKLY" &&
-            `매주 ${CONVERT_TO_DAY[history.scheduledDay]}`}
+            `${t("regular.result.weekly")} ${
+              CONVERT_TO_DAY[history.scheduledDay]
+            }`}
         </span>
 
         {/* 수취 통화 코드 with 더보기아이콘 */}
@@ -103,7 +109,10 @@ export default function HistoryCard({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="text-[#86909C] rounded-full p-1 transition-colors -mr-2">
-                  <MoreVertical className="w-5 h-5" aria-label="더보기" />
+                  <MoreVertical
+                    className="w-5 h-5"
+                    aria-label={t("regular.history.more")}
+                  />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
@@ -116,14 +125,14 @@ export default function HistoryCard({
                   className="cursor-pointer gap-2"
                 >
                   <FileText className="w-4 h-4" />
-                  자세히보기
+                  {t("regular.history.viewDetails")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setIsModalOpen(true)}
                   className="text-[#F53F3F] focus:text-[#F53F3F] cursor-pointer gap-2"
                 >
                   <Trash2 className="w-4 h-4" />
-                  해지하기
+                  {t("regular.history.cancelRemittance")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -135,7 +144,7 @@ export default function HistoryCard({
         {/* 송금인 & 송금 은행 */}
         <div className="flex flex-col items-start">
           <div className="text-sm text-black font-semibold mb-1">
-            To. {history.recipientName}
+            {t("regular.history.to", { name: history.recipientName })}
           </div>
           <div className="text-sm text-[#86909C] font-semibold">
             {history.recipientBankName}
@@ -151,9 +160,8 @@ export default function HistoryCard({
       {/* 취소 확인 모달 */}
       {isModalOpen && (
         <Modal
-          title="해외 정기 송금 해지"
-          message={`송금을 해지하시겠습니까?
-해지 후에는 복구가 어려우니 신중히 선택해주세요.`}
+          title={t("regular.history.cancelModalTitle")}
+          message={t("regular.history.cancelModalMessage")}
           onClose={handleModal}
           onConfirm={handleDeleteConfirm}
         />

@@ -7,6 +7,7 @@ import BottomBar from "../../../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { setRecipientData } from "@/src/store/features/send/sendSlice";
+import { useTranslations } from "next-intl";
 
 const phoneCodes = {
   USD: "🇺🇸 +1",
@@ -67,6 +68,7 @@ const formatPhoneNumber = (digits, phoneCode) => {
 export default function RecipientPage() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const t = useTranslations("send");
 
   const receiveCurrency = useSelector((state) => state.send.receiveCurrency); // 수취 통화 코드
   const displayPhoneCode = phoneCodes[receiveCurrency] || ""; // 전화 국가코드
@@ -147,7 +149,7 @@ export default function RecipientPage() {
         {/* 상단 바 + 프로그레스 바 */}
         <header className="pt-[env(safe-area-inset-top)]">
           <AppHeader
-            title="해외 송금"
+            title={t("common.remittance")}
             show={true}
             showHamburger={false}
             showBack={true}
@@ -161,20 +163,21 @@ export default function RecipientPage() {
           <main className="flex-1 pt-4 pb-6 overflow-y-auto">
             <section className="flex flex-col gap-[2.188rem]">
               <h1 className="text-left text-[1.563rem] font-bold">
-                <span className="text-[#1A3668]">해외 송금</span> 기본 정보를
-                <br />
-                입력해주세요
+                <span className="text-[#1A3668]">
+                  {t("common.remittance")}
+                </span>{" "}
+                {t("regular.information.title")}
               </h1>
 
               <hr className="border-t border-[#E5E6EB]" />
 
               <section className="flex flex-col gap-6">
                 <h2 className="text-left text-[1.563rem] text-[#1A3668] font-bold">
-                  받는 분
+                  {t("regular.information.recipientTitle")}
                 </h2>
 
                 <h3 className="text-left text-[1.125rem] text-black font-semibold">
-                  수취인 정보를 입력해주세요
+                  {t("regular.information.recipientSubtitle")}
                 </h3>
 
                 {/* 입력칸 */}
@@ -185,14 +188,16 @@ export default function RecipientPage() {
                   {/* 이름 */}
                   <div className="flex flex-col items-start">
                     <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                      이름 (Full Name)
+                      {t("regular.information.fullName")}
                     </label>
                     <input
                       type="text"
                       name="recipientName"
                       value={formData.recipientName}
                       onChange={handleChange}
-                      placeholder="영문으로 입력하세요"
+                      placeholder={t(
+                        "regular.information.englishNamePlaceholder"
+                      )}
                       className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
                     />
                   </div>
@@ -200,7 +205,7 @@ export default function RecipientPage() {
                   {/* 국적 */}
                   <div className="flex flex-col items-start">
                     <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                      국적 (Nationality)
+                      {t("regular.information.nationality")}
                     </label>
                     <div className="relative w-full">
                       <input
@@ -234,7 +239,9 @@ export default function RecipientPage() {
                       name="phoneNo"
                       value={formData.phoneNo}
                       onChange={handleChange}
-                      placeholder="전화번호를 입력하세요"
+                      placeholder={t(
+                        "regular.information.recipientPhonePlaceholder"
+                      )}
                       className="w-[80%] px-4 py-3 bg-[#F7F8FA] text-black placeholder:text-[#86909C] focus:outline-none"
                     />
                   </div>
@@ -242,13 +249,15 @@ export default function RecipientPage() {
                   {/* 주소 */}
                   <div className="flex flex-col items-start">
                     <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                      주소
+                      {t("regular.information.address")}
                     </label>
                     <div className="relative w-full">
                       <input
                         name="recipientAddress"
                         value={formData.recipientAddress}
-                        placeholder="주소를 입력하세요"
+                        placeholder={t(
+                          "regular.information.recipientAddressPlaceholder"
+                        )}
                         onChange={handleChange}
                         className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
                           formData.recipientAddress === ""
@@ -264,7 +273,11 @@ export default function RecipientPage() {
           </main>
         </div>
 
-        <BottomBar label="다음" onClick={handleSubmit} isActive={isFormValid} />
+        <BottomBar
+          label={t("common.next")}
+          onClick={handleSubmit}
+          isActive={isFormValid}
+        />
       </div>
     </div>
   );

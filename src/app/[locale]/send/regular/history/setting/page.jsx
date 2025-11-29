@@ -4,11 +4,13 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
 import RegSendHistoryItem from "../components/RegSendHistoryItem";
+import { useTranslations } from "next-intl";
 
 // 정기적으로 송금 내역을 보여주는 페이지
 export default function SendDetailPage({ params: paramsPromise }) {
   const params = React.use(paramsPromise);
   const { id } = params;
+  const t = useTranslations("send.regular.history");
 
   const [dateRange, setDateRange] = useState("2025. 08.04 ~ 2025.11.04");
   const [remove, setRemove] = useState(false);
@@ -51,7 +53,7 @@ export default function SendDetailPage({ params: paramsPromise }) {
       {/* 정기 송금 내역 */}
       <section className="flex flex-col gap-4">
         <h1 className="text-left mt-[3.438rem] text-[1.563rem] text-[#1A3668] font-bold">
-          정기 해외 송금 내역
+          {t("title")}
           {/* <span className="text-lg text-[#86909C]">({detail.recipient})</span> */}
         </h1>
       </section>
@@ -68,9 +70,9 @@ export default function SendDetailPage({ params: paramsPromise }) {
 
         {/* 오른쪽 텍스트 영역 */}
         <div className="flex flex-col items-end font-semibold">
-          <span className="text-base text-black">6개월 정기 송금 완료</span>
+          <span className="text-base text-black">{t("completed")}</span>
           <span className="text-right text-sm" style={{ color: "#2EA62E" }}>
-            신용도 점수 +50
+            {t("creditScoreUp")}
           </span>
         </div>
       </div>

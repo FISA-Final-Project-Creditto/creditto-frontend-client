@@ -5,9 +5,11 @@ import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { format } from "date-fns";
 import { Calendar, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function DatePicker({ value, onChange }) {
   const [isOpen, setIsOpen] = useState(false); // 달력 모달 open 상태
+  const t = useTranslations("send.oneOff.form");
 
   // 날짜 클릭 시 실행
   const handleDayClick = (date) => {
@@ -49,7 +51,7 @@ export default function DatePicker({ value, onChange }) {
           value={value}
           readOnly
           onClick={() => setIsOpen(true)}
-          placeholder="송금을 시작할 날짜를 선택하세요"
+          placeholder={t("startDatePlaceholder")}
           className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-md appearance-none text-[#1F2329] placeholder:text-[#86909C] focus:outline-none cursor-pointer"
         />
 
