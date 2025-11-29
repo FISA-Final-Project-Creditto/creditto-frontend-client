@@ -7,8 +7,9 @@ import { ChevronDown } from "lucide-react";
 import StepProgressBar from "../../../components/StepProgressbar";
 import DatePicker from "./components/DatePicker";
 import BottomBar from "../../../components/BottomBar";
-import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { setTypeData } from "@/src/store/features/send/sendSlice";
+import AppHeader from "@/src/common/AppHeader/AppHeader";
+import { credittoApi } from "@/src/app/api/axios";
 
 // 요일
 const DAYS = [
@@ -30,6 +31,7 @@ const currency = {
 // const connectedAccounts = ["1002-123-123124", "1002-346-346234"];
 
 export default function TypePage() {
+  const [showKRWAmount, setShowKRWAmount] = useState(false); // 금액 작성 여부
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -116,6 +118,7 @@ export default function TypePage() {
       scheduledDay = formData.scheduled; // "MONDAY" 등 문자열
     }
 
+    // 제출 데이터 폼
     const submissionData = {
       accountNo: formData.accountNo,
       sendCurrency,
@@ -132,8 +135,50 @@ export default function TypePage() {
     // 정기 해외 송금 신규 등록 요청바디 저장
     dispatch(setTypeData(submissionData));
 
-    router.push("/send/information/remittance");
+    router.push("send/regular/information/remittance");
   };
+
+  useEffect(() => {
+    const handleAmountComplete = async () => {
+      // 외화 거래 금액이 작성되자 않으면 작성 미완료로 인식
+      if (!formData.sendAmount || formData.sendAmount.trim() === "") {
+        setShowKRWAmount(false);
+        return;
+      }
+
+      // 작성되고 5초 뒤에 작성 완료로 인식
+      const timer = setTimeout(() => {
+        setShowKRWAmount(true);
+      }, 500);
+
+      // 환율 조회
+      if (showKRWAmount) {
+        try {
+          const accessToken = sessionStorage.getItem("accessToken");
+
+          const res = await credittoApi.get(
+            `/api/exchange/${receiveCurrency}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          if (res.code === 200) {
+            console.log(res.data.message);
+          }
+        } catch (error) {
+          console.log("환율 조회 실패", error);
+        }
+      }
+
+      // 다음 입력이 들어오면 초기화
+      return () => clearTimeout(time);
+    };
+
+    handleAmountComplete();
+  });
 
   return (
     <main>
@@ -229,19 +274,28 @@ export default function TypePage() {
               </div>
 
               {/* 외화 거래 금액 */}
-              <div className="flex flex-col items-start">
-                <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                  외화 거래 금액
-                </label>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={formData.sendAmount}
-                  onChange={handleAmountChange}
-                  placeholder="송금할 금액을 입력하세요"
-                  className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
-                />
-              </div>
+              <section className="flex flex-col gap-2">
+                <div className="flex flex-col items-start">
+                  <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
+                    외화 거래 금액
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={formData.sendAmount}
+                    onChange={handleAmountChange}
+                    placeholder="송금할 금액을 입력하세요"
+                    className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
+                  />
+                </div>
+
+                {/* 환율 적용된 금액(원화) */}
+                {showKRWAmount && (
+                  <p className="text-sm text-[#334D79] text-left font-semibold">
+                    원화: 1000 KRW
+                  </p>
+                )}
+              </section>
 
               {/* 송금 주기 */}
               <div className="flex flex-col items-start">

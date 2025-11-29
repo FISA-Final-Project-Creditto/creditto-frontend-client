@@ -28,7 +28,7 @@ export default function ChooseCountryPage() {
       dispatch(setReceivedCurrency(currency));
       dispatch(setCountryData(localSelectedCountry)); // Redux 액션 호출
     }
-    router.push("/send/information/type");
+    router.push("/send/regular/information/type");
   };
 
   return (
