@@ -9,7 +9,7 @@ import AppHeader from "@/src/common/AppHeader/AppHeader";
 import clsx from "clsx";
 import {
   setReceivedCurrency,
-  setSelectedCountry,
+  setCountryData,
 } from "@/src/store/features/send/sendSlice";
 
 export default function ChooseCountryPage() {
@@ -26,7 +26,7 @@ export default function ChooseCountryPage() {
     const currency = currencyMap[localSelectedCountry];
     if (currency) {
       dispatch(setReceivedCurrency(currency));
-      dispatch(setSelectedCountry(localSelectedCountry)); // Redux 액션 호출
+      dispatch(setCountryData(localSelectedCountry)); // Redux 액션 호출
     }
     router.push("/send/information/type");
   };

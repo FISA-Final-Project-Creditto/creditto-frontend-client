@@ -10,7 +10,7 @@ import AppHeader from "@/src/common/AppHeader/AppHeader";
 import BottomBar from "../../components/BottomBar";
 import {
   setRecipientInfo,
-  setSelectedCountry as setReduxSelectedCountry,
+  setCountryData as setReduxSelectedCountry,
 } from "@/src/store/features/send/sendSlice";
 
 const BANK_OPTIONS = {

@@ -12,7 +12,6 @@ import {
 } from "@/src/store/features/send/sendSlice";
 import BottomBar from "../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-import StepProgressBar from "../components/StepProgressbar";
 import { credittoApi } from "../../api/axios";
 
 // 요일
