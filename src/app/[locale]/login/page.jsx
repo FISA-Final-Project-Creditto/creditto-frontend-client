@@ -3,8 +3,8 @@ import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
-import { useDispatch } from "react-redux";
-import { loginMode } from "@/src/store/features/simplepw/simplepwSlice"; // 이 부분은 비밀번호 설정 모드 관련이므로 그대로 둡니다.
+import { useDispatch } from "react-redux"; 
+import { requireVerification } from "@/src/store/features/simplepw/simplepwSlice";
 import { setSerialNumber } from "@/src/store/features/signup/userSlice"; // 새로 만든 액션을 import 합니다.
 import BottomBar from "../send/components/BottomBar";
 
@@ -39,12 +39,10 @@ export default function LoginPage() {
       if (res.data) {
         alert("본인 인증에 성공했습니다.");
         // 1. Redux 스토어에 serialNumber 저장
-        console.log("serialNumber:", res.data.data.certificate_serial);
-        dispatch(setSerialNumber(res.data.data.certificate_serial));
-        dispatch(loginMode());
-        // dispatch(loginMode()); // loginMode는 여기서 설정할 필요가 없으므로 제거합니다.
+        // console.log("serialNumber:", res.data.data.certificate_serial);
+        dispatch(setSerialNumber(res.data.data.certificate_serial)); 
+        dispatch(requireVerification("/main")); // 로그인 성공 시 /main으로 이동하도록 설정
         // 2. 비밀번호 입력 페이지로 이동
-
         router.push("/auth/pw"); // 비밀번호 입력 페이지로 이동
       }
     } catch (err) {

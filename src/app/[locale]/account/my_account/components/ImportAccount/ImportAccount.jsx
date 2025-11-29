@@ -1,10 +1,11 @@
 "use client";
-import api, { credittoApi } from "@/src/app/api/axios";
+import { credittoApi } from "@/src/app/api/axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAccounts } from "@/src/store/features/account/accountSlice";
 import BottomBar from "@/src/app/[locale]/send/components/BottomBar";
+import { requireVerification } from "@/src/store/features/simplepw/simplepwSlice";
 
 export default function ImportAccount() {
   const router = useRouter();
@@ -48,7 +49,9 @@ export default function ImportAccount() {
     }
   }, [dispatch, status]);
   const handleAccount = () => {
-    router.push("/account/create");
+    // 비밀번호 확인을 요청하고, 성공 시 '/account/create'로 이동하도록 설정
+    dispatch(requireVerification("/account/create"));
+    router.push("/auth/pw"); // 비밀번호 페이지로 이동
   };
 
   return (

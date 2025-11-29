@@ -5,8 +5,12 @@ import React, { useState, useEffect } from "react";
 
 export default function Money({}) {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
-  const [money, setMoney] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [accountState, setAccountState] = useState({
+    balance: null,
+    accountCount: 0,
+  });
+
 
 
   useEffect(() => {
@@ -19,12 +23,15 @@ export default function Money({}) {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        // API 응답 구조에 맞게 잔액을 추출하세요. 예: response.data.balance
-        setMoney(response.data.data); 
+        // API 응답에서 balance와 accountCount를 모두 상태로 저장
+        setAccountState({
+          balance: response.data.data,
+          accountCount: response.data.accoutCount,
+        });
         console.log("반응 : ", response.data);
       } catch (error) {
         console.error("Error fetching accounts:", error);
-        setMoney(null); // 에러 발생 시 잔액 null로 설정
+        setAccountState({ balance: null, accountCount: 0 }); // 에러 발생 시 초기화
       } finally {
         setIsLoading(false); // 로딩 종료
       }
@@ -39,21 +46,29 @@ export default function Money({}) {
 
   const renderBalance = () => {
     if (isLoading) {
-      return "잔액 조회 중..."; // A, B (로딩 중)
-    }
-    if (money === null) {
-      return "계좌 연결 후 조회 가능"; // A, B (계좌 없음 또는 에러)
+      return "잔액 조회 중...";
     }
 
+    // B. 예전에 썼는데 지금은 계좌 끊음 (onboarding=true, accountCount=0)
+    if (accountState.accountCount === 0) {
+      return "연동된 계좌가 없습니다.";
+    }
+
+    // C, D. 계좌 연동했고, 잔액이 0원이거나 그 이상
+    // balance가 null인 경우는 API 에러로 간주하여 다른 메시지를 보여줄 수도 있습니다.
+    if (accountState.balance === null) {
+      return "잔액을 불러올 수 없습니다.";
+    }
+    
     const formattedBalance = new Intl.NumberFormat("ko-KR", {
       style: "currency",
       currency: "KRW",
-    }).format(money);
+    }).format(accountState.balance);
 
     if (isBalanceVisible) {
-      return formattedBalance; // C, D
+      return formattedBalance;
     } else {
-      return "●●●●●"; // C, D (숨김 처리)
+      return "●●●●●";
     }
   };
 
