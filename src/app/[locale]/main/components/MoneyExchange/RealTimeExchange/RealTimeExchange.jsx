@@ -1,14 +1,14 @@
-'use client'
+"use client";
 import { credittoApi } from "@/src/app/api/axios";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState , } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function RealTimeExchange() {
   const [exchange, setExchange] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchExchangeRate = async () => {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
@@ -30,7 +30,7 @@ export default function RealTimeExchange() {
         }
       }
     };
-        // 1. 컴포넌트 마운트 시 즉시 한 번 호출
+    // 1. 컴포넌트 마운트 시 즉시 한 번 호출
     fetchExchangeRate();
 
     // 2. 1초마다 주기적으로 API 호출 설정
@@ -40,19 +40,22 @@ export default function RealTimeExchange() {
     return () => clearInterval(intervalId);
   }, [isLoading]); // isLoading을 의존성 배열에 추가하여 finally 블록이 여러 번 실행되지 않도록 함
 
- 
-
   return (
     <div className="w-[90%] h-[46px] bg-white rounded-xl text-left flex items-center justify-between px-4 shadow-sm">
       <div className="flex items-center gap-2">
         <span className="text-2xl">🇺🇸</span>
-        <span className="text-gray-600 font-medium">실시간 환율 ({exchange?.currencyCode || 'USD'})</span>
+        <span className="text-gray-600 font-medium">
+          실시간 환율 ({exchange?.currencyCode || "USD"})
+        </span>
       </div>
       <div className="font-bold text-gray-800">
-        <span>{exchange ? new Intl.NumberFormat('ko-KR').format(exchange.exchangeRate) : '...'}</span>
+        <span>
+          {exchange
+            ? new Intl.NumberFormat("ko-KR").format(exchange.exchangeRate)
+            : "..."}
+        </span>
         <span className="text-gray-500 font-normal ml-1">원</span>
       </div>
     </div>
   );
-
 }
