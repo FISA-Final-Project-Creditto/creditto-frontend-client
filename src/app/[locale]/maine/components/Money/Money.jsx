@@ -25,8 +25,8 @@ export default function Money({}) {
         });
         // API 응답에서 balance와 accountCount를 모두 상태로 저장
         setAccountState({
-          balance: response.data.data,
-          accountCount: response.data.accoutCount,
+          balance: response.data.data.totalBalance,
+          accountCount: response.data.data.accountCount,
         });
         console.log("반응 : ", response.data);
       } catch (error) {
