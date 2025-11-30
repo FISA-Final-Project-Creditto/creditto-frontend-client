@@ -145,6 +145,7 @@ export default function TypePage() {
     router.push("/send/regular/information/remittance");
   };
 
+  // 환율 조회
   useEffect(() => {
     const fetchExchange = () => {
       // 수취 통화 코드가 없거나, 금액이 비어 있으면 아무 것도 하지 않음
@@ -168,9 +169,10 @@ export default function TypePage() {
           );
 
           const { code, data } = res.data;
+          console.log("receiveCurrency: ", receiveCurrency);
 
           if (code === 200 && data && data.exchangeRate) {
-            const rate = data.exchangeRate; // 예: 1 USD = 1464.8 KRW
+            const rate = data.exchangeRate; // 환율
 
             const raw = formData.sendAmount.replace(/,/g, "");
             const amount = Number(raw);

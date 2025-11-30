@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
@@ -10,14 +10,14 @@ import EditableField from "../components/EditableField";
 import InfoRow from "../components/InfoRow";
 
 // 국가명을 한국어로 변환
-const countryToKorean = {
+const COUNTRY_TO_KOREAN = {
   KOR: "대한민국",
   USA: "미국",
   CHINA: "중국",
   JAPAN: "일본",
 };
 
-const statusToKorean = {
+const STATUS_TO_KOREAN = {
   ACTIVE: "정상",
   DELAYED: "연기",
   PAUSED: "일시중지",
@@ -28,13 +28,6 @@ export default function HistoryDetailPage() {
   const { id } = useParams(); // /send/regular/history/details/[id]의 id
   const router = useRouter();
   const [edit, setEdit] = useState(false); // 편집 여부
-
-  // Redux에 저장해둔 정기 송금 설정 내역 목록
-  const histories = useSelector((state) => state.sendHistory.detailedHistory);
-  const history = histories.find(
-    (item) => String(item.regRemId) === String(id)
-  );
-  console.log("정기송금 설정: ", history);
 
   // formData 초기값은 함수 기반 초기화로 설정
   const [formData, setFormData] = useState({
@@ -56,20 +49,21 @@ export default function HistoryDetailPage() {
     recipientPhoneNo: "", // 수취인 전화번호
     regRemStatus: "ACTIVE", // 거래 상태
   });
+  const [originalData, setOriginalData] = useState(null); // 수정 도중에 취소하고 싶을 경우
 
   // 금액 표시용 포맷터 (읽기 모드에서만 콤마 붙이기)
   const formatAmount = (val) =>
     val == null || val === "" ? "" : Number(val).toLocaleString();
 
-  // 저장 버튼 - 수정 API 호출
+  // 저장 버튼 - 수정 API 요청
   const handleSave = async () => {
-    if (!formData || !history) return;
+    if (!formData) return;
 
     try {
       const accessToken = sessionStorage.getItem("accessToken");
 
       // 백엔드에서 제공한 Request Body 형태에 맞게 조립
-      const payload = {
+      const requestBody = {
         accountNo: formData.accountNo,
         sendAmount: Number(formData.sendAmount),
         regRemType: formData.regRemType,
@@ -82,8 +76,8 @@ export default function HistoryDetailPage() {
       };
 
       const res = await credittoApi.put(
-        `/api/remittance/scheduled/${history.regRemId}`,
-        payload,
+        `/api/remittance/scheduled/${id}`,
+        requestBody,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -91,8 +85,17 @@ export default function HistoryDetailPage() {
         }
       );
 
-      if (res.data.code === 200) {
-        alert("정기 송금 설정이 수정");
+      const { code } = res.data;
+
+      if (code === 200) {
+        alert("정기 송금 설정이 수정되었습니다.");
+
+        // 업데이트 된 데이터만 저장(요청 바디 사용)
+        setOriginalData((prev) => ({
+          ...prev, // 기존 필드 유지
+          ...requestBody, // 변경된 부분만 덮어씀
+        })); // 원본 데이터 수정
+
         setEdit(false);
       } else {
         alert("수정에 실패했습니다. 다시 시도해주세요.");
@@ -105,26 +108,11 @@ export default function HistoryDetailPage() {
 
   // 수정 취소
   const handleCancel = () => {
-    setEdit(false);
-    // 원래 값으로 롤백하고 싶으면 history 기반으로 다시 세팅
-    if (history) {
-      setFormData((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          accountNo: history.accountNo,
-          amount: String(history.sendAmount ?? 0),
-          remType: history.regRemType || "MONTHLY",
-          monthlyDay:
-            history.regRemType === "MONTHLY" && history.scheduledDate != null
-              ? String(history.scheduledDate)
-              : "10",
-          weeklyDay:
-            history.regRemType === "WEEKLY" && history.scheduledDay
-              ? history.scheduledDay
-              : "MONDAY",
-        };
-      });
+    setEdit(false); // 편집 취소
+
+    // 원본 데이터가 있으면 다시 되돌리기
+    if (originalData) {
+      setFormData(originalData);
     }
   };
 
@@ -145,7 +133,7 @@ export default function HistoryDetailPage() {
           console.log("하나의 정기송금 설정 세부사항 조회 성공");
 
           // API 응답값을 formData에 저장
-          setFormData({
+          const historyData = {
             accountNo: data.accountNo ?? "",
             sendAmount: data.sendAmount ? String(data.sendAmount) : "",
             regRemType: data.regRemType ?? "",
@@ -169,7 +157,10 @@ export default function HistoryDetailPage() {
             recipientPhoneCc: data.recipientPhoneCc || "",
             recipientPhoneNo: data.recipientPhoneNo || "",
             regRemStatus: data.regRemStatus || "ACTIVE",
-          });
+          };
+
+          setFormData(historyData);
+          setOriginalData(historyData); // 원본 저장
         }
       } catch (error) {
         console.log("하나의 정기송금 설정 세부사항 조회 실패: ", error);
@@ -179,7 +170,7 @@ export default function HistoryDetailPage() {
     fetchHistoryDetail();
   }, [id]);
 
-  // history 또는 formData가 아직 없으면 로딩 상태
+  // formData가 아직 없으면 로딩 상태
   if (!formData) {
     return (
       <main className="min-h-dvh flex items-center justify-center bg-white">
@@ -236,7 +227,7 @@ export default function HistoryDetailPage() {
             <EditableField
               label="외화 거래 금액"
               edit={edit}
-              type="number"
+              type="sendAmount"
               value={`${formatAmount(formData.sendAmount)} ${
                 formData.receiveCurrency
               }`}
@@ -253,7 +244,7 @@ export default function HistoryDetailPage() {
             <EditableField
               label="송금 주기"
               edit={edit}
-              type="remType"
+              type="regRemType"
               regRemType={formData.regRemType}
               scheduledDate={formData.scheduledDate}
               scheduledDay={formData.scheduledDay}
@@ -282,7 +273,7 @@ export default function HistoryDetailPage() {
             <InfoRow label="이름" value={formData.clientName} />
             <InfoRow
               label="국적"
-              value={countryToKorean[formData.clientCountry]}
+              value={COUNTRY_TO_KOREAN[formData.clientCountry]}
             />
             <InfoRow label="송금 통화 코드" value={formData.sendCurrency} />
           </div>
@@ -296,7 +287,7 @@ export default function HistoryDetailPage() {
           <div className="space-y-3.75">
             <InfoRow
               label="국가"
-              value={countryToKorean[formData.recipientCountry]}
+              value={COUNTRY_TO_KOREAN[formData.recipientCountry]}
             />
             <InfoRow label="은행명" value={formData.recipientBankName} />
             <InfoRow label="계좌 번호" value={formData.recipientAccountNo} />
@@ -306,16 +297,23 @@ export default function HistoryDetailPage() {
               label="전화 번호"
               value={`${formData.recipientPhoneCc} ${formData.recipientPhoneNo}`}
             />
-            <InfoRow
+
+            {/* 정기 송금 상태 */}
+            <EditableField
               label="송금 상태"
-              value={statusToKorean[formData.regRemStatus]}
+              edit={edit}
+              type="regRemStatus"
+              value={STATUS_TO_KOREAN[formData.regRemStatus]}
+              onChangeRegRemStatus={(v) =>
+                setFormData((prev) => ({ ...prev, regRemStatus: v }))
+              }
             />
           </div>
         </section>
       </div>
 
       {edit && (
-        <div className="fixed bottom-0 left-0 right-0 flex gap-3 p-4 bg-white">
+        <div className="bottom-0 left-0 right-0 flex gap-3 p-4 bg-white">
           <Button
             variant="outline"
             className="flex-1 border-[#86909C] text-[#4E5969]"
