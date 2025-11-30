@@ -169,7 +169,6 @@ export default function TypePage() {
           );
 
           const { code, data } = res.data;
-          console.log("receiveCurrency: ", receiveCurrency);
 
           if (code === 200 && data && data.exchangeRate) {
             const rate = data.exchangeRate; // 환율

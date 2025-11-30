@@ -56,8 +56,8 @@ function EditableField({
             )}
 
             {/* 연결된 계좌가 있을 경우 */}
-            {connectedAccounts.map((account, idx) => (
-              <option key={idx} value={account}>
+            {connectedAccounts.map((account) => (
+              <option key={account} value={account}>
                 {account}
               </option>
             ))}

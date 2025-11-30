@@ -7,21 +7,10 @@ import { credittoApi } from "@/src/app/api/axios";
 import EditableField from "../components/EditableField";
 import InfoRow from "../components/InfoRow";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-
-// 국가명을 한국어로 변환
-const COUNTRY_TO_KOREAN = {
-  KOR: "대한민국",
-  USA: "미국",
-  CHINA: "중국",
-  JAPAN: "일본",
-};
-
-const STATUS_TO_KOREAN = {
-  ACTIVE: "정상",
-  DELAYED: "연기",
-  PAUSED: "일시중지",
-  CANCELLED: "취소",
-};
+import {
+  COUNTRY_TO_KOREAN,
+  STATUS_TO_KOREAN,
+} from "@/src/lib/constants/countryCode";
 
 export default function HistoryDetailPage() {
   const { id } = useParams(); // /send/regular/history/details/[id]의 id
@@ -125,8 +114,6 @@ export default function HistoryDetailPage() {
 
         const { code, data } = res.data;
         if (code === 200 && data) {
-          console.log("하나의 정기송금 설정 세부사항 조회 성공: ", data);
-
           // API 응답값을 formData에 저장
           const historyData = {
             accountNo: data.accountNo ?? "",
@@ -158,7 +145,7 @@ export default function HistoryDetailPage() {
           setOriginalData(historyData); // 원본 저장
         }
       } catch (error) {
-        console.log("하나의 정기송금 설정 세부사항 조회 실패: ", error);
+        console.error("하나의 정기송금 설정 세부사항 조회 실패: ", error);
       }
     };
 
@@ -166,7 +153,7 @@ export default function HistoryDetailPage() {
   }, [id]);
 
   // formData가 아직 없으면 로딩 상태
-  if (!formData) {
+  if (!originalData) {
     return (
       <main className="min-h-dvh flex items-center justify-center bg-white">
         <p className="text-sm text-[#86909C]">

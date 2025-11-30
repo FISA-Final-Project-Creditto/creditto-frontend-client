@@ -14,3 +14,18 @@ export const countryCodes = [
   { name: "인도네시아", countryCode: "IDN" },
   { name: "がはこと", countryCode: "UTO" },
 ];
+
+// 국가명을 한국어로 변환
+export const COUNTRY_TO_KOREAN = {
+  KOR: "대한민국",
+  USA: "미국",
+  CHINA: "중국",
+  JAPAN: "일본",
+};
+
+export const STATUS_TO_KOREAN = {
+  ACTIVE: "정상",
+  DELAYED: "연기",
+  PAUSED: "일시중지",
+  CANCELLED: "취소",
+};

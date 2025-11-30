@@ -1,13 +1,19 @@
 "use client";
+
 import Hambuger from "@/src/app/[locale]/main/components/Hambuger";
 import { ChevronLeft } from "lucide-react";
 import React from "react";
 
 export default function AppHeader({
-  title = "앱",
+  title,
   showBack = true,
   show = true,
   showHamburger = true,
+
+  // 수정 관련
+  showEdit = false,
+  edit,
+  handleEdit,
 }) {
   if (!show) return null;
 
@@ -28,6 +34,14 @@ export default function AppHeader({
 
       <div className="w-9 h-10 flex items-center justify-end">
         {showHamburger && <Hambuger />}
+        {showEdit && !edit && (
+          <button
+            onClick={handleEdit}
+            className="text-sm font-semibold text-[#4D6389]"
+          >
+            수정
+          </button>
+        )}
       </div>
     </header>
   );
