@@ -58,7 +58,7 @@ export default function CardCarousel() {
       router.push("/");
       return;
     }
-    router.push("/send/choose");
+    router.push("/send/regular/choose");
   };
 
   return (
