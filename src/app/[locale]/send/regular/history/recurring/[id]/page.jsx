@@ -8,6 +8,7 @@ import { setSendHistoryData } from "@/src/store/features/sendHistory/sendHistory
 import { credittoApi } from "@/src/app/api/axios";
 import RegSendHistoryItem from "../../components/RegSendHistoryItem";
 import RecurringHistory from "../components/RecurringHistory";
+import RemRecordList from "../../components/RegSendHistoryItem";
 
 // 정기적으로 송금 내역을 보여주는 페이지
 export default function RecurringPage({ params: paramsPromise }) {
@@ -20,7 +21,7 @@ export default function RecurringPage({ params: paramsPromise }) {
 
   // 하나의 정기송금 설정에 대한 송금 기록 내역들
   // ✅ TODO: 실제 이름은 details로 수정
-  const [realDetails, setRealDetails] = useState([]);
+  const [remRecords, setRemRecords] = useState([]);
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
   // 수취인과 수취 계좌번호 가져오기
@@ -67,6 +68,51 @@ export default function RecurringPage({ params: paramsPromise }) {
 
   const detail = details.find((h) => h.id === parseInt(id)); // 부모에게 전달받은 params(id)와 histories에서 동일한 id값을 가진 history 찾기
 
+  // 6개월 사이클을 여러 번 계산하는 함수
+  const getSixMonthCycles = (remRecords) => {
+    // remRecords(송금 내역 리스트)가 비어있거나 최소 6개가 들어있지 않은 경우
+    if (!Array.isArray(remRecords) || remRecords.length < 6) {
+      return { count: 0 };
+    }
+
+    // createdDate 기준 오름차순 정렬
+    const sorted = [...remRecords].sort(
+      (a, b) =>
+        new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
+    );
+
+    let cycleCount = 0;
+    let i = 0;
+
+    // 한 번 6개월 완주하면 i를 +6 해서 다음 송금 내역들부터 다시 시작
+    while (i + 5 < sorted.length) {
+      const first = new Date(sorted[i].createdDate); // 1번째 송금
+      const sixth = new Date(sorted[i + 5].createdDate); // 6번째 송금
+
+      // 개월 수 차이 계산
+      const monthDiff =
+        (sixth.getFullYear() - first.getFullYear()) * 12 +
+        (sixth.getMonth() - first.getMonth());
+
+      if (monthDiff >= 5) {
+        cycleCount += 1;
+        i += 6; // 다음 송금 내역들부터 다시 시작
+      } else {
+        break; // 아직 6개월이 안 됐으면, 이후 인덱스들도 6개월 채울 수 없기 때문에 종료
+      }
+    }
+
+    return { count: cycleCount };
+  };
+
+  const { count: sixMonthCycles } = getSixMonthCycles(remRecords); // 사이클 횟수
+  const creditScoreBonus = sixMonthCycles * 50; // 보너스 점수
+
+  // 리스트 아이템 클릭 시 모달 열기
+  const handleHistoryItemClick = async () => {
+    setIsHistoryModalOpen(true);
+  };
+
   // 하나의 정기송금 설정에 대한 송금 기록 조회
   useEffect(() => {
     const fetchRegSendHistory = async () => {
@@ -75,26 +121,34 @@ export default function RecurringPage({ params: paramsPromise }) {
 
         setIsLoading(true); // API 응답 기다리는 동안 로딩 진행
 
-        const res = await credittoApi.get(`/api/remittance/scheduled/${id}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const res = await credittoApi.get(
+          `/api/remittance/scheduled/history/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
 
-        if (res.data.code === 200) {
-          console.log("특정 정기송금 기록 조회 성공: ", res.data);
-          setRealDetails(res.data.data); // 내역 리스트에 저장
+        const { code, data } = res.data;
 
-          // Redux 스토어에 저장
-          const reduxData = {
-            regRemId: id,
-            recipientName: recipientName,
-            recipientAccountNo: recipientAccountNo,
-          };
-          dispatch(setSendHistoryData(reduxData));
+        if (code === 200) {
+          console.log("하나의 정기송금 설정에 대한 송금 기록 조회: ", data);
+          setRemRecords(data); // 내역 리스트에 저장
+
+          // // Redux 스토어에 저장
+          // const reduxData = {
+          //   regRemId: id,
+          //   recipientName: recipientName,
+          //   recipientAccountNo: recipientAccountNo,
+          // };
+          // dispatch(setSendHistoryData(reduxData));
         }
       } catch (error) {
-        console.log("하나의 정기송금 설정에 대한 송금 기록 조회 실패: ", error);
+        console.error(
+          "하나의 정기송금 설정에 대한 송금 기록 조회 실패: ",
+          error
+        );
         setError(true);
       } finally {
         setIsLoading(false);
@@ -103,11 +157,6 @@ export default function RecurringPage({ params: paramsPromise }) {
 
     fetchRegSendHistory();
   }, [id, dispatch, recipientName, recipientAccountNo]); // 빈 배열 → 페이지 렌더 시 1회 실행
-
-  // 리스트 아이템 클릭 시 모달 열기
-  const handleHistoryItemClick = async (item) => {
-    setIsHistoryModalOpen(true);
-  };
 
   return (
     <div className="min-h-dvh flex flex-col bg-white">
@@ -149,25 +198,29 @@ export default function RecurringPage({ params: paramsPromise }) {
 
       {/* 정기 송금 내역 */}
       <main className="space-y-[1.875rem] mb-[2.813rem] px-8 mt-[2.875rem]">
-        <RegSendHistoryItem
-          details={details}
-          onItemClick={handleHistoryItemClick}
+        <RemRecordList
+          records={remRecords}
+          onRecordClick={handleHistoryItemClick}
         />
       </main>
 
       {/* 정기 송금 완료 컴포넌트 */}
-      <div className="flex items-center w-full gap-3 px-8">
-        {/* 왼쪽 가로 라인 */}
-        <div className="flex-1 border-t border-[#86909C]" />
+      {sixMonthCycles >= 6 && (
+        <div className="flex items-center w-full gap-3 px-8">
+          {/* 왼쪽 가로 라인 */}
+          <div className="flex-1 border-t border-[#86909C]" />
 
-        {/* 오른쪽 텍스트 영역 */}
-        <div className="flex flex-col items-end font-semibold">
-          <span className="text-base text-black">6개월 정기 송금 완료</span>
-          <span className="text-right text-sm" style={{ color: "#2EA62E" }}>
-            신용도 점수 +50
-          </span>
+          {/* 오른쪽 텍스트 영역 */}
+          <div className="flex flex-col items-end font-semibold">
+            <span className="text-base text-black">
+              6개월 정기 송금 {sixMonthCycles}회 완료
+            </span>
+            <span className="text-right text-sm" style={{ color: "#2EA62E" }}>
+              신용도 점수 +{creditScoreBonus}
+            </span>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* RecurringHistory 모달 오버레이 */}
       {isHistoryModalOpen && (
