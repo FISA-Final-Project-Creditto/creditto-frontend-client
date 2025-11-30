@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronLeft, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
 import { credittoApi } from "@/src/app/api/axios";
 import EditableField from "../components/EditableField";
 import InfoRow from "../components/InfoRow";
+import AppHeader from "@/src/common/AppHeader/AppHeader";
 
 // 국가명을 한국어로 변환
 const COUNTRY_TO_KOREAN = {
@@ -184,35 +183,21 @@ export default function HistoryDetailPage() {
   return (
     <main className="min-h-dvh flex flex-col bg-white">
       {/* 상단 */}
-      <header className="mb-[1.563rem] px-8 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <button
-              className="text-[#1D2129]"
-              onClick={() => router.back()}
-              type="button"
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </button>
-            <h1 className="text-lg font-semibold">해외 송금 내역</h1>
-          </div>
-
-          {!edit && (
-            <button
-              onClick={() => setEdit(true)}
-              className="text-sm font-semibold text-[#4D6389]"
-            >
-              수정
-            </button>
-          )}
-        </div>
+      <header>
+        <AppHeader
+          title="해외 송금 내역"
+          showHamburger={false}
+          showEdit={true}
+          edit={edit}
+          handleEdit={() => setEdit(true)}
+        />
       </header>
 
       {/* 내용 */}
-      <div className="flex flex-col px-8">
+      <div className="flex flex-col px-8 mt-[1.25rem]">
         <section className="w-full border border-[#86909C] rounded-xl px-[1.563rem] py-5 mb-[2.188rem]">
           <div className="space-y-3.75">
-            {/* 출금 계좌 (Select) */}
+            {/* 출금 계좌 */}
             <EditableField
               label="출금 계좌"
               edit={edit}
