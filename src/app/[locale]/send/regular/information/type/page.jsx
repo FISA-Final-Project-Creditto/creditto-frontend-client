@@ -16,7 +16,7 @@ const DAYS = [
   { name: "월요일", value: "MONDAY" },
   { name: "화요일", value: "TUESDAY" },
   { name: "수요일", value: "WEDNESDAY" },
-  { name: "목요일", value: "THRUSDAY" },
+  { name: "목요일", value: "THURSDAY" },
   { name: "금요일", value: "FRIDAY" },
 ];
 
@@ -145,6 +145,7 @@ export default function TypePage() {
     router.push("/send/regular/information/remittance");
   };
 
+  // 환율 조회
   useEffect(() => {
     const fetchExchange = () => {
       // 수취 통화 코드가 없거나, 금액이 비어 있으면 아무 것도 하지 않음
@@ -170,7 +171,7 @@ export default function TypePage() {
           const { code, data } = res.data;
 
           if (code === 200 && data && data.exchangeRate) {
-            const rate = data.exchangeRate; // 예: 1 USD = 1464.8 KRW
+            const rate = data.exchangeRate; // 환율
 
             const raw = formData.sendAmount.replace(/,/g, "");
             const amount = Number(raw);

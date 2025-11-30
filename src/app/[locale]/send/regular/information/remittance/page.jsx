@@ -75,7 +75,7 @@ export default function RemittancePage() {
 
       dispatch(setClientData(submissionData));
 
-      router.push("/send/information/recipient"); // 수취인 페이지로 이동
+      router.push("/send/regular/information/recipient"); // 수취인 페이지로 이동
     } else {
       console.log("모든 입력 칸이 채워져야 됩니다");
     }

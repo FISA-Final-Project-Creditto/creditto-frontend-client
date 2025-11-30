@@ -134,7 +134,7 @@ export default function BankPage() {
 
       if (res.data.code === 200) {
         // 신청 결과 페이지로 이동
-        router.push("/send/result");
+        router.push("/send/regular/result");
       }
     } catch (error) {
       console.log("정기 해외 송금 신청 실패: ", error.response);

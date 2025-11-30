@@ -10,7 +10,7 @@ import ParsedInfoSection from "./components/ParsedInfoSection";
 import BottomBar from "../components/BottomBar";
 import { useDispatch } from "react-redux";
 import { setOcrData } from "@/src/store/features/ocr/ocrSlice";
-import { countryCodes } from "@/src/app/[locale]/constants/countryCode";
+import { countryCodes } from "@/src/lib/constants/countryCode";
 
 const DOCUMENT_TYPE_ALIEN_CARD = "Alien Registration Card"; // 외국인등록증 상수로 선언
 

@@ -20,7 +20,6 @@ export default function HistoryPage() {
   // ✅ sessionStorage에서 가져오는 방법으로 변경
   const accounts = useSelector((state) => state.account.accounts); // Redux에서 저장된 연동계좌 목록 조회
   const connectedAccounts = accounts?.map((acc) => acc.accountNo) ?? []; // 계좌 번호만 추출
-  console.log("connectedAccounts: ", connectedAccounts);
 
   // 연동된 계좌가 없을 때 메인 페이지로 이동 처리
   // ✅ TODO: UI로 보여줘야 함
@@ -148,7 +147,7 @@ export default function HistoryPage() {
               history={history}
               onClick={() =>
                 router.push(
-                  `/send/history/recurring/${history.regRemId}` +
+                  `/send/regular/history/recurring/${history.regRemId}` +
                     `?recipientName=${encodeURIComponent(
                       history.recipientName
                     )}` +
