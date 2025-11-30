@@ -26,12 +26,11 @@ function EditableField({
   value,
   rawValue,
   type,
-  regRemType,
+  regRemType, // 송금 주기(MONTHLY / WEEKLY)
   scheduledDate,
   scheduledDay,
   regRemStatus,
   onChange, // 계좌, 외화거래 변경 핸들러
-  onChangeRegRemType, // 송금 상세 주기 변경 핸들러
   onChangeScheduledDate, // 날짜(매월) 변경 핸들러
   onChangeScheduledDay, // 요일(매주) 변경 핸들러
   onChangeRegRemStatus, // 정기 송금 상태 변경 핸들러
@@ -71,17 +70,8 @@ function EditableField({
             onChange={(e) => onChange(e.target.value)}
             className="flex-1 text-right border-[#C9CDD4] text-[#1D2129]"
           />
-        ) : type === "regRemType" ? (
-          <div className="flex flex-1 justify-end gap-2">
-            <select
-              value={regRemType}
-              onChange={(e) => onChangeRegRemType(e.target.value)}
-              className="border-[#C9CDD4] rounded-md px-3 py-2 text-[#1D2129]"
-            >
-              <option value="MONTHLY">MONTHLY</option>
-              <option value="WEEKLY">WEEKLY</option>
-            </select>
-
+        ) : type === "scheduled" ? (
+          <div className="flex flex-1 justify-end">
             {regRemType === "MONTHLY" ? (
               <select
                 value={scheduledDate}
@@ -122,11 +112,12 @@ function EditableField({
           </select>
         ) : null
       ) : (
+        // 읽기 모드 – 한 줄로 "매월 14일" / "매주 화요일" 표기
         <span className="text-right text-[#1D2129] font-medium flex-1 whitespace-pre-line">
-          {type === "regRemType"
+          {type === "scheduled"
             ? regRemType === "MONTHLY"
               ? `매월 ${scheduledDate}일`
-              : `매주 ${WEEKDAY_LABELS[scheduledDay]}`
+              : `매주 ${WEEKDAY_LABELS[scheduledDay] || ""}`
             : value}
         </span>
       )}

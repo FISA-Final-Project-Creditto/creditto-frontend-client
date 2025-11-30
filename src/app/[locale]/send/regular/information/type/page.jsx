@@ -16,7 +16,7 @@ const DAYS = [
   { name: "월요일", value: "MONDAY" },
   { name: "화요일", value: "TUESDAY" },
   { name: "수요일", value: "WEDNESDAY" },
-  { name: "목요일", value: "THRUSDAY" },
+  { name: "목요일", value: "THURSDAY" },
   { name: "금요일", value: "FRIDAY" },
 ];
 

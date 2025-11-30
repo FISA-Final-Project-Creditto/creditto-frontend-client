@@ -109,7 +109,7 @@ export default function ResultPage() {
       <footer>
         <BottomBar
           label="다음"
-          onClick={() => router.push("/send/loading")}
+          onClick={() => router.push("/send/regular/loading")}
           isActive={true}
         />
       </footer>

@@ -65,7 +65,6 @@ export default function HistoryDetailPage() {
       const requestBody = {
         accountNo: formData.accountNo,
         sendAmount: Number(formData.sendAmount),
-        regRemType: formData.regRemType,
         scheduledDate:
           formData.regRemType === "MONTHLY"
             ? Number(formData.scheduledDate)
@@ -90,10 +89,7 @@ export default function HistoryDetailPage() {
         alert("정기 송금 설정이 수정되었습니다.");
 
         // 업데이트 된 데이터만 저장(요청 바디 사용)
-        setOriginalData((prev) => ({
-          ...prev, // 기존 필드 유지
-          ...requestBody, // 변경된 부분만 덮어씀
-        })); // 원본 데이터 수정
+        setOriginalData(formData); // 원본 데이터 수정(현재 Formdata를 집어넣어서 원본을 수정)
 
         setEdit(false);
       } else {
@@ -129,7 +125,7 @@ export default function HistoryDetailPage() {
 
         const { code, data } = res.data;
         if (code === 200 && data) {
-          console.log("하나의 정기송금 설정 세부사항 조회 성공");
+          console.log("하나의 정기송금 설정 세부사항 조회 성공: ", data);
 
           // API 응답값을 formData에 저장
           const historyData = {
@@ -229,13 +225,10 @@ export default function HistoryDetailPage() {
             <EditableField
               label="송금 주기"
               edit={edit}
-              type="regRemType"
-              regRemType={formData.regRemType}
+              type="scheduled"
+              regRemType={formData.regRemType} //  MONTHLY / WEEKLY 전달
               scheduledDate={formData.scheduledDate}
               scheduledDay={formData.scheduledDay}
-              onChangeRegRemType={(v) =>
-                setFormData((prev) => ({ ...prev, regRemType: v }))
-              }
               onChangeScheduledDate={(v) =>
                 setFormData((prev) => ({ ...prev, scheduledDate: v }))
               }

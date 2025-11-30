@@ -20,6 +20,14 @@ const CurrencyFlag = {
   CNY: CN,
 };
 
+const CONVERT_TO_DAY = {
+  MONDAY: "월요일",
+  TUESDAY: "화요일",
+  WEDNESDAY: "수요일",
+  THURSDAY: "목요일",
+  FRIDAY: "금요일",
+};
+
 export default function HistoryCard({
   history,
   onClick,
@@ -75,7 +83,8 @@ export default function HistoryCard({
         <span className="text-lg font-bold text-[#4E5969]">
           {history.regRemType === "MONTHLY" &&
             `매월 ${history.scheduledDate}일`}
-          {history.regRemType === "WEEKLY" && `매주 ${history.scheduledDay}`}
+          {history.regRemType === "WEEKLY" &&
+            `매주 ${CONVERT_TO_DAY[history.scheduledDay]}`}
         </span>
 
         {/* 수취 통화 코드 with 더보기아이콘 */}
