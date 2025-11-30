@@ -7,15 +7,16 @@ import { ChevronDown } from "lucide-react";
 import StepProgressBar from "../../../components/StepProgressbar";
 import DatePicker from "./components/DatePicker";
 import BottomBar from "../../../components/BottomBar";
-import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { setTypeData } from "@/src/store/features/send/sendSlice";
+import AppHeader from "@/src/common/AppHeader/AppHeader";
+import { credittoApi } from "@/src/app/api/axios";
 
 // 요일
 const DAYS = [
   { name: "월요일", value: "MONDAY" },
   { name: "화요일", value: "TUESDAY" },
   { name: "수요일", value: "WEDNESDAY" },
-  { name: "목요일", value: "THRUSDAY" },
+  { name: "목요일", value: "THURSDAY" },
   { name: "금요일", value: "FRIDAY" },
 ];
 
@@ -30,6 +31,9 @@ const currency = {
 // const connectedAccounts = ["1002-123-123124", "1002-346-346234"];
 
 export default function TypePage() {
+  const [showKRWAmount, setShowKRWAmount] = useState(false); // 금액 작성 여부
+  const [krwAmount, setKrwAmount] = useState(0); // 환율 적용된 원화 금액
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -72,15 +76,20 @@ export default function TypePage() {
   // 송금 금액(외화) 변경 핸들러 (숫자만 받게 + 3자리 콤마)
   const handleAmountChange = (e) => {
     const { value } = e.target;
-    const rawValue = value.replace(/[^0-9]/g, "");
+    const rawValue = value.replace(/[^0-9]/g, ""); // 숫자만 남기기(문자 제거)
 
     if (rawValue === "") {
       setFormData((prev) => ({ ...prev, sendAmount: "" }));
+      setShowKRWAmount(false);
+      setKrwAmount(0);
       return;
     }
 
-    const formattedValue = new Intl.NumberFormat().format(Number(rawValue));
+    const formattedValue = new Intl.NumberFormat("ko-KR").format(
+      Number(rawValue)
+    ); // 숫자 포맷팅(3자리 콤마)
     setFormData((prev) => ({ ...prev, sendAmount: formattedValue }));
+    setShowKRWAmount(false); // 새로 입력 시작 -> 다시 숨김
   };
 
   // 날짜 변경 핸들러
@@ -116,6 +125,7 @@ export default function TypePage() {
       scheduledDay = formData.scheduled; // "MONDAY" 등 문자열
     }
 
+    // 제출 데이터 폼
     const submissionData = {
       accountNo: formData.accountNo,
       sendCurrency,
@@ -132,8 +142,67 @@ export default function TypePage() {
     // 정기 해외 송금 신규 등록 요청바디 저장
     dispatch(setTypeData(submissionData));
 
-    router.push("/send/information/remittance");
+    router.push("/send/regular/information/remittance");
   };
+
+  // 환율 조회
+  useEffect(() => {
+    const fetchExchange = () => {
+      // 수취 통화 코드가 없거나, 금액이 비어 있으면 아무 것도 하지 않음
+      if (!receiveCurrency || !formData.sendAmount.trim()) {
+        setShowKRWAmount(false);
+        setKrwAmount(0);
+        return;
+      }
+
+      const timer = setTimeout(async () => {
+        try {
+          const accessToken = sessionStorage.getItem("accessToken");
+
+          const res = await credittoApi.get(
+            `/api/exchange/${receiveCurrency}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          const { code, data } = res.data;
+
+          if (code === 200 && data && data.exchangeRate) {
+            const rate = data.exchangeRate; // 환율
+
+            const raw = formData.sendAmount.replace(/,/g, "");
+            const amount = Number(raw);
+
+            if (!amount) {
+              setShowKRWAmount(false);
+              setKrwAmount(0);
+              return;
+            }
+
+            const krw = amount * rate; // 외화 * 환율 = 원화
+            setKrwAmount(krw);
+            setShowKRWAmount(true); // 환율 보여줌
+            console.log("환율이 적용된 금액(원화): ", krw);
+          } else {
+            setShowKRWAmount(false);
+            setKrwAmount(0);
+          }
+        } catch (error) {
+          console.log("환율 조회 실패", error);
+          setShowKRWAmount(false);
+          setKrwAmount(0);
+        }
+      }, 500); // 0.5초 동안 입력이 없으면 "작성 완료"로 인식
+
+      // 다음 입력이 들어오면 타이머 취소 (디바운스)
+      return () => clearTimeout(timer);
+    };
+
+    fetchExchange();
+  }, [formData.sendAmount, receiveCurrency]);
 
   return (
     <main>
@@ -229,19 +298,28 @@ export default function TypePage() {
               </div>
 
               {/* 외화 거래 금액 */}
-              <div className="flex flex-col items-start">
-                <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                  외화 거래 금액
-                </label>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={formData.sendAmount}
-                  onChange={handleAmountChange}
-                  placeholder="송금할 금액을 입력하세요"
-                  className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
-                />
-              </div>
+              <section className="flex flex-col gap-2">
+                <div className="flex flex-col items-start">
+                  <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
+                    외화 거래 금액({receiveCurrency})
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={formData.sendAmount}
+                    onChange={handleAmountChange}
+                    placeholder="송금할 금액을 입력하세요"
+                    className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
+                  />
+                </div>
+
+                {/* 환율 적용된 금액(원화) */}
+                {showKRWAmount && (
+                  <p className="text-sm text-[#334D79] text-left font-semibold">
+                    원화: {new Intl.NumberFormat().format(krwAmount)} KRW
+                  </p>
+                )}
+              </section>
 
               {/* 송금 주기 */}
               <div className="flex flex-col items-start">

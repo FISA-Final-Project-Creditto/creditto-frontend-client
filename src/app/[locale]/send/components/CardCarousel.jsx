@@ -58,7 +58,7 @@ export default function CardCarousel() {
       router.push("/");
       return;
     }
-    router.push("/send/choose");
+    router.push("/send/regular/choose");
   };
 
   return (
@@ -193,7 +193,7 @@ export default function CardCarousel() {
                         title="송금 조회 · 관리"
                         subtitle={"송금 내역과\n신청 정보를 한눈에"}
                         icon="file"
-                        onClick={() => router.push("/send/history")}
+                        onClick={() => router.push("/send/regular/history")}
                       />
                     </div>
                   )}
