@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "@/src/store/features/signup/userSlice";
 import { registerUser } from "@/src/app/api/axios";
-import { countryCodes } from "../../../../lib/constants/countryCode";
+import { countryCodes } from "../../constants/countryCode";
 import { settingMode as settingModeAction } from "@/src/store/features/simplepw/simplepwSlice";
 
 export default function InfoInputPage() {

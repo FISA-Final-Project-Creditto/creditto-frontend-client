@@ -11,6 +11,25 @@ import {
   Bar,
 } from 'recharts';
 export default function CreditChart() {
+
+// 말풍선 모양의 커스텀 툴팁 컴포넌트
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="relative">
+        <div className="bg-white text-gray-800 p-3 rounded-lg shadow-lg">
+          <p className="font-bold text-sm text-gray-900">{label}</p>
+          <p className="text-base text-[#1A3668] font-semibold">{`${payload[0].value}점`}</p>
+        </div>
+        {/* 말풍선 꼬리 부분 */}
+        <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-white transform rotate-45 -bottom-1"></div>
+      </div>
+    );
+  }
+
+  return null;
+};
+
 const creditScoreData = [
   { month: '1월', score: 400 },
   { month: '2월', score: 425 },
@@ -32,12 +51,18 @@ const creditScoreData = [
                       stroke="rgba(255,255,255,0.6)"
                       style={{ fontSize: '10px' }}
                     />
+                    {/* 커스텀 툴팁 컴포넌트를 content로 전달 */}
+                    <Tooltip cursor={{ stroke: 'rgba(255, 255, 255, 0.3)', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
                     <Line
                       type="monotone"
                       dataKey="score"
                       stroke="#ffffff"
                       dot={false}
                       strokeWidth={2}
+                      activeDot={{
+                        r: 6, // 점 크기
+                        stroke: '#ffffff',
+                      }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
