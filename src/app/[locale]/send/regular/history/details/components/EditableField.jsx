@@ -2,6 +2,15 @@
 
 import { Input } from "@/components/ui/input";
 
+// 요일 라벨 매핑
+const WEEKDAY_LABELS = {
+  MONDAY: "월요일",
+  TUESDAY: "화요일",
+  WEDNESDAY: "수요일",
+  THURSDAY: "목요일",
+  FRIDAY: "금요일",
+};
+
 export default // 수정 가능한 필드
 function EditableField({
   label,
@@ -10,12 +19,12 @@ function EditableField({
   rawValue,
   onChange,
   type,
-  remType,
-  monthlyDay,
-  weeklyDay,
-  onChangeRemType,
-  onChangeMonthlyDay,
-  onChangeWeeklyDay,
+  regRemType,
+  scheduledDate,
+  scheduledDay,
+  onChangeRegRemType,
+  onChangeScheduledDate,
+  onChangeScheduledDay,
 }) {
   return (
     <div className="flex items-start justify-between gap-4 text-sm">
@@ -45,7 +54,7 @@ function EditableField({
           <div className="flex flex-1 justify-end gap-2">
             <select
               value={remType}
-              onChange={(e) => onChangeRemType(e.target.value)}
+              onChange={(e) => onChangeRegRemType(e.target.value)}
               className="border-[#C9CDD4] rounded-md px-3 py-2 text-[#1D2129]"
             >
               <option value="MONTHLY">MONTHLY</option>
@@ -54,8 +63,8 @@ function EditableField({
 
             {remType === "MONTHLY" ? (
               <select
-                value={monthlyDay}
-                onChange={(e) => onChangeMonthlyDay(e.target.value)}
+                value={scheduledDate}
+                onChange={(e) => onChangeScheduledDate(e.target.value)}
                 className="border-[#C9CDD4] rounded-md px-3 py-2 text-[#1D2129]"
               >
                 {Array.from({ length: 31 }, (_, i) => (
@@ -66,8 +75,8 @@ function EditableField({
               </select>
             ) : (
               <select
-                value={weeklyDay}
-                onChange={(e) => onChangeWeeklyDay(e.target.value)}
+                value={scheduledDay}
+                onChange={(e) => onChangeScheduledDay(e.target.value)}
                 className="border-[#C9CDD4] rounded-md px-3 py-2 text-[#1D2129]"
               >
                 {Object.entries(WEEKDAY_LABELS).map(([key, label]) => (
@@ -82,9 +91,9 @@ function EditableField({
       ) : (
         <span className="text-right text-[#1D2129] font-medium flex-1 whitespace-pre-line">
           {type === "remType"
-            ? remType === "MONTHLY"
-              ? `매월 ${monthlyDay}일`
-              : `매주 ${WEEKDAY_LABELS[weeklyDay]}`
+            ? regRemType === "MONTHLY"
+              ? `매월 ${scheduledDate}일`
+              : `매주 ${WEEKDAY_LABELS[scheduledDay]}`
             : value}
         </span>
       )}

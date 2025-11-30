@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
@@ -9,17 +9,23 @@ import { credittoApi } from "@/src/app/api/axios";
 import EditableField from "../components/EditableField";
 import InfoRow from "../components/InfoRow";
 
-// 요일 라벨 매핑
-const WEEKDAY_LABELS = {
-  MONDAY: "월요일",
-  TUESDAY: "화요일",
-  WEDNESDAY: "수요일",
-  THURSDAY: "목요일",
-  FRIDAY: "금요일",
+// 국가명을 한국어로 변환
+const countryToKorean = {
+  KOR: "대한민국",
+  USA: "미국",
+  CHINA: "중국",
+  JAPAN: "일본",
+};
+
+const statusToKorean = {
+  ACTIVE: "정상",
+  DELAYED: "연기",
+  PAUSED: "일시중지",
+  CANCELLED: "취소",
 };
 
 export default function HistoryDetailPage() {
-  const { id } = useParams(); // /send/history/details/[id] 의 id
+  const { id } = useParams(); // /send/regular/history/details/[id]의 id
   const router = useRouter();
   const [edit, setEdit] = useState(false); // 편집 여부
 
@@ -31,34 +37,24 @@ export default function HistoryDetailPage() {
   console.log("정기송금 설정: ", history);
 
   // formData 초기값은 함수 기반 초기화로 설정
-  const [formData, setFormData] = useState(() => {
-    if (!history) return null;
-
-    return {
-      accountNo: history.accountNo,
-      amount: String(history.sendAmount ?? 0),
-      remType: history.regRemType || "MONTHLY",
-      monthlyDay:
-        history.regRemType === "MONTHLY" && history.scheduledDate != null
-          ? String(history.scheduledDate)
-          : "10",
-      weeklyDay:
-        history.regRemType === "WEEKLY" && history.scheduledDay
-          ? history.scheduledDay
-          : "MONDAY",
-      startDate: "2025년 10월 29일",
-      senderName: "Richard Park",
-      senderCountry: "USA",
-      senderCurrency: "KRW",
-      senderAddress: "Busan, Rodeo-street, 124\n103-102",
-      recipientCountry: "USA",
-      recipientBank: history.recipientBankName,
-      recipientAccount: history.accountNo,
-      recipientCurrency: history.receivedCurrency,
-      recipientName: history.recipientName,
-      recipientAddress: "Busan, Rodeo-street, 124\n103-102",
-      recipientPhone: "111-111-1111",
-    };
+  const [formData, setFormData] = useState({
+    accountNo: "", // 출금 계좌
+    sendAmount: "", // 외화 거래 금액
+    regRemType: "", // 송금 주기 상세(매월/매주)
+    scheduledDate: "", // 날짜(매월)
+    scheduledDay: "", // 요일(매주)
+    startedAt: "", // 송금 시작일
+    clientName: "", // 송금인명
+    clientCountry: "", // 송금인 국가
+    sendCurrency: "", // 송금 통화
+    recipientCountry: "", // 수취 통화
+    recipientBankName: "", // 수취인 소유 은행
+    recipientAccountNo: "", // 수취 계좌번호
+    receiveCurrency: "", // 수취 통화
+    recipientName: "", // 수취인명
+    recipientPhoneCc: "", // 수취인 전화번호 코드
+    recipientPhoneNo: "", // 수취인 전화번호
+    regRemStatus: "ACTIVE", // 거래 상태
   });
 
   // 금액 표시용 포맷터 (읽기 모드에서만 콤마 붙이기)
@@ -72,14 +68,17 @@ export default function HistoryDetailPage() {
     try {
       const accessToken = sessionStorage.getItem("accessToken");
 
-      // 백엔드와 약속한 Request Body 형태에 맞게 조립
+      // 백엔드에서 제공한 Request Body 형태에 맞게 조립
       const payload = {
         accountNo: formData.accountNo,
-        sendAmount: Number(formData.amount),
-        regRemType: formData.remType,
+        sendAmount: Number(formData.sendAmount),
+        regRemType: formData.regRemType,
         scheduledDate:
-          formData.remType === "MONTHLY" ? Number(formData.monthlyDay) : null,
-        scheduledDay: formData.remType === "WEEKLY" ? formData.weeklyDay : null,
+          formData.regRemType === "MONTHLY"
+            ? Number(formData.scheduledDate)
+            : null,
+        scheduledDay:
+          formData.regRemType === "WEEKLY" ? formData.scheduledDay : null,
       };
 
       const res = await credittoApi.put(
@@ -129,12 +128,63 @@ export default function HistoryDetailPage() {
     }
   };
 
-  // ▷ history 또는 formData가 아직 없으면 로딩 상태
-  if (!history || !formData) {
+  // 하나의 정기송금 설정의 세부사항 조회
+  useEffect(() => {
+    const fetchHistoryDetail = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+
+        const res = await credittoApi(`/api/remittance/scheduled/${id}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        const { code, data } = res.data;
+        if (code === 200 && data) {
+          console.log("하나의 정기송금 설정 세부사항 조회 성공");
+
+          // API 응답값을 formData에 저장
+          setFormData({
+            accountNo: data.accountNo ?? "",
+            sendAmount: data.sendAmount ? String(data.sendAmount) : "",
+            regRemType: data.regRemType ?? "",
+            scheduledDate:
+              data.regRemType === "MONTHLY" && data.scheduledDate != null
+                ? String(data.scheduledDate)
+                : "",
+            scheduledDay:
+              data.regRemType === "WEEKLY" && data.scheduledDay
+                ? data.scheduledDay
+                : "",
+            startedAt: data.startedAt || "",
+            clientName: data.clientName || "",
+            clientCountry: data.clientCountry || "",
+            sendCurrency: data.sendCurrency || "",
+            recipientCountry: data.recipientCountry || "",
+            recipientBankName: data.recipientBankName || "",
+            recipientAccountNo: data.recipientAccountNo || "",
+            receiveCurrency: data.receiveCurrency || "",
+            recipientName: data.recipientName || "",
+            recipientPhoneCc: data.recipientPhoneCc || "",
+            recipientPhoneNo: data.recipientPhoneNo || "",
+            regRemStatus: data.regRemStatus || "ACTIVE",
+          });
+        }
+      } catch (error) {
+        console.log("하나의 정기송금 설정 세부사항 조회 실패: ", error);
+      }
+    };
+
+    fetchHistoryDetail();
+  }, [id]);
+
+  // history 또는 formData가 아직 없으면 로딩 상태
+  if (!formData) {
     return (
       <main className="min-h-dvh flex items-center justify-center bg-white">
         <p className="text-sm text-[#86909C]">
-          정기 송금 정보를 불러오는 중...
+          정기 송금 설정 정보를 불러오는 중...
         </p>
       </main>
     );
@@ -187,12 +237,14 @@ export default function HistoryDetailPage() {
               label="외화 거래 금액"
               edit={edit}
               type="number"
-              value={formatAmount(formData.amount)}
-              rawValue={formData.amount}
+              value={`${formatAmount(formData.sendAmount)} ${
+                formData.receiveCurrency
+              }`}
+              rawValue={formData.sendAmount}
               onChange={(v) =>
                 setFormData((prev) => ({
                   ...prev,
-                  amount: v.replace(/\D/g, ""),
+                  sendAmount: v.replace(/\D/g, ""),
                 }))
               }
             />
@@ -202,22 +254,22 @@ export default function HistoryDetailPage() {
               label="송금 주기"
               edit={edit}
               type="remType"
-              remType={formData.remType}
-              monthlyDay={formData.monthlyDay}
-              weeklyDay={formData.weeklyDay}
-              onChangeRemType={(v) =>
-                setFormData((prev) => ({ ...prev, remType: v }))
+              regRemType={formData.regRemType}
+              scheduledDate={formData.scheduledDate}
+              scheduledDay={formData.scheduledDay}
+              onChangeRegRemType={(v) =>
+                setFormData((prev) => ({ ...prev, regRemType: v }))
               }
-              onChangeMonthlyDay={(v) =>
-                setFormData((prev) => ({ ...prev, monthlyDay: v }))
+              onChangeScheduledDate={(v) =>
+                setFormData((prev) => ({ ...prev, scheduledDate: v }))
               }
-              onChangeWeeklyDay={(v) =>
-                setFormData((prev) => ({ ...prev, weeklyDay: v }))
+              onChangeScheduledDay={(v) =>
+                setFormData((prev) => ({ ...prev, scheduledDay: v }))
               }
             />
 
             {/* 읽기 전용 필드 */}
-            <InfoRow label="송금 시작일" value={formData.startDate} />
+            <InfoRow label="송금 시작일" value={formData.startedAt} />
           </div>
 
           <Divider />
@@ -227,9 +279,12 @@ export default function HistoryDetailPage() {
             송금인 정보
           </h3>
           <div className="space-y-3.75">
-            <InfoRow label="이름" value={formData.senderName} />
-            <InfoRow label="국적" value={formData.senderCountry} />
-            <InfoRow label="송금 통화 코드" value={formData.senderCurrency} />
+            <InfoRow label="이름" value={formData.clientName} />
+            <InfoRow
+              label="국적"
+              value={countryToKorean[formData.clientCountry]}
+            />
+            <InfoRow label="송금 통화 코드" value={formData.sendCurrency} />
           </div>
 
           <Divider />
@@ -239,16 +294,22 @@ export default function HistoryDetailPage() {
             수신인 정보
           </h3>
           <div className="space-y-3.75">
-            <InfoRow label="국가" value={formData.recipientCountry} />
-            <InfoRow label="은행명" value={formData.recipientBank} />
-            <InfoRow label="계좌 번호" value={formData.recipientAccount} />
             <InfoRow
-              label="수취 통화 코드"
-              value={formData.recipientCurrency}
+              label="국가"
+              value={countryToKorean[formData.recipientCountry]}
             />
+            <InfoRow label="은행명" value={formData.recipientBankName} />
+            <InfoRow label="계좌 번호" value={formData.recipientAccountNo} />
+            <InfoRow label="수취 통화 코드" value={formData.receiveCurrency} />
             <InfoRow label="이름" value={formData.recipientName} />
-            <InfoRow label="주소" value={formData.recipientAddress} multiline />
-            <InfoRow label="전화 번호" value={formData.recipientPhone} />
+            <InfoRow
+              label="전화 번호"
+              value={`${formData.recipientPhoneCc} ${formData.recipientPhoneNo}`}
+            />
+            <InfoRow
+              label="송금 상태"
+              value={statusToKorean[formData.regRemStatus]}
+            />
           </div>
         </section>
       </div>

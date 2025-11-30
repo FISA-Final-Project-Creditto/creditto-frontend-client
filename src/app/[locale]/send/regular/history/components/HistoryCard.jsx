@@ -100,7 +100,9 @@ export default function HistoryCard({
               <DropdownMenuContent align="end" className="w-40">
                 <DropdownMenuItem
                   onClick={() =>
-                    router.push(`/send/history/details/${history.regRemId}`)
+                    router.push(
+                      `/send/regular/history/details/${history.regRemId}`
+                    )
                   }
                   className="cursor-pointer gap-2"
                 >
