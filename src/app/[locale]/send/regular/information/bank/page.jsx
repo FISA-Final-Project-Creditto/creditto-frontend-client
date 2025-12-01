@@ -16,7 +16,30 @@ import {
   selectBankData,
 } from "@/src/store/features/send/sendSelectors";
 import { credittoApi } from "@/src/app/api/axios";
-import { useTranslations } from "next-intl";
+
+// 국가별 은행 목록
+const BANK_OPTIONS = {
+  USD: [
+    { name: "JP모건 체이스", code: "JPMCUS33" },
+    { name: "뱅크 오브 아메리카", code: "BOFAUS3N" },
+    { name: "웰스 파고", code: "WFBIUS6S" },
+  ],
+  JPY: [
+    { name: "미쓰비시UFJ은행", code: "BOTKJPJT" },
+    { name: "미쓰이스미토모은행", code: "SMBCJPJT" },
+    { name: "미즈호은행", code: "MHCBJPJT" },
+  ],
+  MYR: [
+    { name: "메이뱅크", code: "MBBEMYKL" },
+    { name: "CIMB", code: "BNIAIDJA" },
+    { name: "퍼블릭 뱅크", code: "PBLLMYKA" },
+  ],
+  THB: [
+    { name: "방콕 은행", code: "BKKBTHB1" },
+    { name: "끄룽타이은행", code: "KRTHTHBK" },
+    { name: "시암 상업 은행", code: "SICOTHBK" },
+  ],
+};
 
 export default function BankPage() {
   const router = useRouter();
