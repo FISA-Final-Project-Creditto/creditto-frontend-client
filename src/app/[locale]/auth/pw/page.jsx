@@ -155,10 +155,12 @@ export default function SecurePage({ length = 6 }) {
         // 검증 성공!
         dispatch(resetVerification()); // 사용한 인증 모드 상태 초기화
 
+
         // 만약 목적지가 '/main'이면(로그인 시도), 토큰을 세션 스토리지에 저장
         if (redirectPath === '/main') {
           sessionStorage.setItem("accessToken", response.data.access_token);
           sessionStorage.setItem("refreshToken", response.data.refresh_token);
+          sessionStorage.setItem("userId", response.data.user_id);
         }
 
         // 저장된 목적지(redirectPath)로 이동. 없으면 기본값으로 /main

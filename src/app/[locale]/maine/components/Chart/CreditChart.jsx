@@ -1,4 +1,5 @@
-import React from 'react'
+import { credittoApi } from '@/src/app/api/axios';
+import React, { useEffect, useState } from 'react'
 import {
   LineChart,
   Line,
@@ -11,6 +12,32 @@ import {
   Bar,
 } from 'recharts';
 export default function CreditChart() {
+  const [historyScore , setHistoryScore] = useState();
+ useEffect(() => {
+    const fetchCreditScore = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const userId = sessionStorage.getItem("userId");
+
+        if (!accessToken) return;
+
+        const res = await credittoApi.get(`/api/credit-score/history/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        
+ 
+        setHistoryScore(res.data.history);
+        // setHistoryScore(r);
+        console.log("신용점수 : ", res.data);
+      } catch (error) {
+        console.error("신용점수 조회 실패:", error);
+      }
+    };
+    fetchCreditScore();
+  }, []);
 
 // 말풍선 모양의 커스텀 툴팁 컴포넌트
 const CustomTooltip = ({ active, payload, label }) => {
@@ -44,7 +71,7 @@ const creditScoreData = [
 
               <div className="bg-white/10 backdrop-blur rounded-2xl m-3">
                 <ResponsiveContainer width="100%" height={90}>
-                  <LineChart data={creditScoreData}>
+                  <LineChart data={historyScore}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                     <XAxis
                       dataKey="month"
