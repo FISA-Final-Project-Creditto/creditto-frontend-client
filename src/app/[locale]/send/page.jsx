@@ -2,8 +2,6 @@
 
 import CardCarousel from "./components/CardCarousel";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 export default function SendMainPage() {
   return (

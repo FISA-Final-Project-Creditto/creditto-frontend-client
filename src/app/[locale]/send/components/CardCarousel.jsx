@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux"; // ✅ 계좌 가져오기
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import SendBtn from "../regular/components/SendBtn";
+import { credittoApi } from "@/src/app/api/axios";
 
 // 송금 유형 데이터
 const transferTypes = [
@@ -16,16 +17,12 @@ const transferTypes = [
     title: "정기 해외 송금",
     subtitle: "매주 · 매달 정기적으로",
     description: "한 번만 등록하면\n약속한 날짜에 자동 송금",
-    subtitle: "매주 · 매달 정기적으로",
-    description: "한 번만 등록하면\n약속한 날짜에 자동 송금",
     icon: Repeat,
     color: "bg-gradient-to-br from-[#002057] to-[#334D79]",
   },
   {
-    id: "one-time",
+    id: "one-off",
     title: "일회성 해외 송금",
-    subtitle: "원할 때 자유롭게",
-    description: "기다릴 필요 없이\n즉시 송금",
     subtitle: "원할 때 자유롭게",
     description: "기다릴 필요 없이\n즉시 송금",
     icon: Globe,
@@ -38,28 +35,39 @@ export default function CardCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // 연동된 계좌 정보 가져오기
-  const accounts = useSelector((state) => state.account.accounts);
+  // 연동된 계좌 정보
+  const [accountState, setAccountState] = useState({
+    balance: null, // 잔액
+    accountCount: 0, // 연동된 계좌 수
+  });
 
-  // 페이지 진입 시 연동 계좌 있는지 체크
+  // 계좌 잔액 합산 조회 by UserId
   useEffect(() => {
-    // accounts가 아직 로딩 중이거나 undefined/null이면 일단 패스
-    if (!Array.isArray(accounts)) return;
+    const fetchAllAccounts = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
 
-    if (accounts.length === 0) {
-      alert("연동된 계좌가 없습니다.\n먼저 계좌를 연결해 주세요.");
-      router.push("/");
-    }
-  }, [accounts, router]);
+        const res = await credittoApi.get("/api/accounts/me/balance", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
-  const handleGoToChoose = () => {
-    if (!Array.isArray(accounts) || accounts.length === 0) {
-      alert("연동된 계좌가 없습니다.\n먼저 계좌를 연결해 주세요.");
-      router.push("/");
-      return;
-    }
-    router.push("/send/regular/choose");
-  };
+        const { code, data } = res.data;
+        if (code === 200) {
+          setAccountState(data); // 응답값을 setAccountState에 상태 저장
+          console.log("연동된 계좌 있음");
+        } else {
+          alert("연동된 계좌가 없습니다");
+          router.push("/");
+        }
+      } catch (error) {
+        console.error("계좌 잔액 합산 조회 by UserId 오류 발생: ", error);
+      }
+    };
+
+    fetchAllAccounts();
+  }, []);
 
   return (
     <div className="flex-1 flex justify-center relative">
@@ -187,7 +195,9 @@ export default function CardCarousel() {
                         title="새로운 송금 등록"
                         subtitle={"원하는 날짜와\n금액을 설정해요"}
                         icon="plus"
-                        onClick={handleGoToChoose}
+                        onClick={() =>
+                          router.push("/send/consent?type=regular")
+                        } // 약관 동의 페이지로 이동
                       />
                       <SendBtn
                         title="송금 조회 · 관리"
@@ -198,13 +208,15 @@ export default function CardCarousel() {
                     </div>
                   )}
                   {/* 일회성 송금 */}
-                  {type.id === "one-time" && (
+                  {type.id === "one-off" && (
                     <div className="flex flex-col gap-2 mt-2 w-full">
                       <SendBtn
                         title="바로 송금하기"
                         subtitle={"기다리지 않고\n지금 즉시 보내요"}
                         icon="plus"
-                        onClick={() => {}}
+                        onClick={() =>
+                          router.push("/send/consent?type=one-off")
+                        }
                       />
                       <SendBtn
                         title="송금 내역 조회"
