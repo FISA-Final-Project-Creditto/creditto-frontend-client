@@ -34,7 +34,7 @@ export default function RealTimeExchange() {
     fetchExchangeRate();
 
     // 2. 1초마다 주기적으로 API 호출 설정
-    const intervalId = setInterval(fetchExchangeRate, 1000);
+    const intervalId = setInterval(fetchExchangeRate, 10000);
 
     // 3. 컴포넌트 언마운트 시 interval 정리 (메모리 누수 방지)
     return () => clearInterval(intervalId);
