@@ -199,7 +199,6 @@
         "receiveCurrencyPlaceholder": "Enter receiving currency code (USD, CNY, JPY)",
         "amount": "Foreign Currency Amount ({currency})",
         "amountPlaceholder": "Enter the amount to send",
-        "appliedRate": "KRW: {amount} KRW",
         "cycle": "Remittance Cycle",
         "cyclePlaceholder": "Select remittance cycle (Monthly / Weekly)",
         "monthly": "Monthly",

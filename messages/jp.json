@@ -199,7 +199,6 @@
         "receiveCurrencyPlaceholder": "受取通貨コードを入力してください (USD, CNY, JPY)",
         "amount": "外貨取引金額({currency})",
         "amountPlaceholder": "送金する金額を入力してください",
-        "appliedRate": "ウォン: {amount} KRW",
         "cycle": "送金周期",
         "cyclePlaceholder": "送金周期を選択してください（毎月/毎週）",
         "monthly": "毎月",
