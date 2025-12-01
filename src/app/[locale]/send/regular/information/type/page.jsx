@@ -317,9 +317,7 @@ export default function TypePage() {
                 {/* 환율 적용된 금액(원화) */}
                 {showKRWAmount && (
                   <p className="text-sm text-[#334D79] text-left font-semibold">
-                    {t("regular.information.appliedRate", {
-                      amount: new Intl.NumberFormat().format(krwAmount),
-                    })}
+                    {new Intl.NumberFormat().format(krwAmount)} KRW
                   </p>
                 )}
               </section>
