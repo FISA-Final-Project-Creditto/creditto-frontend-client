@@ -1,6 +1,6 @@
-import SecurePage from "./page";
+import PwPage from "./page";
 
 export default function PwLayout({ children }) {
  
-  return <SecurePage>{children}</SecurePage>;
+  return <PwPage>{children}</PwPage>;
 }

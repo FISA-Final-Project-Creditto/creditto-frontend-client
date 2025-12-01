@@ -97,9 +97,9 @@ export default function InfoInputPage() {
 
       const res = await registerUser(data);
 
-      if (res && res.data) {
+      if (res.code === 200) {
         console.log(t("userRegistrationSuccess"), res.data);
-        console.log(t("userId"), res.data.data.userId);
+        console.log(t("userId"), res.data.userId);
 
         dispatch(
           setUserData({
@@ -107,7 +107,7 @@ export default function InfoInputPage() {
             birthDate: formData.birthDate,
             phoneNumber: formData.phoneNumber,
             address: formData.address,
-            userId: res.data.data.userId,
+            userId: res.data.userId,
           })
         );
 

@@ -19,9 +19,11 @@ export default function SecurePage({ length = 6 }) {
   const t = useTranslations("auth.password");
 
   // 목적지 기반 인증을 위한 새로운 Redux 상태
-  const { isVerificationRequired, redirectPath, mode } = useSelector((state) => state.simplepw);
+  const { isVerificationRequired, redirectPath, mode } = useSelector(
+    (state) => state.simplepw
+  );
   // 비밀번호 '설정' 모드인지 확인
-  const isSettingMode = mode === 'setting';
+  const isSettingMode = mode === "setting";
 
   // Redux 스토어에서 serialNumber를 가져옵니다.
   const serialNumber = useSelector((state) => state.user.serialNumber);
@@ -53,7 +55,7 @@ export default function SecurePage({ length = 6 }) {
           setStep(2); // 두 번째 입력 단계로 전환
           setPin(""); // 입력값 초기화
           setErrorMessage(""); // 에러 메시지 초기화
-          setShuffleToken((t) => t + 1); // 키패드 셔플
+          setShuffleToken((prev) => prev + 1); // 키패드 셔플
           return;
         }
 
@@ -84,7 +86,7 @@ export default function SecurePage({ length = 6 }) {
               setStep(1);
               setIsShaking(true);
               setErrorMessage(t("certificateIssueError"));
-              setShuffleToken((t) => t + 1);
+              setShuffleToken((prev) => prev + 1);
             }
           } else {
             // 두 번째 입력이 첫 번째와 불일치하는 경우
@@ -93,7 +95,7 @@ export default function SecurePage({ length = 6 }) {
             setFirstPin(null);
             setStep(1);
             setErrorMessage(t("passwordsDoNotMatch"));
-            setShuffleToken((t) => t + 1);
+            setShuffleToken((prev) => prev + 1);
           }
 
           return;
@@ -133,7 +135,7 @@ export default function SecurePage({ length = 6 }) {
   useEffect(() => {
     const verifyAndRedirect = async () => {
       try {
-        console.log(serialNumber)
+        console.log(serialNumber);
         if (!serialNumber) {
           setErrorMessage(t("certificateNotFound"));
           setIsShaking(true);
@@ -156,14 +158,13 @@ export default function SecurePage({ length = 6 }) {
         dispatch(resetVerification()); // 사용한 인증 모드 상태 초기화
 
         // 만약 목적지가 '/main'이면(로그인 시도), 토큰을 세션 스토리지에 저장
-        if (redirectPath === '/main') {
+        if (redirectPath === "/main") {
           sessionStorage.setItem("accessToken", response.data.access_token);
           sessionStorage.setItem("refreshToken", response.data.refresh_token);
         }
 
         // 저장된 목적지(redirectPath)로 이동. 없으면 기본값으로 /main
         router.push(redirectPath || "/main");
-
       } catch (error) {
         console.error("❌ 비밀번호 검증 실패:", error);
         setPin("");
@@ -175,7 +176,16 @@ export default function SecurePage({ length = 6 }) {
     if (isVerificationRequired && pin.length === length) {
       verifyAndRedirect();
     }
-  }, [pin, isVerificationRequired, redirectPath, serialNumber, length, router, dispatch, t]);
+  }, [
+    pin,
+    isVerificationRequired,
+    redirectPath,
+    serialNumber,
+    length,
+    router,
+    dispatch,
+    t,
+  ]);
 
   // 붙여넣기/복사/자르기 차단
   useEffect(() => {
@@ -215,24 +225,20 @@ export default function SecurePage({ length = 6 }) {
       />
       {/* 상단: 타이틀/서브타이틀/인디케이터 */}
       <div>
-        {isSettingMode && (
-          <h1 className="text-[1.375rem] font-medium text-black leading-snug mb-[1.875rem]">
+        {settingMode && (
+          <h1 className="text-[1.375rem] font-medium text-black leading-snug mb-[1.875rem] whitespace-pre-line">
             {t("title1")}
             <br />
-            {t("title2")}
+            {tt("title2")}
           </h1>
         )}
         <div className="flex flex-col items-center ">
           {isVerificationRequired && (
-            <p className="text-[#4E5969] mt-6">
-              {t("enter6DigitPin")}
-            </p>
+            <p className="text-[#4E5969] mt-6">{t("enter6DigitPin")}</p>
           )}
 
           {isSettingMode && step === 1 && (
-            <p className="text-[#4E5969] mt-6">
-              {t("enter6DigitPinToUse")}
-            </p>
+            <p className="text-[#4E5969] mt-6">{t("enter6DigitPinToUse")}</p>
           )}
 
           {step === 2 && !errorMessage && (
