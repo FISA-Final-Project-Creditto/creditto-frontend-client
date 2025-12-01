@@ -21,11 +21,11 @@ export default function SplashPage({ hasSerial }) {
 
   const handleLogin = () => {
     if (!hasSerial) {
-      router.push("/login");
+      router.push("/select-lang?next=/login");
     } else {
       // 비밀번호 확인을 요청하고, 성공 시 '/main'으로 이동하도록 설정
       dispatch(requireVerification("/main"));
-      router.push("/auth/pw");
+      router.push("/select-lang?next=/auth/pw");
     }
   };
 
@@ -38,7 +38,7 @@ export default function SplashPage({ hasSerial }) {
           className="w-full h-[90px] cursor-pointer flex justify-center items-center text-gray9000 underline text-lg"
           onClick={(e) => {
             e.stopPropagation();
-            router.push("/signup/permission");
+            router.push("/select-lang?next=/signup/permission");
           }}
         >
           {t("signUp")}
