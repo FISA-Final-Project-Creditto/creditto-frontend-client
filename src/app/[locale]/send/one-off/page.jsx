@@ -220,8 +220,9 @@ export default function TypePage() {
         // 성공 후 페이지 이동 또는 다른 처리
         setIsDrawerOpen(false);
       } catch (error) {
-        console.error(t("oneOff.page.requestFailed"), error);
-        alert(t("oneOff.page.requestError"));
+        console.error("송금 요청 실패:", error);
+        alert("송금 요청 중 오류가 발생했습니다.");
+        setIsDrawerOpen(false);
       }
     } else {
       console.log(t("oneOff.page.fillAllFields"));
@@ -325,10 +326,11 @@ export default function TypePage() {
                   onChange={handleChange}
                   className="w-1/3 px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black focus:outline-none"
                 >
-                  <option value="+82">{t("oneOff.page.countryCodeKorea")}</option>
-                  <option value="+1">{t("oneOff.page.countryCodeUSA")}</option>
-                  <option value="+86">{t("oneOff.page.countryCodeChina")}</option>
-                  <option value="+81">{t("oneOff.page.countryCodeJapan")}</option>
+                  <option value="+82">한국 (+82)</option>
+                  <option value="+1">미국 (+1)</option>
+                  <option value="+81">일본 (+81)</option>
+                  <option value="+60">말레이시아 (+60)</option>
+                  <option value="+66">태국 (+66)</option>
                 </select>
                 <input
                   name="phoneNo"
