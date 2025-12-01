@@ -7,8 +7,7 @@ export default function Credit({ accountState }) {
   const creditScore = 750;
   const maxScore = 900;
   const [creditInfo, setCreditInfo] = useState();
-  const scorePercentage = (creditInfo / maxScore) * 100;
-
+const scorePercentage = creditInfo ? (creditInfo / maxScore) * 100 : 0;
 
   const renderCredit = () =>{
     if (accountState.accountCount === 0) {
@@ -27,7 +26,7 @@ export default function Credit({ accountState }) {
   useEffect(() => {
     const fetchCreditScore = async () => {
       try {
-        console.log(accountState.accountCount)
+        // console.log(accountState.accountCount)
         const accessToken = sessionStorage.getItem("accessToken");
         const userId = sessionStorage.getItem("userId");
 
@@ -43,13 +42,13 @@ export default function Credit({ accountState }) {
  
         setCreditInfo(res.data.credit_score);
         // setHistoryScore(r);
-        console.log("신용점수 : ", res.data);
+        // console.log("신용점수 : ", res.data);
       } catch (error) {
         console.error("신용점수 조회 실패:", error);
       }
     };
     fetchCreditScore();
-  }, []);
+  }, [accountState]);
 
   return (
     <div className="w-full mt-5 bg-gradient-to-br from-[#1A3668] via-[#1A3668] to-[#1A3668]/80 rounded-3xl p-6 text-primary-foreground shadow-lg ">

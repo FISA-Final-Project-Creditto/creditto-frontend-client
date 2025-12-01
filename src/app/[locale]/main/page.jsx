@@ -11,8 +11,8 @@ import { credittoApi } from "../../api/axios";
 
 export default function MainPage() {
   const router = useRouter();
-    const [isLoading, setIsLoading] = useState(true);
-  
+  const [isLoading, setIsLoading] = useState(true);
+
   const [accountState, setAccountState] = useState({
     balance: null,
     accountCount: 0,
@@ -24,6 +24,7 @@ export default function MainPage() {
         if (!accessToken) {
           alert("로그인이 필요합니다.");
           router.replace("/");
+          return;
         }
         const response = await credittoApi.get("/api/accounts/me/balance", {
           headers: {
@@ -51,7 +52,7 @@ export default function MainPage() {
       <Header />
       <main className="">
         <div className="px-5 mt-2">
-          <Money accountState={accountState} isLoading={isLoading}/>
+          <Money accountState={accountState} isLoading={isLoading} />
           <RoundedIconTabs accountState={accountState} />
           <FunctionButton />
         </div>
