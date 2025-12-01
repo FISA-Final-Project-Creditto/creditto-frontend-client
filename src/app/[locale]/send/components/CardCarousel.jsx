@@ -8,35 +8,33 @@ import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux"; // ✅ 계좌 가져오기
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import SendBtn from "../regular/components/SendBtn";
-
-// 송금 유형 데이터
-const transferTypes = [
-  {
-    id: "regular",
-    title: "정기 해외 송금",
-    subtitle: "매주 · 매달 정기적으로",
-    description: "한 번만 등록하면\n약속한 날짜에 자동 송금",
-    subtitle: "매주 · 매달 정기적으로",
-    description: "한 번만 등록하면\n약속한 날짜에 자동 송금",
-    icon: Repeat,
-    color: "bg-gradient-to-br from-[#002057] to-[#334D79]",
-  },
-  {
-    id: "one-time",
-    title: "일회성 해외 송금",
-    subtitle: "원할 때 자유롭게",
-    description: "기다릴 필요 없이\n즉시 송금",
-    subtitle: "원할 때 자유롭게",
-    description: "기다릴 필요 없이\n즉시 송금",
-    icon: Globe,
-    color: "bg-gradient-to-br from-[#4D6389] to-[#99A6BC]",
-  },
-];
+import { useTranslations } from "next-intl";
 
 export default function CardCarousel() {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+  const t = useTranslations("send.main");
+
+  // 송금 유형 데이터
+  const transferTypes = [
+    {
+      id: "regular",
+      title: t("regularTitle"),
+      subtitle: t("regularSubtitle"),
+      description: t("regularDescription"),
+      icon: Repeat,
+      color: "bg-gradient-to-br from-[#002057] to-[#334D79]",
+    },
+    {
+      id: "one-time",
+      title: t("oneOffTitle"),
+      subtitle: t("oneOffSubtitle"),
+      description: t("oneOffDescription"),
+      icon: Globe,
+      color: "bg-gradient-to-br from-[#4D6389] to-[#99A6BC]",
+    },
+  ];
 
   // 연동된 계좌 정보 가져오기
   const accounts = useSelector((state) => state.account.accounts);
@@ -47,14 +45,14 @@ export default function CardCarousel() {
     if (!Array.isArray(accounts)) return;
 
     if (accounts.length === 0) {
-      alert("연동된 계좌가 없습니다.\n먼저 계좌를 연결해 주세요.");
+      alert(t("noLinkedAccountAlert"));
       router.push("/");
     }
-  }, [accounts, router]);
+  }, [accounts, router, t]);
 
   const handleGoToChoose = () => {
     if (!Array.isArray(accounts) || accounts.length === 0) {
-      alert("연동된 계좌가 없습니다.\n먼저 계좌를 연결해 주세요.");
+      alert(t("noLinkedAccountAlert"));
       router.push("/");
       return;
     }
@@ -184,14 +182,14 @@ export default function CardCarousel() {
                   {type.id === "regular" && (
                     <div className="flex flex-col gap-2 mt-2 w-full">
                       <SendBtn
-                        title="새로운 송금 등록"
-                        subtitle={"원하는 날짜와\n금액을 설정해요"}
+                        title={t("newTransfer")}
+                        subtitle={t("newTransferSubtitle")}
                         icon="plus"
                         onClick={handleGoToChoose}
                       />
                       <SendBtn
-                        title="송금 조회 · 관리"
-                        subtitle={"송금 내역과\n신청 정보를 한눈에"}
+                        title={t("historyTitle")}
+                        subtitle={t("historySubtitle")}
                         icon="file"
                         onClick={() => router.push("/send/regular/history")}
                       />
@@ -201,14 +199,14 @@ export default function CardCarousel() {
                   {type.id === "one-time" && (
                     <div className="flex flex-col gap-2 mt-2 w-full">
                       <SendBtn
-                        title="바로 송금하기"
-                        subtitle={"기다리지 않고\n지금 즉시 보내요"}
+                        title={t("sendNow")}
+                        subtitle={t("sendNowSubtitle")}
                         icon="plus"
                         onClick={() => {router.push('/send/one-off/choose')}}
                       />
                       <SendBtn
-                        title="송금 내역 조회"
-                        subtitle={"지금까지 보낸\n기록을 모아봐요"}
+                        title={t("historyOneOffTitle")}
+                        subtitle={t("historyOneOffSubtitle")}
                         icon="file"
                         onClick={() => {}}
                       />

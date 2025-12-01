@@ -1,10 +1,10 @@
 import createMiddleware from "next-intl/middleware";
 
 export default createMiddleware({
-  // A list of all locales that are supported
-  locales: ["en", "ko", "jp", "cn"],
+  // 국제화 언어들
+  locales: ["ko", "en", "jp"],
 
-  // Used when no locale matches
+  // 기본 언어
   defaultLocale: "ko",
 });
 

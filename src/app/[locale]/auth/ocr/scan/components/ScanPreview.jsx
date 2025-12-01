@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 /**
  * props
@@ -8,6 +9,7 @@ import Image from "next/image";
  * - state: { isPending, isFileRejected, error, data }
  */
 export default function ScanPreview({ src, state }) {
+  const t = useTranslations("auth.scanPreview");
   const { isPending, isFileRejected, error, data } = state || {};
 
   return (
@@ -17,7 +19,7 @@ export default function ScanPreview({ src, state }) {
         {src && (
           <Image
             src={src}
-            alt="preview"
+            alt={t("preview")}
             fill
             className="object-cover"
             unoptimized // blob: URL은 최적화 불가 → 경고 방지
@@ -44,7 +46,7 @@ export default function ScanPreview({ src, state }) {
           <>
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/20 to-transparent animate-scan pointer-events-none" />
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
-              <p className="text-sm font-medium text-[#4485EE]">분석 중...</p>
+              <p className="text-sm font-medium text-[#4485EE]">{t("analyzing")}</p>
             </div>
           </>
         )}

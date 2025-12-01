@@ -2,22 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { useSelector } from "react-redux";
-
-// 요일 라벨 매핑
-const WEEKDAY_LABELS = {
-  MONDAY: "월요일",
-  TUESDAY: "화요일",
-  WEDNESDAY: "수요일",
-  THURSDAY: "목요일",
-  FRIDAY: "금요일",
-};
-
-const STATUS_TO_KOREAN = {
-  ACTIVE: "정상",
-  DELAYED: "연기",
-  PAUSED: "일시중지",
-  CANCELLED: "취소",
-};
+import { useTranslations } from "next-intl";
 
 export default // 수정 가능한 필드
 function EditableField({
@@ -35,6 +20,22 @@ function EditableField({
   onChangeScheduledDay, // 요일(매주) 변경 핸들러
   onChangeRegRemStatus, // 정기 송금 상태 변경 핸들러
 }) {
+  const t = useTranslations("send");
+  // 요일 라벨 매핑
+  const WEEKDAY_LABELS = {
+    MONDAY: t("common.dayOfWeek.MONDAY"),
+    TUESDAY: t("common.dayOfWeek.TUESDAY"),
+    WEDNESDAY: t("common.dayOfWeek.WEDNESDAY"),
+    THURSDAY: t("common.dayOfWeek.THURSDAY"),
+    FRIDAY: t("common.dayOfWeek.FRIDAY"),
+  };
+
+  const STATUS_TO_KOREAN = {
+    ACTIVE: t("common.status.ACTIVE"),
+    DELAYED: t("common.status.DELAYED"),
+    PAUSED: t("common.status.PAUSED"),
+    CANCELLED: t("common.status.CANCELLED"),
+  };
   // ✅ TODO: api에서 계좌 조회 호출로 가져올 예정(현재는 Redux로)
   const accounts = useSelector((state) => state.account.accounts); // Redux에서 저장된 연동계좌 목록 조회
   const connectedAccounts = accounts?.map((acc) => acc.accountNo) ?? []; // 계좌 번호만 추출
@@ -52,7 +53,7 @@ function EditableField({
           >
             {/* 연결된 계좌가 없을 경우 */}
             {connectedAccounts.length === 0 && (
-              <option value="">연결된 계좌가 없습니다</option>
+              <option value="">{t("common.noLinkedAccount")}</option>
             )}
 
             {/* 연결된 계좌가 있을 경우 */}
@@ -80,7 +81,8 @@ function EditableField({
               >
                 {Array.from({ length: 31 }, (_, i) => (
                   <option key={i + 1} value={String(i + 1)}>
-                    {i + 1}일
+                    {i + 1}
+                    {t("common.day")}
                   </option>
                 ))}
               </select>
@@ -116,8 +118,12 @@ function EditableField({
         <span className="text-right text-[#1D2129] font-medium flex-1 whitespace-pre-line">
           {type === "scheduled"
             ? regRemType === "MONTHLY"
-              ? `매월 ${scheduledDate}일`
-              : `매주 ${WEEKDAY_LABELS[scheduledDay] || ""}`
+              ? `${t("regular.result.monthly")} ${scheduledDate}${t(
+                  "common.day"
+                )}`
+              : `${t("regular.result.weekly")} ${
+                  WEEKDAY_LABELS[scheduledDay] || ""
+                }`
             : value}
         </span>
       )}

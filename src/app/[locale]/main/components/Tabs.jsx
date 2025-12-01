@@ -5,16 +5,18 @@ import Credit from "../../maine/components/Credit/Credit";
 import { CreditCard } from "@/components/ui/credit-card"
 import CreditChart from "../../maine/components/Chart/CreditChart";
 import { useRouter } from "next/navigation";
-
-const tabs = [
-  { id: "home", label: "홈", icon: Home },
-  { id: "QR", label: "간편 결제", icon: CreditCardIcon },
-  { id: "location", label: "위치", icon: MapPin },
-];
+import { useTranslations } from "next-intl";
 
 export default function RoundedIconTabs({accountState}) {
   const [activeTab, setActiveTab] = useState("home");
   const router = useRouter();
+  const t = useTranslations("main.tabs");
+
+  const tabs = [
+    { id: "home", label: t("home"), icon: Home },
+    { id: "QR", label: t("simplePayment"), icon: CreditCardIcon },
+    { id: "location", label: t("location"), icon: MapPin },
+  ];
 
   return (
     <div className="bg-gradient-to-b from-[#F4F8FF] via-[#E9F2FF] to-[#F4F8FF] p-3 shadow-b h-[480px] ">
@@ -59,14 +61,14 @@ export default function RoundedIconTabs({accountState}) {
                 <CreditCard
         variant="dark"
         cardNumber=""
-        cardHolder="이름"
+        cardHolder={t("name")}
         expiryDate="06/25"
       />
             </div>
           </div>
         )}
         {activeTab === "location" && (
-          <div className="w-[368px] h-[373px]">네이버 지도 연동 예정</div>
+          <div className="w-[368px] h-[373px]">{t("naverMapAPI")}</div>
         )}
       </div>
     </div>

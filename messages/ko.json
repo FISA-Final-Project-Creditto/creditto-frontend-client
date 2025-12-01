@@ -1,5 +1,536 @@
 {
   "greeting": "안녕하세요!",
   "signUp": "회원가입",
-  "logIn": "로그인"
+  "logIn": "로그인",
+  "login": {
+    "alert": {
+      "alreadyLoggedIn": "이미 로그인되어 있습니다. 메인 페이지로 이동합니다.",
+      "authSuccess": "본인 인증에 성공했습니다."
+    },
+    "auth": {
+      "title": "본인 인증",
+      "instructionPart1": "본인 인증을 위해",
+      "instructionPart2": "정보를 입력해주세요"
+    },
+    "name": {
+      "label": "이름",
+      "placeholder": "이름을 입력하세요"
+    },
+    "phone": {
+      "label": "휴대폰 번호",
+      "placeholder": "010-0000-0000"
+    },
+    "button": {
+      "login": "로그인"
+    },
+    "bottomSheet": {
+      "title": "휴대폰 본인확인 약관",
+      "next": "다음",
+      "agreeAll": "휴대폰 본인확인 약관 전체 동의",
+      "terms1": "서비스 이용약관 동의(필수)",
+      "terms2": "개인정보 수집 및 이용 동의(필수)",
+      "terms3": "고유식별정보 처리 동의(필수)",
+      "terms4": "본인확인서비스 이용 동의(선택)",
+      "agreeAndContinue": "동의하고 계속"
+    }
+  },
+  "main": {
+    "loginRequired": "로그인이 필요합니다.",
+    "functionButton": {
+      "loan": "대출",
+      "creditScore": "신용 점수"
+    },
+    "loanButton": {
+      "title": "대출 상품 추천",
+      "subtitle": "나에게 딱 맞는 대출"
+    },
+    "mainCarousel": {
+      "creditScoreLink": "신용 점수",
+      "credittoScore": "Creditto 점수",
+      "accountConnectionLink": "계좌 연결"
+    },
+    "goExchangeButton": {
+      "title": "환율 그래프",
+      "subtitle": "미국, 중국, 일본 다양한 환율을 한번에 !"
+    },
+    "moneyExchange": {
+      "title": "환전"
+    },
+    "realTimeExchange": {
+      "exchangeRateAPI": "환율 API 연동 예정"
+    },
+    "tabs": {
+      "home": "홈",
+      "simplePayment": "간편 결제",
+      "location": "위치",
+      "name": "이름",
+      "naverMapAPI": "네이버 지도 연동 예정"
+    }
+  },
+  "maine": {
+    "greeting": "안녕하세요",
+    "userName": "정용준님",
+    "monthlyUsage": "월 이용액",
+    "thisMonth": "이번 달",
+    "usageCount": "건 사용",
+    "send": "송금",
+    "loan": "대출",
+    "invest": "투자",
+    "recommendedProducts": "추천 상품",
+    "seeMore": "더보기",
+    "mediumInterestCreditLoan": "중금리 신용대출",
+    "loanInterestRate": "연 4.5% ~ 8.9%",
+    "savingsProduct": "적금 상품",
+    "savingsInterestRate": "연 4.2% 이율",
+    "exchangeRate": "환율",
+    "refresh": "새로고침",
+    "usdTrend": "USD 추이",
+    "money": {
+      "loading": "잔액 조회 중...",
+      "noAccount": "연동된 계좌가 없습니다.",
+      "cantLoad": "잔액을 불러올 수 없습니다.",
+      "balance": "계좌잔액"
+    },
+    "creditChart": {
+      "score": "점",
+      "month": "{month}월"
+    },
+    "credit": {
+      "credittoScore": "Creditto 점수",
+      "maxScore": "최고 {maxScore}점",
+      "grade": "등급",
+      "excellent": "우수",
+      "creditRating": "신용도 평가",
+      "comparison": "지난달 대비 +20점 상승"
+    },
+    "sendButton": {
+      "label": "해외 송금하기"
+    }
+  },
+  "send": {
+    "common": {
+      "remittance": "해외 송금",
+      "next": "다음",
+      "name": "이름",
+      "country": "국가",
+      "address": "주소",
+      "phoneNumber": "전화번호",
+      "accountNumber": "계좌 번호",
+      "day": "일",
+      "dayOfWeek": {
+        "MONDAY": "월요일",
+        "TUESDAY": "화요일",
+        "WEDNESDAY": "수요일",
+        "THURSDAY": "목요일",
+        "FRIDAY": "금요일"
+      },
+      "status": {
+        "ACTIVE": "정상",
+        "DELAYED": "연기",
+        "PAUSED": "일시중지",
+        "CANCELLED": "취소"
+      },
+      "selectAccount": "계좌를 선택하세요",
+      "noLinkedAccount": "연동된 계좌가 없습니다.",
+      "pageTitle": "해외 송금 · 조회",
+      "pageSubtitle": "어떤 해외 송금이\n필요하신가요?",
+      "pageDescription": "송금 신청부터 내역 관리까지 가능해요",
+      "confirm": "확인",
+      "yes": "예",
+      "no": "아니요",
+      "notice": "유의사항",
+      "noticeContent": "해외 SWIFT 송금시 입력하신 정보가 콜팬던트 정을 경우 해외 송금이 정상적으로 처리되지 않을 수 있습니다. 이때에는 착오 고객에게 있으며 착오사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관"
+    },
+    "main": {
+      "regularTitle": "정기 해외 송금",
+      "regularSubtitle": "매주 · 매달 정기적으로",
+      "regularDescription": "한 번만 등록하면\n약속한 날짜에 자동 송금",
+      "oneOffTitle": "일회성 해외 송금",
+      "oneOffSubtitle": "원할 때 자유롭게",
+      "oneOffDescription": "기다릴 필요 없이\n즉시 송금",
+      "noLinkedAccountAlert": "연동된 계좌가 없습니다.\n먼저 계좌를 연결해 주세요.",
+      "newTransfer": "새로운 송금 등록",
+      "newTransferSubtitle": "원하는 날짜와\n금액을 설정해요",
+      "historyTitle": "송금 조회 · 관리",
+      "historySubtitle": "송금 내역과\n신청 정보를 한눈에",
+      "sendNow": "바로 송금하기",
+      "sendNowSubtitle": "기다리지 않고\n지금 즉시 보내요",
+      "historyOneOffTitle": "송금 내역 조회",
+      "historyOneOffSubtitle": "지금까지 보낸\n기록을 모아봐요"
+    },
+    "chooseCountry": {
+      "title": "송금할 국가를 선택해주세요",
+      "subtitle": "송금하실 국가의 통화를 선택해주세요",
+      "usa": "미국 USD",
+      "dollar": "달러",
+      "china": "중국 CNY",
+      "yuan": "위안",
+      "japan": "일본 JPY",
+      "yen": "엔",
+      "select": "선택",
+      "selectBank": "은행 선택"
+    },
+    "regular": {
+      "result": {
+        "title": "해외 자동 송금",
+        "subtitle": "신청결과",
+        "account": "출금 계좌",
+        "receiveCurrency": "수취 통화 코드",
+        "sendCurrency": "송금 통화 코드",
+        "amount": "외화 거래 금액",
+        "cycle": "송금 주기",
+        "monthly": "매월",
+        "weekly": "매주",
+        "startDate": "송금 시작일",
+        "senderInfo": "송금인 정보",
+        "recipientInfo": "수신인 정보",
+        "bankName": "수취 은행명",
+        "bankCode": "수취 은행 코드"
+      },
+      "loading": {
+        "title": "신청 내용을 확인하고 있어요"
+      },
+      "information": {
+        "title": "해외 송금 기본 정보를 입력해주세요",
+        "type": "송금 유형",
+        "account": "송금 계좌",
+        "sendCurrency": "송금 통화 코드",
+        "receiveCurrency": "수취 통화 코드",
+        "receiveCurrencyPlaceholder": "수취 통화 코드를 입력하세요(USD, CNY, JPY)",
+        "amount": "외화 거래 금액({currency})",
+        "amountPlaceholder": "송금할 금액을 입력하세요",
+        "cycle": "송금 주기",
+        "cyclePlaceholder": "송금 주기를 선택하세요 (매월 / 매주)",
+        "monthly": "매월",
+        "weekly": "매주",
+        "cycleDetail": "송금 주기 상세",
+        "cycleDetailPlaceholder": "송금 주기의 상세 시점을 선택하세요",
+        "weekdayWarning": "우리은행은 평일에만 송금이 가능하오니 이용에 참고해주세요",
+        "monthEndWarning": "해당 월에 해당 날짜가 없으면 자동으로 그 달의 마지막 날에 실행됩니다",
+        "startDate": "송금 시작일",
+        "remitterTitle": "보내시는 분",
+        "remitterSubtitle": "국내 체류 정보를 입력해주세요",
+        "fullName": "이름 (Full Name)",
+        "englishNamePlaceholder": "영문으로 입력하세요",
+        "nationality": "국적 (Nationality)",
+        "address": "주소 (Address)",
+        "addressPlaceholder": "송금인의 거주 주소를 입력하세요",
+        "detailAddress": "상세 주소",
+        "detailAddressPlaceholder": "주소를 입력하세요",
+        "recipientTitle": "받는 분",
+        "recipientSubtitle": "수취인 정보를 입력해주세요",
+        "recipientPhonePlaceholder": "전화번호를 입력하세요",
+        "recipientAddressPlaceholder": "주소를 입력하세요",
+        "bankInfoTitle": "해외 은행 정보 입력",
+        "bankInfoSubtitle": "입금하시려는 해외 은행 정보를 입력해 주세요",
+        "bankName": "은행명 (Bank Name)",
+        "bankNamePlaceholder": "은행명을 선택하세요",
+        "noCurrencyWarning": "통화 코드를 먼저 선택하세요",
+        "bankCode": "은행 코드",
+        "accountNumberPlaceholder": "계좌번호를 입력하세요",
+        "modalTitle": "해외 자동 송금",
+        "modalMessage": "해외 자동 송금 서비스를 신청하시겠습니까?\n‘예'를 클릭하실 경우 앞서 산출한 우대환율이 \n적용됩니다."
+      },
+      "history": {
+        "title": "정기 송금 내역",
+        "registered": "등록된 정기 송금",
+        "loading": "정기 송금 내역 불러오는 중",
+        "selectAccountPrompt": "계좌를 선택하면 내역이 표시됩니다",
+        "noHistory": "정기 송금 내역이 없습니다",
+        "noHistorySubtitle": "다른 계좌를 선택하거나 신규 송금을 등록해주세요",
+        "noLinkedAccount": "연동된 계좌가 없습니다. 계좌 연동 후 이용해주세요.",
+        "detailTitle": "해외 송금 내역",
+        "editFailed": "수정에 실패했습니다. 다시 시도해주세요.",
+        "editError": "수정 중 오류가 발생했습니다.",
+        "loadingDetail": "정기 송금 설정 정보를 불러오는 중...",
+        "save": "저장",
+        "cancel": "취소",
+        "editSuccess": "정기 송금 설정이 수정되었습니다.",
+        "more": "더보기",
+        "viewDetails": "자세히보기",
+        "cancelRemittance": "해지하기",
+        "to": "To. {name}",
+        "cancelModalTitle": "해외 정기 송금 해지",
+        "cancelModalMessage": "송금을 해지하시겠습니까?\n해지 후에는 복구가 어려우니 신중히 선택해주세요.",
+        "noRemittanceHistory": "아직 송금 내역이 없습니다.",
+        "exchangeRate": "환율 {rate}원",
+        "recurringTitle": "해외 정기 송금 내역",
+        "recipient": "수취인",
+        "recipientAccount": "수취인 계좌번호",
+        "completed": "6개월 정기 송금 완료",
+        "creditScoreUp": "신용도 점수 +50",
+        "recurringDetailTitle": "송금 상세 정보",
+        "remittanceAmount": "송금 금액",
+        "fee": "수수료",
+        "status": "송금 처리 상태"
+      },
+      "term": {
+        "title": "약관 동의서 페이지"
+      }
+    },
+    "oneOff": {
+      "choose": {
+        "bankJPMorgan": "JP모건 체이스",
+        "bankBOA": "뱅크 오브 아메리카",
+        "bankWellsFargo": "웰스 파고",
+        "bankBOC": "교통은행",
+        "bankICBC": "중국은행",
+        "bankABC": "중국농업은행",
+        "bankMUFG": "미쓰비시UFJ은행",
+        "bankSMBC": "미쓰이스미토모은행",
+        "bankMizuho": "미즈호은행",
+        "countryUSA": "미국",
+        "countryChina": "중국",
+        "countryJapan": "일본"
+      },
+      "form": {
+        "account": "송금 계좌",
+        "accountPlaceholder": "계좌를 선택하세요",
+        "receiveCurrency": "수취 통화 코드",
+        "amount": "외화 거래 금액",
+        "amountPlaceholder": "송금할 금액을 입력하세요",
+        "startDate": "송금 시작일",
+        "startDatePlaceholder": "송금을 시작할 날짜를 선택하세요"
+      },
+      "page": {
+        "requestFailed": "송금 요청 실패:",
+        "requestError": "송금 요청 중 오류가 발생했습니다.",
+        "fillAllFields": "모든 입력 칸이 채워져야 됩니다",
+        "title": "누구 에게 보낼까요?",
+        "recipientAccount": "계좌번호 입력",
+        "recipientName": "받는 분 이름 (영문)",
+        "recipientNamePlaceholder": "받는 분의 영문 이름을 입력하세요",
+        "recipientPhone": "받는 분 전화번호",
+        "countryCodeKorea": "한국 (+82)",
+        "countryCodeUSA": "미국 (+1)",
+        "countryCodeChina": "중국 (+86)",
+        "countryCodeJapan": "일본 (+81)",
+        "phonePlaceholder": "전화번호를 입력하세요",
+        "date": "송금날짜 입력"
+      }
+    },
+    "components": {
+      "creditPointBanner": {
+        "expectedCredit": "예상 신용도",
+        "point": "점"
+      },
+      "complete": {
+        "title": "신청이 완료되었습니다",
+        "currentScore": "현재 신청도 접수 : ",
+        "months12": "12개월 정기 송금시",
+        "months18": "18개월 정기 송금시",
+        "months24": "24개월 정기 송금시",
+        "complete": "완료"
+      },
+      "addressModal": {
+        "title": "주소 검색"
+      }
+    }
+  },
+  "account": {
+    "connection": {
+      "title": "계좌 연결",
+      "wonClick": "WON 클릭 ",
+      "withOneClick": "한번으로",
+      "description": "{name}님의 계좌를 연결할 수 있어요",
+      "wooriLogo": "우리은행 로고",
+      "complete": "완료"
+    },
+    "create": {
+      "title": "계좌 생성",
+      "nameLabel": "계좌 이름",
+      "namePlaceholder": "계좌 명을 입력하세요",
+      "typeLabel": "계좌 종류",
+      "typePlaceholder": "계좌 종류를 선택하세요",
+      "deposit": "입출금 계좌",
+      "savings": "적금 계좌",
+      "loan": "대출 계좌",
+      "investment": "투자 계좌",
+      "instruction1": "계좌 생성을 위해",
+      "instruction2": "정보를 입력해주세요",
+      "button": "계좌 생성하기"
+    },
+    "myAccount": {
+      "title": "내 계좌",
+      "historyTitle": "계좌 내역 조회",
+      "currency": "원",
+      "searchPlaceholder": "거래 내역 검색",
+      "all": "전체",
+      "deposit": "입금",
+      "withdrawal": "출금",
+      "noHistory": "거래내역이 없습니다.",
+      "wooriBank": "우리은행 예·적금",
+      "wooriLogo": "우리은행 로고",
+      "noLinkedAccount": "연결된 계좌가 없습니다.",
+      "goToCreate": "계좌 개설하러 가기"
+    },
+    "success": {
+      "title": "계좌가 생성되었어요 !",
+      "description": "이제 Creditto의 생활을 시작해 보세요",
+      "toMain": "메인 화면으로"
+    },
+    "import": {
+      "noAccessToken": "Access Token이 없습니다.",
+      "saveSuccess": "계좌 정보 저장 성공:",
+      "fetchFail": "계좌 정보를 가져오는 데 실패했습니다:"
+    }
+  },
+  "signup": {
+    "agree": {
+      "title": "약관 동의",
+      "agreeAll": "약관 전체 동의",
+      "terms1": "(필수) Creditto 서비스 이용약관",
+      "terms2": "(필수) 개인정보 수집 및 이용 동의",
+      "terms3": "(필수) 개인정보 취급위탁 동의",
+      "terms4": "(선택) 광고성 정보 수신 동의",
+      "next": "다음"
+    },
+    "loading": {
+      "title": "고객님의 정보를 확인하고 있어요",
+      "description": "잠시만 기다려 주세요"
+    },
+    "permission": {
+      "cameraGranted": "카메라 권한 허용",
+      "cameraDenied": "카메라 권한 거부/오류",
+      "geolocationNotSupported": "지오로케이션 미지원",
+      "locationAllowed": "위치 허용: {lat}, {lon}",
+      "locationDenied": "위치 거부/오류: {code}",
+      "title": "접근 권한",
+      "description1": "서비스 이용을 위해",
+      "description2": "앱 접근 권한을 확인해주세요",
+      "optional": "선택 권한",
+      "camera": "카메라",
+      "cameraDescription": "신분증 촬영, QR코드 인식, 사진찍어 이체하기,\n영상상담 등에 사용",
+      "location": "위치",
+      "locationDescription": "가까운 영업점 및 ATM 찾기에 사용",
+      "microphone": "마이크",
+      "microphoneDescription": "영상상담 시 음성인식을 위해 사용",
+      "next": "다음"
+    },
+    "phone": {
+      "nameLabel": "고객님의 이름을 알려주세요",
+      "birthdayLabel": "고객님의 생일을 알려주세요",
+      "phoneLabel": "고객님의 전화번호를 입력해주세요",
+      "name": "이름",
+      "birthdate": "생년월일",
+      "birthdatePlaceholder": "YYYY-MM-DD",
+      "phoneNumber": "휴대폰 번호",
+      "phonePlaceholder": "010-0000-0000",
+      "authTitle": "본인 인증"
+    },
+    "sms": {
+      "timer": "3:00",
+      "success": "인증을 성공했어요",
+      "title": "문자 인증",
+      "description": "문자메시지로 받은\n인증번호 6자리를 입력해주세요",
+      "label": "인증번호",
+      "placeholder": "000000",
+      "requestCode": "인증요청",
+      "reRequestCode": "인증 재요청",
+      "verify": "인증하기"
+    },
+    "success": {
+      "title": "가입이 완료되었어요",
+      "description": "creditto의 서비스를 이용하기 위해서\n인증서 발급이 필요해요",
+      "doItLater": "다음에 할게요",
+      "issueCertificate": "인증서 발급하기"
+    }
+  },
+  "auth": {
+    "info": {
+      "title": "신분증 정보 입력",
+      "previewImage": "미리보기 이미지",
+      "name": "이름",
+      "birthdate": "생년월일",
+      "alienRegistrationNumber": "외국인등록번호",
+      "phoneNumber": "전화번호",
+      "address": "주소",
+      "areaOfResidence": "체류지역",
+      "setSimplePassword": "간편 비밀번호 설정",
+      "userRegistrationSuccess": "유저 등록 성공: ",
+      "userId": "userId: ",
+      "failedToRegisterUser": "Failed to register user:"
+    },
+    "infoInput": {
+      "namePlaceholder": "이름을 대문자로 입력해주세요",
+      "birthdatePlaceholder": "생년월일을 입력해주세요(8자리)",
+      "alienRegistrationNumberPlaceholder": "외국인등록번호를 입력해주세요",
+      "addressPlaceholder": "외국인등록증에 기재된 주소를 입력해주세요",
+      "areaOfResidencePlaceholder": "체류지역을 입력해주세요"
+    },
+    "loading": {
+      "title": "고객님의 정보를 확인하고 있어요",
+      "description": "잠시만 기다려 주세요"
+    },
+    "ocrBottomSheet": {
+      "title": "크레디토 인증서를 만들게요"
+    },
+    "identification": {
+      "title": "신분증(외국인 등록증)을 \n준비해주세요",
+      "description": "비대면 등록을 위해 신분증 촬영이 필요해요",
+      "idCardExample": "신분증 예시",
+      "importAlienRegistrationCard": "외국인등록증 가져오기"
+    },
+    "ocrStep": {
+      "title": "인증서 발급은 아래 순서로 진행돼요",
+      "step1Title": "비대면 실명확인",
+      "step1Subtitle": "외국인 등록증을 준비해주세요",
+      "step2Title": "간편 비밀번호 설정",
+      "step2Subtitle": "6자리 간편 비밀번호를 설정합니다.",
+      "issueCertificate": "인증서 발급하기",
+      "dialogDescription": "한 번 만들면 n년동안 쓸 수 있어요",
+      "terms1": "[필수] 본인 확인 서비스 약관 및 동의사항",
+      "terms2": "[필수] 크레디토 전자인증서비스 약관",
+      "terms3": "[필수] 개인정보 수집·이용 동의(크레디토인증서)",
+      "terms4": "[필수] 고유식별정보 처리 동의",
+      "issueLater": "다음에 발급하기"
+    },
+    "scan": {
+      "frontendError": "Frontend requestOCR error (full error object):",
+      "notAlienRegistrationCard": "외국인등록증 이미지가 아닙니다.",
+      "uploadValidImage": "올바른 외국인등록증 이미지를 업로드해주세요.",
+      "handleSelectFileError": "handleSelectFile 에러:",
+      "analysisFailed": "분석에 실패했습니다.",
+      "tryAgain": "잠시 후 다시 시도해 주세요.",
+      "retakePhoto": "다시 촬영하기",
+      "confirm": "확인",
+      "infoCorrect": "아래 정보가 맞나요?",
+      "alienRegistrationNumber": "외국인등록번호",
+      "name": "이름",
+      "gender": "성별",
+      "countryRegion": "국가 / 지역",
+      "issueDate": "발급 일자",
+      "visaType": "비자 유형",
+      "issuingAuthority": "발급 기관"
+    },
+    "scanPreview": {
+      "preview": "preview",
+      "analyzing": "분석 중..."
+    },
+    "uploadBox": {
+      "supportedFormats": "지원 형식: JPG · JPEG · PNG"
+    },
+    "password": {
+      "title1": "인증서 로그인을 위한",
+      "title2": "간편 비밀번호를 설정합니다",
+      "enter6DigitPin": "간편 비밀번호 6자리를 입력하세요",
+      "enter6DigitPinToUse": "사용할 간편 비밀번호 6자리를 입력하세요",
+      "enterAgainForConfirmation": "확인을 위해 한번 더 입력해주세요.",
+      "passwordsDoNotMatch": "비밀번호가 일치하지 않습니다. 다시 설정해주세요.",
+      "certificateNotFound": "인증서 정보를 찾을 수 없습니다.",
+      "certificateIssueError": "인증서 발급 중 오류가 발생했습니다. 다시 시도해주세요.",
+      "passwordIncorrectOrError": "비밀번호가 올바르지 않습니다."
+    },
+    "securePinKeyboard": {
+      "clearAll": "전체삭제",
+      "delete": "지우기",
+      "enterLabel": "{label} 입력"
+    },
+    "authSuccess": {
+      "title": "인증서가 발급되었어요",
+      "description": "이제부터 모든 서비스를 이용할 수 있어요",
+      "idCardExample": "신분증 예시",
+      "start": "시작하기"
+    }
+  }
 }

@@ -41,12 +41,31 @@ export default function ChooseCountryPage() {
   const [selectedBank, setSelectedBank] = useState({ name: "", code: "" });
   const dispatch = useDispatch();
   const router = useRouter();
+  const t = useTranslations("send");
+
+  const BANK_OPTIONS = {
+    USD: [
+      { name: t("oneOff.choose.bankJPMorgan"), code: "JPMCUS33" },
+      { name: t("oneOff.choose.bankBOA"), code: "BOFAUS3N" },
+      { name: t("oneOff.choose.bankWellsFargo"), code: "WFBIUS6S" },
+    ],
+    CNY: [
+      { name: t("oneOff.choose.bankBOC"), code: "COMMCNSH" },
+      { name: t("oneOff.choose.bankICBC"), code: "BKCHCNBJ" },
+      { name: t("oneOff.choose.bankABC"), code: "ABOCCNBJ" },
+    ],
+    JPY: [
+      { name: t("oneOff.choose.bankMUFG"), code: "BOTKJPJT" },
+      { name: t("oneOff.choose.bankSMBC"), code: "SMBCJPJT" },
+      { name: t("oneOff.choose.bankMizuho"), code: "MHCBJPJT" },
+    ],
+  };
 
   return (
     <div>
       <header>
         <AppHeader
-          title="해외 송금"
+          title={t("common.remittance")}
           show={true}
           showHamburger={false}
           showBack={true}
@@ -56,12 +75,13 @@ export default function ChooseCountryPage() {
       <main className="flex flex-col gap-[2.188rem] px-5">
         <section>
           <h1 className="text-left mt-[3.75rem] text-[1.563rem] font-bold">
-            <span className="text-[#1A3668]">해외 송금</span> 국가를
-            <br />
-            선택해주세요
+            <span className="text-[#1A3668]">
+              {t("common.remittance")}
+            </span>{" "}
+            {t("chooseCountry.title")}
           </h1>
           <p className="text-sm text-left text-[#86909C]">
-            송금하실 국가의 통화를 선택해주세요.
+            {t("chooseCountry.subtitle")}
           </p>
         </section>
         <section className="flex flex-col gap-6"></section>
@@ -71,15 +91,15 @@ export default function ChooseCountryPage() {
             {
               code: "US",
               currency: "USD",
-              name: "미국",
-              currencyName: "달러",
+              name: t("oneOff.choose.countryUSA"),
+              currencyName: t("chooseCountry.dollar"),
               Icon: US,
             },
             {
               code: "JP",
               currency: "JPY",
-              name: "일본",
-              currencyName: "엔",
+              name: t("oneOff.choose.countryJapan"),
+              currencyName: t("chooseCountry.yen"),
               Icon: JP,
             },
             {
@@ -138,7 +158,7 @@ export default function ChooseCountryPage() {
                   >
                     <div className="flex flex-col gap-2 pl-4">
                       <h3 className="text-left font-semibold text-gray-700 mb-2">
-                        은행 선택
+                        {t("chooseCountry.selectBank")}
                       </h3>
                       {BANK_OPTIONS[currency]?.map((bank) => (
                         <button
@@ -167,7 +187,7 @@ export default function ChooseCountryPage() {
       {/* 하단 버튼 */}
       <footer className="pt-20">
         <BottomBar
-          label="선택"
+          label={t("chooseCountry.select")}
           onClick={() => {
             if (selectedCountry && selectedBank.code) {
               // 선택된 은행 정보(bankName, bankCode)를 Redux에 저장

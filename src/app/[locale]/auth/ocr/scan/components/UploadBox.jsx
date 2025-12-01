@@ -2,8 +2,10 @@
 
 import { useRef } from "react";
 import { ScanSearch } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function UploadBox({ onSelect }) {
+  const t = useTranslations("auth.uploadBox");
   const cameraInputRef = useRef(null);
   const galleryInputRef = useRef(null);
 
@@ -29,7 +31,7 @@ export default function UploadBox({ onSelect }) {
 
             {/* 안내문 */}
             <p className="text-sm text-[#4E5969]">
-              지원 형식: JPG · JPEG · PNG
+              {t("supportedFormats")}
             </p>
           </section>
         </div>

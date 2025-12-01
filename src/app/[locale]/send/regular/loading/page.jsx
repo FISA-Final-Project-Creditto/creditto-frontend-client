@@ -2,9 +2,11 @@
 import React, { useEffect } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function LoadingPage() {
   const router = useRouter();
+  const t = useTranslations("send.regular.loading");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -20,7 +22,7 @@ export default function LoadingPage() {
       "
       >
         <h1 className="text-[1.375rem] text-left font-bold text-[#1A3668] mt-30 px-8">
-          신청 내용을 확인하고 있어요
+          {t("title")}
         </h1>
 
         <div>

@@ -2,24 +2,28 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic"; 
+import dynamic from "next/dynamic";
 import { useDispatch, useSelector } from "react-redux";
 import api, { issueCertificate, registerUser } from "../../../api/axios";
 import { resetVerification } from "@/src/store/features/simplepw/simplepwSlice";
+import { useTranslations } from "next-intl";
 
 const SecurePinKeyboard = dynamic(
   () => import("./components/SecurePinKeyboard"),
   { ssr: false } // 키보드는 클라이언트에서만 렌더 → hydration 에러 방지
 );
 
-export default function SecurePage({ length = 6 }) { 
+export default function SecurePage({ length = 6 }) {
   const dispatch = useDispatch();
   const router = useRouter();
+  const t = useTranslations("auth.password");
 
   // 목적지 기반 인증을 위한 새로운 Redux 상태
-  const { isVerificationRequired, redirectPath, mode } = useSelector((state) => state.simplepw);
+  const { isVerificationRequired, redirectPath, mode } = useSelector(
+    (state) => state.simplepw
+  );
   // 비밀번호 '설정' 모드인지 확인
-  const isSettingMode = mode === 'setting';
+  const isSettingMode = mode === "setting";
 
   // Redux 스토어에서 serialNumber를 가져옵니다.
   const serialNumber = useSelector((state) => state.user.serialNumber);
@@ -51,7 +55,7 @@ export default function SecurePage({ length = 6 }) {
           setStep(2); // 두 번째 입력 단계로 전환
           setPin(""); // 입력값 초기화
           setErrorMessage(""); // 에러 메시지 초기화
-          setShuffleToken((t) => t + 1); // 키패드 셔플
+          setShuffleToken((prev) => prev + 1); // 키패드 셔플
           return;
         }
 
@@ -81,10 +85,8 @@ export default function SecurePage({ length = 6 }) {
               setFirstPin(null);
               setStep(1);
               setIsShaking(true);
-              setErrorMessage(
-                "인증서 발급 중 오류가 발생했습니다. 다시 시도해주세요."
-              );
-              setShuffleToken((t) => t + 1);
+              setErrorMessage(t("certificateIssueError"));
+              setShuffleToken((prev) => prev + 1);
             }
           } else {
             // 두 번째 입력이 첫 번째와 불일치하는 경우
@@ -92,15 +94,15 @@ export default function SecurePage({ length = 6 }) {
             setIsShaking(true);
             setFirstPin(null);
             setStep(1);
-            setErrorMessage("비밀번호가 일치하지 않습니다. 다시 설정해주세요.");
-            setShuffleToken((t) => t + 1);
+            setErrorMessage(t("passwordsDoNotMatch"));
+            setShuffleToken((prev) => prev + 1);
           }
 
           return;
         }
       }
     },
-    [length, step, firstPin, router, isSettingMode, userData, dispatch]
+    [length, step, firstPin, router, isSettingMode, userData, dispatch, t]
   );
 
   // 키보드에서 숫자 버튼 클릭 시 실행
@@ -133,9 +135,9 @@ export default function SecurePage({ length = 6 }) {
   useEffect(() => {
     const verifyAndRedirect = async () => {
       try {
-        console.log(serialNumber)
+        console.log(serialNumber);
         if (!serialNumber) {
-          setErrorMessage("인증서 정보를 찾을 수 없습니다.");
+          setErrorMessage(t("certificateNotFound"));
           setIsShaking(true);
           return;
         }
@@ -147,7 +149,7 @@ export default function SecurePage({ length = 6 }) {
         params.append("simple_password", pin);
         params.append("client_id", process.env.NEXT_PUBLIC_CLIENT_ID);
         params.append("client_secret", process.env.NEXT_PUBLIC_CLIENT_SECRET);
-        
+
         const response = await api.post("/oauth2/token", params, {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
         });
@@ -157,7 +159,7 @@ export default function SecurePage({ length = 6 }) {
 
 
         // 만약 목적지가 '/main'이면(로그인 시도), 토큰을 세션 스토리지에 저장
-        if (redirectPath === '/main') {
+        if (redirectPath === "/main") {
           sessionStorage.setItem("accessToken", response.data.access_token);
           sessionStorage.setItem("refreshToken", response.data.refresh_token);
           sessionStorage.setItem("userId", response.data.user_id);
@@ -165,19 +167,27 @@ export default function SecurePage({ length = 6 }) {
 
         // 저장된 목적지(redirectPath)로 이동. 없으면 기본값으로 /main
         router.push(redirectPath || "/main");
-
       } catch (error) {
         console.error("❌ 비밀번호 검증 실패:", error);
         setPin("");
         setIsShaking(true);
-        setErrorMessage("비밀번호가 올바르지 않습니다.");
+        setErrorMessage(t("passwordIncorrectOrError"));
       }
     };
 
     if (isVerificationRequired && pin.length === length) {
       verifyAndRedirect();
     }
-  }, [pin, isVerificationRequired, redirectPath, serialNumber, length, router, dispatch]);
+  }, [
+    pin,
+    isVerificationRequired,
+    redirectPath,
+    serialNumber,
+    length,
+    router,
+    dispatch,
+    t,
+  ]);
 
   // 붙여넣기/복사/자르기 차단
   useEffect(() => {
@@ -208,7 +218,7 @@ export default function SecurePage({ length = 6 }) {
     >
       {/* 숨겨진 입력(포커스 트랩) */}
       <input
-        ref={hiddenInputRef} 
+        ref={hiddenInputRef}
         inputMode="numeric"
         autoComplete="one-time-code"
         className="sr-only"
@@ -217,29 +227,25 @@ export default function SecurePage({ length = 6 }) {
       />
       {/* 상단: 타이틀/서브타이틀/인디케이터 */}
       <div>
-        {isSettingMode && (
-          <h1 className="text-[1.375rem] font-medium text-black leading-snug mb-[1.875rem]">
-            인증서 로그인을 위한
+        {settingMode && (
+          <h1 className="text-[1.375rem] font-medium text-black leading-snug mb-[1.875rem] whitespace-pre-line">
+            {t("title1")}
             <br />
-            간편 비밀번호를 설정합니다
+            {tt("title2")}
           </h1>
         )}
         <div className="flex flex-col items-center ">
           {isVerificationRequired && (
-            <p className="text-[#4E5969] mt-6">
-              간편 비밀번호 6자리를 입력하세요
-            </p>
+            <p className="text-[#4E5969] mt-6">{t("enter6DigitPin")}</p>
           )}
 
           {isSettingMode && step === 1 && (
-            <p className="text-[#4E5969] mt-6">
-              사용할 간편 비밀번호 6자리를 입력하세요
-            </p>
+            <p className="text-[#4E5969] mt-6">{t("enter6DigitPinToUse")}</p>
           )}
 
           {step === 2 && !errorMessage && (
             <p className="text-[#4E5969] text-sm mt-1">
-              확인을 위해 한번 더 입력해주세요.
+              {t("enterAgainForConfirmation")}
             </p>
           )}
           {errorMessage && (

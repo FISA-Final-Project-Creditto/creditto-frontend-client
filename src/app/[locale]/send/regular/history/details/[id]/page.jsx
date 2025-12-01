@@ -11,11 +11,13 @@ import {
   COUNTRY_TO_KOREAN,
   STATUS_TO_KOREAN,
 } from "@/src/lib/constants/countryCode";
+import { useTranslations } from "next-intl";
 
 export default function HistoryDetailPage() {
   const { id } = useParams(); // /send/regular/history/details/[id]의 id
   const router = useRouter();
   const [edit, setEdit] = useState(false); // 편집 여부
+  const t = useTranslations("send");
 
   // formData 초기값은 함수 기반 초기화로 설정
   const [formData, setFormData] = useState({
@@ -75,18 +77,18 @@ export default function HistoryDetailPage() {
       const { code } = res.data;
 
       if (code === 200) {
-        alert("정기 송금 설정이 수정되었습니다.");
+        alert(t("regular.history.editSuccess"));
 
         // 업데이트 된 데이터만 저장(요청 바디 사용)
         setOriginalData(formData); // 원본 데이터 수정(현재 Formdata를 집어넣어서 원본을 수정)
 
         setEdit(false);
       } else {
-        alert("수정에 실패했습니다. 다시 시도해주세요.");
+        alert(t("regular.history.editFailed"));
       }
     } catch (error) {
       console.error("정기 송금 수정 API 실패: ", error);
-      alert("수정 중 오류가 발생했습니다.");
+      alert(t("regular.history.editError"));
     }
   };
 
@@ -157,7 +159,7 @@ export default function HistoryDetailPage() {
     return (
       <main className="min-h-dvh flex items-center justify-center bg-white">
         <p className="text-sm text-[#86909C]">
-          정기 송금 설정 정보를 불러오는 중...
+          {t("regular.history.loadingDetail")}
         </p>
       </main>
     );
@@ -168,7 +170,7 @@ export default function HistoryDetailPage() {
       {/* 상단 */}
       <header>
         <AppHeader
-          title="해외 송금 내역"
+          title={t("regular.history.detailTitle")}
           showHamburger={false}
           showEdit={true}
           edit={edit}
@@ -182,7 +184,7 @@ export default function HistoryDetailPage() {
           <div className="space-y-3.75">
             {/* 출금 계좌 */}
             <EditableField
-              label="출금 계좌"
+              label={t("regular.result.account")}
               edit={edit}
               type="select-account"
               value={formData.accountNo}
@@ -193,7 +195,7 @@ export default function HistoryDetailPage() {
 
             {/* 외화 거래 금액 (숫자만) */}
             <EditableField
-              label="외화 거래 금액"
+              label={t("regular.result.amount")}
               edit={edit}
               type="sendAmount"
               value={`${formatAmount(formData.sendAmount)} ${
@@ -210,7 +212,7 @@ export default function HistoryDetailPage() {
 
             {/* 송금 주기 (MONTHLY → 날짜 / WEEKLY → 요일) */}
             <EditableField
-              label="송금 주기"
+              label={t("regular.result.cycle")}
               edit={edit}
               type="scheduled"
               regRemType={formData.regRemType} //  MONTHLY / WEEKLY 전달
@@ -225,47 +227,62 @@ export default function HistoryDetailPage() {
             />
 
             {/* 읽기 전용 필드 */}
-            <InfoRow label="송금 시작일" value={formData.startedAt} />
+            <InfoRow
+              label={t("regular.result.startDate")}
+              value={formData.startedAt}
+            />
           </div>
 
           <Divider />
 
           {/* 송금인 정보 */}
           <h3 className="text-left font-bold text-[#4E5969] text-lg mb-[0.938rem]">
-            송금인 정보
+            {t("regular.result.senderInfo")}
           </h3>
           <div className="space-y-3.75">
-            <InfoRow label="이름" value={formData.clientName} />
+            <InfoRow label={t("common.name")} value={formData.clientName} />
             <InfoRow
-              label="국적"
+              label={t("common.country")}
               value={COUNTRY_TO_KOREAN[formData.clientCountry]}
             />
-            <InfoRow label="송금 통화 코드" value={formData.sendCurrency} />
+            <InfoRow
+              label={t("regular.result.sendCurrency")}
+              value={formData.sendCurrency}
+            />
           </div>
 
           <Divider />
 
           {/* 수신인 정보 */}
           <h3 className="text-left font-bold text-[#4E5969] text-lg mb-[0.938rem]">
-            수신인 정보
+            {t("regular.result.recipientInfo")}
           </h3>
           <div className="space-y-3.75">
             <InfoRow
-              label="국가"
+              label={t("common.country")}
               value={COUNTRY_TO_KOREAN[formData.recipientCountry]}
             />
-            <InfoRow label="은행명" value={formData.recipientBankName} />
-            <InfoRow label="계좌 번호" value={formData.recipientAccountNo} />
-            <InfoRow label="수취 통화 코드" value={formData.receiveCurrency} />
-            <InfoRow label="이름" value={formData.recipientName} />
             <InfoRow
-              label="전화 번호"
+              label={t("regular.result.bankName")}
+              value={formData.recipientBankName}
+            />
+            <InfoRow
+              label={t("common.accountNumber")}
+              value={formData.recipientAccountNo}
+            />
+            <InfoRow
+              label={t("regular.result.receiveCurrency")}
+              value={formData.receiveCurrency}
+            />
+            <InfoRow label={t("common.name")} value={formData.recipientName} />
+            <InfoRow
+              label={t("common.phoneNumber")}
               value={`${formData.recipientPhoneCc} ${formData.recipientPhoneNo}`}
             />
 
             {/* 정기 송금 상태 */}
             <EditableField
-              label="송금 상태"
+              label={t("common.status.title")}
               edit={edit}
               type="regRemStatus"
               value={STATUS_TO_KOREAN[formData.regRemStatus]}
@@ -284,13 +301,13 @@ export default function HistoryDetailPage() {
             className="flex-1 border-[#86909C] text-[#4E5969]"
             onClick={handleCancel}
           >
-            취소
+            {t("regular.history.cancel")}
           </Button>
           <Button
             className="flex-1 bg-[#1A3668] text-white"
             onClick={handleSave}
           >
-            저장
+            {t("regular.history.save")}
           </Button>
         </div>
       )}

@@ -11,7 +11,10 @@ import {
   BarChart,
   Bar,
 } from 'recharts';
+import { useTranslations } from 'next-intl';
+
 export default function CreditChart() {
+  const t = useTranslations('maine');
   const [historyScore , setHistoryScore] = useState();
  useEffect(() => {
     const fetchCreditScore = async () => {
@@ -46,7 +49,7 @@ const CustomTooltip = ({ active, payload, label }) => {
       <div className="relative">
         <div className="bg-white text-gray-800 p-3 rounded-lg shadow-lg">
           <p className="font-bold text-sm text-gray-900">{label}</p>
-          <p className="text-base text-[#1A3668] font-semibold">{`${payload[0].value}점`}</p>
+          <p className="text-base text-[#1A3668] font-semibold">{`${payload[0].value}${t('creditChart.score')}`}</p>
         </div>
         {/* 말풍선 꼬리 부분 */}
         <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-white transform rotate-45 -bottom-1"></div>
@@ -58,13 +61,13 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const creditScoreData = [
-  { month: '1월', score: 400 },
-  { month: '2월', score: 425 },
-  { month: '3월', score: 680 },
-  { month: '4월', score: 695 },
-  { month: '5월', score: 400 },
-  { month: '6월', score: 730 },
-  { month: '7월', score: 840 },
+  { month: t('creditChart.month', {month: 1}), score: 400 },
+  { month: t('creditChart.month', {month: 2}), score: 425 },
+  { month: t('creditChart.month', {month: 3}), score: 680 },
+  { month: t('creditChart.month', {month: 4}), score: 695 },
+  { month: t('creditChart.month', {month: 5}), score: 400 },
+  { month: t('creditChart.month', {month: 6}), score: 730 },
+  { month: t('creditChart.month', {month: 7}), score: 840 },
 ];
   return (
           <div className="w-full mt-3 bg-gradient-to-br from-[#1A3668] via-[#1A3668] to-[#1A3668]/80 rounded-3xl m-3 text-primary-foreground shadow-lg ">

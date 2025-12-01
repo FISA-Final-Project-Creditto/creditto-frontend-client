@@ -4,8 +4,11 @@ import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import BottomBar from "../../send/components/BottomBar";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 export default function PermissionPage() {
+  const t = useTranslations("signup.permission");
   const router = useRouter();
   const [camOk, setCamOk] = useState(null);
   const [micOk, setMicOk] = useState(null);
@@ -19,10 +22,10 @@ export default function PermissionPage() {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       stream.getTracks().forEach((t) => t.stop());
       setCamOk(true);
-      append("카메라 권한 허용");
+      append(t("cameraGranted"));
     } catch (e) {
       setCamOk(false);
-      append("카메라 권한 거부/오류");
+      append(t("cameraDenied"));
     }
   }
 
@@ -40,17 +43,17 @@ export default function PermissionPage() {
 
   function requestGeo() {
     if (!("geolocation" in navigator)) {
-      append("지오로케이션 미지원");
+      append(t("geolocationNotSupported"));
       return;
     }
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setGeoOk(true);
-        append(`위치 허용: ${pos.coords.latitude}, ${pos.coords.longitude}`);
+        append(t("locationAllowed", { lat: pos.coords.latitude, lon: pos.coords.longitude }));
       },
       (err) => {
         setGeoOk(false);
-        append(`위치 거부/오류: ${err.code}`);
+        append(t("locationDenied", { code: err.code }));
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
@@ -68,27 +71,25 @@ export default function PermissionPage() {
 
   return (
     <>
-      <AppHeader title="접근 권한" show={true} showHamburger={true} />
+      <AppHeader title={t("title")} show={true} showHamburger={true} />
       <div className="flex-1 px-8 pt-16 pb-10 text-left">
         <h1 className="text-2xl font-bold leading-snug">
-          서비스 이용을 위해
-          <br />앱 접근 권한을 확인해주세요
+          {t("description1")}
+          <br />{t("description2")}
         </h1>
 
-        <p className="mt-12 text-sm text-gray-500">선택 권한</p>
+        <p className="mt-12 text-sm text-gray-500">{t("optional")}</p>
 
         <ul className="mt-6 space-y-8">
           <li>
             <div className="flex items-start gap-4">
-              <img src="/icon/camera.png" className="w-6 h-6 mt-1" />
+              <Image src="/icon/camera.png" alt={t("camera")} width={24} height={24} className="w-6 h-6 mt-1" />
               <div>
                 <p className="font-bold">
-                  카메라 {camOk === true ? "✅" : camOk === false ? "❌" : ""}
+                  {t("camera")} {camOk === true ? "✅" : camOk === false ? "❌" : ""}
                 </p>
                 <p className="mt-1 text-sm text-gray-500 leading-relaxed">
-                  신분증 촬영, QR코드 인식, 사진찍어 이체하기,
-                  <br />
-                  영상상담 등에 사용
+                  {t("cameraDescription")}
                 </p>
               </div>
             </div>
@@ -96,13 +97,13 @@ export default function PermissionPage() {
 
           <li>
             <div className="flex items-start gap-4">
-              <img src="/icon/location.png" className="w-6 h-6 mt-1" />
+              <Image src="/icon/location.png" alt={t("location")} width={24} height={24} className="w-6 h-6 mt-1" />
               <div>
                 <p className="font-bold">
-                  위치 {geoOk === true ? "✅" : geoOk === false ? "❌" : ""}
+                  {t("location")} {geoOk === true ? "✅" : geoOk === false ? "❌" : ""}
                 </p>
                 <p className="mt-1 text-sm text-gray-500 leading-relaxed">
-                  가까운 영업점 및 ATM 찾기에 사용
+                  {t("locationDescription")}
                 </p>
               </div>
             </div>
@@ -110,13 +111,13 @@ export default function PermissionPage() {
 
           <li>
             <div className="flex items-start gap-4">
-              <img src="/icon/mic.png" className="w-6 h-6 mt-1" />
+              <Image src="/icon/mic.png" alt={t("microphone")} width={24} height={24} className="w-6 h-6 mt-1" />
               <div>
                 <p className="font-bold">
-                  마이크 {micOk === true ? "✅" : micOk === false ? "❌" : ""}
+                  {t("microphone")} {micOk === true ? "✅" : micOk === false ? "❌" : ""}
                 </p>
                 <p className="mt-1 text-sm text-gray-500 leading-relaxed">
-                  영상상담 시 음성인식을 위해 사용
+                  {t("microphoneDescription")}
                 </p>
               </div>
             </div>
@@ -125,7 +126,7 @@ export default function PermissionPage() {
       </div>
 
       <footer>
-        <BottomBar label="다음" onClick={handleNext} isActive={true} />
+        <BottomBar label={t("next")} onClick={handleNext} isActive={true} />
       </footer>
     </>
   );
