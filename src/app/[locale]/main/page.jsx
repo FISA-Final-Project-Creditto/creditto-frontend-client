@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import MoneyExchange from "./components/MoneyExchange/MoneyExchange";
 import Header from "./components/Header/Header";
 import RoundedIconTabs from "./components/Tabs";
@@ -7,39 +7,57 @@ import FunctionButton from "./components/FunctionButton/FunctionButton";
 import Money from "../maine/components/Money/Money";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
+import { credittoApi } from "../../api/axios";
 
 export default function MainPage() {
   const router = useRouter();
-  // Redux 스토어에서 계좌 정보를 가져옵니다.
-  // const accounts = useSelector((state) => state.account.accounts);
+  const [isLoading, setIsLoading] = useState(true);
 
+  const [accountState, setAccountState] = useState({
+    balance: null,
+    accountCount: 0,
+  });
+  useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) {
+          alert("로그인이 필요합니다.");
+          router.replace("/");
+          return;
+        }
+        const response = await credittoApi.get("/api/accounts/me/balance", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        // API 응답에서 balance와 accountCount를 모두 상태로 저장
+        setAccountState({
+          balance: response.data.data.totalBalance,
+          accountCount: response.data.data.accountCount,
+        });
+        console.log("반응 : ", response.data);
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+        setAccountState({ balance: null, accountCount: 0 }); // 에러 발생 시 초기화
+      } finally {
+        setIsLoading(false); // 로딩 종료
+      }
+    };
+    fetchBalance();
+  }, []);
 
-  useEffect(()=>{
-    const accessToken = sessionStorage.getItem("accessToken");
-    if (!accessToken) {
-      alert("로그인이 필요합니다.");
-      router.replace("/");
-    }
-
-    // 가져온 계좌 정보를 콘솔에 출력하여 확인
-    // console.log("메인 페이지에서 확인한 계좌 정보:", accounts);
-  })
   return (
     <>
       <Header />
       <main className="">
-
-
         <div className="px-5 mt-2">
-           <Money />
-          <RoundedIconTabs   />
+          <Money accountState={accountState} isLoading={isLoading} />
+          <RoundedIconTabs accountState={accountState} />
           <FunctionButton />
         </div>
         <div className="px-5 mt-5 ">
-          <div>
-           
-            
-          </div>
+          <div></div>
         </div>
 
         <div className="w-full flex-1 bg-[#F3F6FB] flex overflow-auto rounded-3xl">
