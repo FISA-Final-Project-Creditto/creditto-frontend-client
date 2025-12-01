@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 export default function InfoInput({
   title,
@@ -7,14 +8,15 @@ export default function InfoInput({
   onChange,
   prefix,
 }) {
+  const t = useTranslations("auth.infoInput");
   // 타이틀별 placeholder 문구
   const placeholders = {
-    이름: "이름을 대문자로 입력해주세요",
-    생년월일: "생년월일을 입력해주세요(8자리)",
-    외국인등록번호: "외국인등록번호를 입력해주세요",
-    주소: "외국인등록증에 기재된 주소를 입력해주세요",
-    체류지역: "체류지역을 입력해주세요",
-    전화번호: "010-0000-0000",
+    "이름": t("namePlaceholder"),
+    "생년월일": t("birthdatePlaceholder"),
+    "외국인등록번호": t("alienRegistrationNumberPlaceholder"),
+    "주소": t("addressPlaceholder"),
+    "체류지역": t("areaOfResidencePlaceholder"),
+    "전화번호": "010-0000-0000", // This one should probably be handled differently
   };
 
   return (

@@ -3,8 +3,10 @@ import BottomSheet from "@/src/app/[locale]/signup/phone/components/BottomSheet"
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 export default function PhonePage() {
+  const t = useTranslations("signup.phone");
   const router = useRouter();
 
   const [step, setStep] = useState(1); // 1: 이름, 2: 생일, 3: 전화번호
@@ -36,14 +38,14 @@ export default function PhonePage() {
   // 상단 문구
   const labelText =
     step === 1
-      ? "고객님의 이름을 알려주세요"
+      ? t("nameLabel")
       : step === 2
-      ? "고객님의 생일을 알려주세요"
-      : "고객님의 전화번호를 입력해주세요";
+      ? t("birthdayLabel")
+      : t("phoneLabel");
 
   const NameField = (
     <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
-      <label className="text-sm text-gray-600">이름</label>
+      <label className="text-sm text-gray-600">{t("name")}</label>
       <input
         value={name}
         type="text"
@@ -55,11 +57,11 @@ export default function PhonePage() {
 
   const BirthdayField = (
     <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
-      <label className="text-sm text-gray-600 ">생년월일</label>
+      <label className="text-sm text-gray-600 ">{t("birthdate")}</label>
       <input
         value={birthday}
         type="text"
-        placeholder="YYYY-MM-DD"
+        placeholder={t("birthdatePlaceholder")}
         className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[20px] pb-1"
         onChange={(e) => setBirthDay(e.target.value)}
         onInput={(e) => {
@@ -86,11 +88,11 @@ export default function PhonePage() {
 
   const PhoneField = (
     <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
-      <label className="text-sm text-gray-600 ">휴대폰 번호</label>
+      <label className="text-sm text-gray-600 ">{t("phoneNumber")}</label>
       <input
         value={phonenumber}
         type="text"
-        placeholder="010-0000-0000"
+        placeholder={t("phonePlaceholder")}
         className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[20px] pb-1 tracking-wider"
         onInput={(e) => {
           // 1️⃣ 숫자만 남기기
@@ -117,7 +119,7 @@ export default function PhonePage() {
     <main className="h-[100dvh] flex justify-center bg-[#e5e5e5]">
       <div className="w-full max-w-[440px] min-h-[100dvh] mx-auto flex  flex-col bg-white">
         <AppHeader
-          title="본인 인증"
+          title={t("authTitle")}
           show={true}
           showHamburger={true}
           showBack={true}

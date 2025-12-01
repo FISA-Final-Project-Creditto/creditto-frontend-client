@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo } from "react";
+import { useTranslations } from "next-intl";
 
 // 0~9 배열을 무작위 순서로 변경
 function shuffle(arr) {
@@ -22,6 +23,7 @@ export default function SecurePinKeyboard({
   onClear,
   shuffleToken, // 🔹 SecurePage에서 내려주는 토큰
 }) {
+  const t = useTranslations("auth.securePinKeyboard");
   // shuffleToken이 바뀔 때마다 새로운 배열을 계산 (파생 상태)
   const digits = useMemo(() => {
     const base = "0123456789".split("");
@@ -64,7 +66,7 @@ export default function SecurePinKeyboard({
             bg-[var(--accent)]
           "
         >
-          전체삭제
+          {t("clearAll")}
         </button>
 
         {/* 중앙: 마지막 숫자 */}
@@ -73,7 +75,7 @@ export default function SecurePinKeyboard({
         {/* 우하단: 백스페이스 */}
         <button
           onClick={onBackspace}
-          aria-label="지우기"
+          aria-label={t("delete")}
           className="
             h-16 w-full rounded-2xl
             text-white text-2xl font-semibold
@@ -90,6 +92,7 @@ export default function SecurePinKeyboard({
 }
 
 function Key({ label, onClick }) {
+  const t = useTranslations("auth.securePinKeyboard");
   return (
     <button
       onClick={onClick}
@@ -102,7 +105,7 @@ function Key({ label, onClick }) {
         shadow-none
         [WebkitTapHighlightColor:transparent]
       "
-      aria-label={`${label} 입력`}
+      aria-label={t("enterLabel", { label })}
     >
       {label}
     </button>

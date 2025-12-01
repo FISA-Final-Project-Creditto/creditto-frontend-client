@@ -2,8 +2,10 @@
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function AgreePage() {
+  const t = useTranslations("signup.agree");
   const router = useRouter();
   const [checked, setChecked] = useState({
     all: false,
@@ -34,9 +36,16 @@ export default function AgreePage() {
     setChecked({ ...newChecked, all: allChecked });
   };
 
+  const terms = [
+    { key: "terms1", text: t("terms1") },
+    { key: "terms2", text: t("terms2") },
+    { key: "terms3", text: t("terms3") },
+    { key: "terms4", text: t("terms4") },
+  ];
+
   return (
     <>
-     <AppHeader title="약관 동의" show={true} showHamburger={true} />
+     <AppHeader title={t("title")} show={true} showHamburger={true} />
       <div className="flex-1 px-8 pt-16 pb-10 text-left">
         {/* 전체 동의 */}
            
@@ -69,18 +78,13 @@ export default function AgreePage() {
             )}
           </span>
           <h1 className="text-[20px] font-bold text-gray-900">
-            약관 전체 동의
+            {t("agreeAll")}
           </h1>
         </label>
 
         {/* 개별 약관 */}
         <ul className="mt-6 space-y-6">
-          {[
-            { key: "terms1", text: "(필수) Creditto 서비스 이용약관" },
-            { key: "terms2", text: "(필수) 개인정보 수집 및 이용 동의" },
-            { key: "terms3", text: "(필수) 개인정보 취급위탁 동의" },
-            { key: "terms4", text: "(선택) 광고성 정보 수신 동의" },
-          ].map(({ key, text }) => (
+          {terms.map(({ key, text }) => (
             <li key={key}>
               <label
                 onClick={() => toggleOne(key)}
@@ -130,7 +134,7 @@ export default function AgreePage() {
           router.push("/signup/phone");
         }}
       >
-        다음
+        {t("next")}
       </button>
       </div>
   

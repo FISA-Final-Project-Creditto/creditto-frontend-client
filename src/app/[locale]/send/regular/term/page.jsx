@@ -1,3 +1,7 @@
+"use client";
+import { useTranslations } from "next-intl";
+
 export default function TermPage() {
-  return <div>약관 동의서 페이지</div>;
+  const t = useTranslations("send.regular.term");
+  return <div>{t("title")}</div>;
 }

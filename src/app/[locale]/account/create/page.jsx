@@ -5,8 +5,10 @@ import { useDispatch } from "react-redux";
 import BottomBar from "../../send/components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import api, { credittoApi } from "../../../api/axios";
+import { useTranslations } from "next-intl";
 
 export default function AccountCreatePage() {
+  const t = useTranslations("account.create");
   const [accountName, setAccountName] = useState("");
   const [accountType, setAccountType] = useState(""); // 기본값을 빈 문자열로 설정
   const [savedToken, setSavedToken] = useState(null);
@@ -39,11 +41,11 @@ export default function AccountCreatePage() {
 
   const Accountfield = (
     <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
-      <label className="text-sm text-gray-600">계좌 이름</label>
+      <label className="text-sm text-gray-600">{t("nameLabel")}</label>
       <input
         value={accountName}
         type="text"
-        placeholder="계좌 명을 입력하세요"
+        placeholder={t("namePlaceholder")}
         className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[20px] pb-1"
         onChange={(e) => setAccountName(e.target.value)}
         onInput={(e) => {
@@ -62,7 +64,7 @@ export default function AccountCreatePage() {
   const AccountTypefield = (
     <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
       <label htmlFor="accountType" className="text-sm text-gray-600 ">
-        계좌 종류
+        {t("typeLabel")}
       </label>
       <select
         id="accountType"
@@ -71,12 +73,12 @@ export default function AccountCreatePage() {
         className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[20px] pb-1"
       >
         <option value="" disabled>
-          계좌 종류를 선택하세요
+          {t("typePlaceholder")}
         </option>
-        <option value="DEPOSIT">입출금 계좌</option>
-        <option value="SAVINGS">적금 계좌</option>
-        <option value="LOAN">대출 계좌</option>
-        <option value="INVESTMENT">투자 계좌</option>
+        <option value="DEPOSIT">{t("deposit")}</option>
+        <option value="SAVINGS">{t("savings")}</option>
+        <option value="LOAN">{t("loan")}</option>
+        <option value="INVESTMENT">{t("investment")}</option>
       </select>
     </div>
   );
@@ -84,7 +86,7 @@ export default function AccountCreatePage() {
   return (
     <>
       <AppHeader
-        title="계좌 생성"
+        title={t("title")}
         show={true}
         showHamburger={true}
         showBack={true}
@@ -93,9 +95,9 @@ export default function AccountCreatePage() {
         <div className="flex-1 px-8 pt-8 pb-10 text-left space-y-6">
           {/* 상단 문구 */}
           <h1 className="text-[20px] font-bold mb-5">
-            계좌 생성을 위해
+            {t("instruction1")}
             <br />
-            정보를 입력해주세요
+            {t("instruction2")}
           </h1>
 
           {/* 입력 필드 */}
@@ -103,7 +105,7 @@ export default function AccountCreatePage() {
           {AccountTypefield}
         </div>
         <footer>
-          <BottomBar label="계좌 생성하기" isActive={!!savedToken} />
+          <BottomBar label={t("button")} isActive={!!savedToken} />
         </footer>
       </form>
     </>

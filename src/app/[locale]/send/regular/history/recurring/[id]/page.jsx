@@ -8,11 +8,13 @@ import { setSendHistoryData } from "@/src/store/features/sendHistory/sendHistory
 import { credittoApi } from "@/src/app/api/axios";
 import RegSendHistoryItem from "../../components/RegSendHistoryItem";
 import RecurringHistory from "../components/RecurringHistory";
+import { useTranslations } from "next-intl";
 
 // 정기적으로 송금 내역을 보여주는 페이지
 export default function RecurringPage({ params: paramsPromise }) {
   const params = React.use(paramsPromise);
   const { id } = params;
+  const t = useTranslations("send.regular.history");
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -114,7 +116,7 @@ export default function RecurringPage({ params: paramsPromise }) {
       {/* 상단바 */}
       <header>
         <AppHeader
-          title="해외 정기 송금 내역"
+          title={t("recurringTitle")}
           showBack={true}
           showHamburger={false}
         />
@@ -123,7 +125,7 @@ export default function RecurringPage({ params: paramsPromise }) {
       {/* 정기 송금 내역 */}
       <section className="flex flex-col gap-4 px-8">
         <h1 className="text-left mt-[40px] text-[1.563rem] text-[#1A3668] font-bold">
-          해외 정기 송금 내역
+          {t("recurringTitle")}
           {/* <span className="text-lg text-[#86909C]">({detail.recipient})</span> */}
         </h1>
       </section>
@@ -132,14 +134,18 @@ export default function RecurringPage({ params: paramsPromise }) {
       <section className="px-8 mt-[1.875rem]">
         <div className="w-full rounded-lg border border-[#E5E6EB] bg-[#F7F8FA] px-[1.25rem] py-[0.938rem] flex flex-col gap-2">
           <div className="flex justify-between items-center">
-            <span className="text-xs text-[#86909C]">수취인</span>
+            <span className="text-xs text-[#86909C]">
+              {t("recipient")}
+            </span>
             <span className="text-sm font-semibold text-black">
               {recipientName}
             </span>
           </div>
 
           <div className="flex justify-between mt-2">
-            <span className="text-xs text-[#86909C]">수취인 계좌번호</span>
+            <span className="text-xs text-[#86909C]">
+              {t("recipientAccount")}
+            </span>
             <div className="text-sm font-medium text-black">
               {recipientAccountNo}
             </div>
@@ -162,9 +168,9 @@ export default function RecurringPage({ params: paramsPromise }) {
 
         {/* 오른쪽 텍스트 영역 */}
         <div className="flex flex-col items-end font-semibold">
-          <span className="text-base text-black">6개월 정기 송금 완료</span>
+          <span className="text-base text-black">{t("completed")}</span>
           <span className="text-right text-sm" style={{ color: "#2EA62E" }}>
-            신용도 점수 +50
+            {t("creditScoreUp")}
           </span>
         </div>
       </div>

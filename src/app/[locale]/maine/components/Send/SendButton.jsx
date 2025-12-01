@@ -1,8 +1,12 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 
-export default function GradientSparkleButton({ label = '해외 송금하기', onClick, className = '' }) {
+export default function GradientSparkleButton({ label, onClick, className = '' }) {
+  const t = useTranslations('maine');
+  const buttonLabel = label || t('sendButton.label');
+
   return (
     <button
       type="button"
@@ -41,7 +45,7 @@ export default function GradientSparkleButton({ label = '해외 송금하기', o
           group-text-white
         "
       >
-        {label}
+        {buttonLabel}
       </span>
     </button>
   );

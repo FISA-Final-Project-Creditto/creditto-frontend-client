@@ -1,9 +1,11 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 // 정기 해외 송금 내역
 export default function RegSendHistoryItem({ details = [], onItemClick }) {
+  const t = useTranslations("send.regular.history");
   // 날짜 포맷터: "2025-11-25" → "11.25"
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
@@ -18,7 +20,7 @@ export default function RegSendHistoryItem({ details = [], onItemClick }) {
   };
 
   if (!details.length) {
-    return <p className="text-sm text-[#86909C]">아직 송금 내역이 없습니다.</p>;
+    return <p className="text-sm text-[#86909C]">{t("noHistory")}</p>;
   }
 
   return (
@@ -43,7 +45,9 @@ export default function RegSendHistoryItem({ details = [], onItemClick }) {
                 {formatAmount(item.sendAmount)} KRW
               </span>
               <span className="text-sm text-[#86909C]">
-                환율 {formatAmount(item.exchangeRate)}원
+                {t("exchangeRate", {
+                  rate: formatAmount(item.exchangeRate),
+                })}
               </span>
             </div>
             <ChevronRight />

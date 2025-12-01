@@ -8,10 +8,12 @@ import Money from "../maine/components/Money/Money";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { credittoApi } from "../../api/axios";
+import { useTranslations } from "next-intl";
 
 export default function MainPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const t = useTranslations("main");
 
   const [accountState, setAccountState] = useState({
     balance: null,

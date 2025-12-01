@@ -11,6 +11,7 @@ import BottomBar from "../components/BottomBar";
 import { useDispatch } from "react-redux";
 import { setOcrData } from "@/src/store/features/ocr/ocrSlice";
 import { countryCodes } from "@/src/app/[locale]/constants/countryCode";
+import { useTranslations } from "next-intl";
 
 const DOCUMENT_TYPE_ALIEN_CARD = "Alien Registration Card"; // 외국인등록증 상수로 선언
 
@@ -33,6 +34,10 @@ const requestOCR = async (file) => {
 };
 
 export default function ScanPage() {
+  const t = useTranslations("auth.scan");
+  const router = useRouter();
+  const dispatch = useDispatch();
+
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
   const previewUrlRef = useRef(""); // 현재 미리보기 URL 저장(해제용)
@@ -44,9 +49,6 @@ export default function ScanPage() {
     data: null, // 원본 OCR 응답
     parsedData: null, // 파싱된 OCR 데이터
   });
-
-  const router = useRouter();
-  const dispatch = useDispatch();
 
   // 언마운트 시 URL 해제
   useEffect(() => {
@@ -107,8 +109,8 @@ export default function ScanPage() {
           isPending: false,
           isFileRejected: true,
           error: {
-            message: "외국인등록증 이미지가 아닙니다.",
-            description: "올바른 외국인등록증 이미지를 업로드해주세요.",
+            message: t("notAlienRegistrationCard"),
+            description: t("uploadValidImage"),
           },
           data: null,
           parsedData: null,
@@ -135,16 +137,16 @@ export default function ScanPage() {
         });
       }
     } catch (e) {
-      console.error("handleSelectFile 에러:", e);
+      console.error(t("handleSelectFileError"), e);
 
       // 에러 처리
       setOcrState({
         isPending: false,
         isFileRejected: false,
         error: {
-          message: e.error || "분석에 실패했습니다.",
+          message: e.error || t("analysisFailed"),
           description:
-            e.details?.error || e.message || "잠시 후 다시 시도해 주세요.",
+            e.details?.error || e.message || t("tryAgain"),
         },
         data: null,
         parsedData: null,
@@ -174,7 +176,7 @@ export default function ScanPage() {
               onClick={handleRetake}
               className="text-[#86909C] text-sm underline transition-colors"
             >
-              다시 촬영하기
+              {t("retakePhoto")}
             </button>
           </div>
         </>
@@ -189,7 +191,7 @@ export default function ScanPage() {
 
           <footer>
             <BottomBar
-              label="확인"
+              label={t("confirm")}
               onClick={() => router.push("/auth/info")}
               isActive={true}
             />

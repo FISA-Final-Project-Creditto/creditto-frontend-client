@@ -8,6 +8,7 @@ import BottomBar from "../../../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import AddressModal from "./components/AddressModal";
 import { setClientData } from "@/src/store/features/send/sendSlice";
+import { useTranslations } from "next-intl";
 
 // 수취 통화 코드를 송금인의 국적으로 변환할 때 사용
 const currencyToNationality = {
@@ -19,6 +20,7 @@ const currencyToNationality = {
 export default function RemittancePage() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const t = useTranslations("send");
 
   const receiveCurrency = useSelector((state) => state.send.receiveCurrency); // 수취 통화 코드
   console.log("수취 통화 코드: ", receiveCurrency);
@@ -86,7 +88,7 @@ export default function RemittancePage() {
       {/* 상단 바 */}
 
       <AppHeader
-        title="해외 송금"
+        title={t("common.remittance")}
         show={true}
         showHamburger={false}
         showBack={true}
@@ -97,20 +99,18 @@ export default function RemittancePage() {
 
         <section className="flex flex-col gap-[2.188rem] mt-4">
           <h1 className="text-left text-[1.563rem] font-bold">
-            <span className="text-[#1A3668]">해외 송금</span> 기본 정보를
-            <br />
-            입력해주세요
+            {t("regular.information.title")}
           </h1>
 
           <hr className="border-t border-[#E5E6EB]" />
 
           <section className="flex flex-col gap-6">
             <h2 className="text-left text-[1.563rem] text-[#1A3668] font-bold">
-              보내시는 분
+              {t("regular.information.remitterTitle")}
             </h2>
 
             <h3 className="text-left text-[1.125rem] text-black font-semibold">
-              국내 체류 정보를 입력해주세요
+              {t("regular.information.remitterSubtitle")}
             </h3>
 
             {/* 입력칸 */}
@@ -121,14 +121,14 @@ export default function RemittancePage() {
               {/* 이름 */}
               <div className="flex flex-col items-start">
                 <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                  이름 (Full Name)
+                  {t("regular.information.fullName")}
                 </label>
                 <input
                   type="text"
                   name="clientName"
                   value={formData.clientName}
                   onChange={handleChange}
-                  placeholder="영문으로 입력하세요"
+                  placeholder={t("regular.information.englishNamePlaceholder")}
                   className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
                 />
               </div>
@@ -136,7 +136,7 @@ export default function RemittancePage() {
               {/* 국적 */}
               <div className="flex flex-col items-start">
                 <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                  국적 (Nationality)
+                  {t("regular.information.nationality")}
                 </label>
                 <div className="relative w-full">
                   <input
@@ -153,7 +153,7 @@ export default function RemittancePage() {
               {/* 주소 */}
               <div className="flex flex-col items-start">
                 <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                  주소 (Address)
+                  {t("regular.information.address")}
                 </label>
                 <div
                   onClick={() => setIsPostcodeOpen(true)}
@@ -164,7 +164,7 @@ export default function RemittancePage() {
                     name="address"
                     value={formData.address}
                     readOnly
-                    placeholder="송금인의 거주 주소를 입력하세요"
+                    placeholder={t("regular.information.addressPlaceholder")}
                     className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
                   />
                 </div>
@@ -173,14 +173,16 @@ export default function RemittancePage() {
               {/* 상세 주소 */}
               <div className="flex flex-col items-start">
                 <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                  상세 주소
+                  {t("regular.information.detailAddress")}
                 </label>
                 <input
                   type="text"
                   name="detailAddr"
                   value={formData.detailAddr}
                   onChange={handleChange}
-                  placeholder="주소를 입력하세요"
+                  placeholder={t(
+                    "regular.information.detailAddressPlaceholder"
+                  )}
                   className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
                 />
               </div>
@@ -197,7 +199,11 @@ export default function RemittancePage() {
         onComplete={handleCompletePostcode}
       />
 
-      <BottomBar label="다음" onClick={handleSubmit} isActive={isFormValid} />
+      <BottomBar
+        label={t("common.next")}
+        onClick={handleSubmit}
+        isActive={isFormValid}
+      />
     </main>
   );
 }

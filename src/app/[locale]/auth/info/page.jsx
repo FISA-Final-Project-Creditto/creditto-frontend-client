@@ -10,8 +10,10 @@ import { setUserData } from "@/src/store/features/signup/userSlice";
 import { registerUser } from "@/src/app/api/axios";
 import { countryCodes } from "../../constants/countryCode";
 import { startSettingMode as settingModeAction } from "@/src/store/features/simplepw/simplepwSlice";
+import { useTranslations } from "next-intl";
 
 export default function InfoInputPage() {
+  const t = useTranslations("auth.info");
   // Redux 스토어에서 ocr과 user 데이터 전체를 가져오기
   const { imageData: previewUrl, ...ocrData } = useSelector(
     (state) => state.ocr
@@ -95,9 +97,9 @@ export default function InfoInputPage() {
 
       const res = await registerUser(data);
 
-      if (res && res.data) {
-        console.log("유저 등록 성공: ", res.data);
-        console.log("userId: ", res.data.data.userId);
+      if (res.code === 200) {
+        console.log(t("userRegistrationSuccess"), res.data);
+        console.log(t("userId"), res.data.userId);
 
         dispatch(
           setUserData({
@@ -105,21 +107,21 @@ export default function InfoInputPage() {
             birthDate: formData.birthDate,
             phoneNumber: formData.phoneNumber,
             address: formData.address,
-            userId: res.data.data.userId,
+            userId: res.data.userId,
           })
         );
 
         router.push("/auth/pw");
       }
     } catch (error) {
-      console.error("Failed to register user:", error);
+      console.error(t("failedToRegisterUser"), error);
     }
   };
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <header>
-        <AppHeader title="신분증 정보 입력" showHamburger={false} />
+        <AppHeader title={t("title")} showHamburger={false} />
       </header>
 
       {/* Card Preview */}
@@ -128,7 +130,7 @@ export default function InfoInputPage() {
           <div className="relative w-80 h-52 rounded-2xl overflow-hidden shadow-lg">
             <Image
               src={previewUrl}
-              alt="미리보기 이미지"
+              alt={t("previewImage")}
               fill
               className="object-contain"
             />
@@ -140,7 +142,7 @@ export default function InfoInputPage() {
       <div className="flex-1 pt-[2.188rem] space-y-4">
         {/* 이름 */}
         <InfoInput
-          title="이름"
+          title={t("name")}
           inputMode=""
           value={formData.name}
           onChange={(e) => handleChange("name", e.target.value)}
@@ -148,7 +150,7 @@ export default function InfoInputPage() {
 
         {/* 생년월일 */}
         <InfoInput
-          title="생년월일"
+          title={t("birthdate")}
           inputMode="numeric"
           value={formData.birthDate}
           onChange={(e) => handleChange("birthDate", e.target.value)}
@@ -156,7 +158,7 @@ export default function InfoInputPage() {
 
         {/* 외국인등록번호 */}
         <InfoInput
-          title="외국인등록번호"
+          title={t("alienRegistrationNumber")}
           inputMode="numeric"
           value={formData.registrationNumber}
           onChange={(e) => handleChange("registrationNumber", e.target.value)}
@@ -164,7 +166,7 @@ export default function InfoInputPage() {
 
         {/* 전화번호 */}
         <InfoInput
-          title="전화번호"
+          title={t("phoneNumber")}
           inputMode="numeric"
           value={formData.phoneNumber}
           onChange={(e) => handleChange("phoneNumber", e.target.value)}
@@ -173,7 +175,7 @@ export default function InfoInputPage() {
         {/* 국내체류지 */}
         {/* ✅ TODO: 추후에 카카오 API 적용 */}
         <InfoInput
-          title="주소"
+          title={t("address")}
           inputMode=""
           value={formData.address}
           onChange={(e) => handleChange("address", e.target.value)}
@@ -181,7 +183,7 @@ export default function InfoInputPage() {
 
         {/* 국가 / 지역 */}
         <InfoInput
-          title="체류지역"
+          title={t("areaOfResidence")}
           inputMode=""
           value={formData.nationality}
           onChange={(e) => handleChange("nationality", e.target.value)}
@@ -191,7 +193,7 @@ export default function InfoInputPage() {
       {/* Bottom Button */}
       <footer>
         <BottomBar
-          label="간편 비밀번호 설정"
+          label={t("setSimplePassword")}
           onClick={handleSubmit}
           isActive={true}
         />

@@ -11,11 +11,13 @@ import {
   setReceivedCurrency,
   setCountryData,
 } from "@/src/store/features/send/sendSlice";
+import { useTranslations } from "next-intl";
 
 export default function ChooseCountryPage() {
   const [localSelectedCountry, setLocalSelectedCountry] = useState(""); // 이름 변경
   const router = useRouter();
   const dispatch = useDispatch();
+  const t = useTranslations("send");
 
   const handleSelectButtonClick = () => {
     const currencyMap = {
@@ -35,7 +37,7 @@ export default function ChooseCountryPage() {
     <div>
       <header>
         <AppHeader
-          title="해외 송금"
+          title={t("common.remittance")}
           show={true}
           showHamburger={false}
           showBack={true}
@@ -44,13 +46,12 @@ export default function ChooseCountryPage() {
 
       <main className="flex flex-col gap-[2.188rem] px-5">
         <section>
-          <h1 className="text-left mt-[3.75rem] text-[1.563rem] font-bold">
-            <span className="text-[#1A3668]">해외 송금</span> 국가를
-            <br />
-            선택해주세요
+          <h1 className="text-left mt-[3.75rem] text-[1.563rem] font-bold whitespace-pre-line">
+            {/* <span className="text-[#1A3668]">{t("common.remittance")}</span>{" "} */}
+            {t("chooseCountry.title")}
           </h1>
           <p className="text-sm text-left text-[#86909C]">
-            송금하실 국가의 통화를 선택해주세요.
+            {t("chooseCountry.subtitle")}
           </p>
         </section>
 
@@ -73,9 +74,11 @@ export default function ChooseCountryPage() {
               <US className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
               <div className="flex flex-col items-start justify-center">
                 <span className=" text-[18px] font-semibold text-[#1F2329]">
-                  미국 USD
+                  {t("chooseCountry.usa")}
                 </span>
-                <span className="text-sm font-medium text-[#86909C]">달러</span>
+                <span className="text-sm font-medium text-[#86909C]">
+                  {t("chooseCountry.dollar")}
+                </span>
               </div>
             </div>
           </button>
@@ -97,9 +100,11 @@ export default function ChooseCountryPage() {
               <CN className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
               <div className="flex flex-col items-start justify-center">
                 <span className=" text-[18px] font-semibold text-[#1F2329]">
-                  중국 CNY
+                  {t("chooseCountry.china")}
                 </span>
-                <span className="text-sm font-medium text-[#86909C]">위안</span>
+                <span className="text-sm font-medium text-[#86909C]">
+                  {t("chooseCountry.yuan")}
+                </span>
               </div>
             </div>
           </button>
@@ -121,9 +126,11 @@ export default function ChooseCountryPage() {
               <JP className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
               <div className="flex flex-col items-start justify-center">
                 <span className=" text-[18px] font-semibold text-[#1F2329]">
-                  일본 JPY
+                  {t("chooseCountry.japan")}
                 </span>
-                <span className="text-sm font-medium text-[#86909C]">엔</span>
+                <span className="text-sm font-medium text-[#86909C]">
+                  {t("chooseCountry.yen")}
+                </span>
               </div>
             </div>
           </button>
@@ -134,7 +141,7 @@ export default function ChooseCountryPage() {
       <footer className="pt-20">
         {localSelectedCountry !== "" && (
           <BottomBar
-            label="선택"
+            label={t("chooseCountry.select")}
             onClick={handleSelectButtonClick}
             isActive={true}
           />

@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import BottomSheet from "@/src/common/UI/BottomSheet/BottomSheet";
 import { useDispatch } from "react-redux";
 import { setUserData } from "@/src/store/features/signup/userSlice";
+import { useTranslations } from "next-intl";
 
 export default function TestBottomSheetPage({ name, birthday, phoneNumber }) {
+  const t = useTranslations("login.bottomSheet");
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
@@ -45,6 +47,13 @@ export default function TestBottomSheetPage({ name, birthday, phoneNumber }) {
   const isRequiredAllChecked =
     checked.terms1 && checked.terms2 && checked.terms3;
 
+  const terms = [
+    { key: "terms1", text: t("terms1") },
+    { key: "terms2", text: t("terms2") },
+    { key: "terms3", text: t("terms3") },
+    { key: "terms4", text: t("terms4") },
+  ];
+
   return (
     <main className="h-[100dvh] flex justify-center bg-[#e5e5e5]">
       <div className="w-full justify-end  mx-auto flex flex-col bg-white">
@@ -54,11 +63,11 @@ export default function TestBottomSheetPage({ name, birthday, phoneNumber }) {
         <BottomSheet
           open={open}
           onOpenChange={setOpen}
-          title="휴대폰 본인확인 약관"
+          title={t("title")}
           trigger={
             <div className="w-full  h-[118px]  flex justify-center">
               <button className="cursor-pointer w-[90%] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white">
-                다음
+                {t("next")}
               </button>
             </div>
           }
@@ -94,18 +103,13 @@ export default function TestBottomSheetPage({ name, birthday, phoneNumber }) {
                 )}
               </span>
               <span className="text-[16px] font-semibold text-gray-900">
-                휴대폰 본인확인 약관 전체 동의
+                {t("agreeAll")}
               </span>
             </label>
 
             {/* 개별 약관 리스트 */}
             <ul className="mt-6 space-y-4">
-              {[
-                { key: "terms1", text: "서비스 이용약관 동의(필수)" },
-                { key: "terms2", text: "개인정보 수집 및 이용 동의(필수)" },
-                { key: "terms3", text: "고유식별정보 처리 동의(필수)" },
-                { key: "terms4", text: "본인확인서비스 이용 동의(선택)" },
-              ].map(({ key, text }) => {
+              {terms.map(({ key, text }) => {
                 const isChecked = checked[key];
 
                 return (
@@ -171,7 +175,7 @@ export default function TestBottomSheetPage({ name, birthday, phoneNumber }) {
                 router.push("/signup/phone/sms");
               }}
             >
-              동의하고 계속
+              {t("agreeAndContinue")}
             </button>
           </div>
         </BottomSheet>

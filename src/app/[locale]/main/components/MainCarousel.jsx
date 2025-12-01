@@ -11,9 +11,11 @@ import {
 } from "@/components/ui/carousel";
 import { CircleProgress } from "./ProgressAnimation";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 function CarouselDemo() {
   const router = useRouter();
+  const t = useTranslations("main.mainCarousel");
   return (
     <Carousel className="w-full h-[190px]">
       <CarouselContent>
@@ -27,12 +29,12 @@ function CarouselDemo() {
           }}
         >
           <div className="w-full cursor-pointer flex justify-center items-center text-gray-300  text-lg font-medium">
-            신용 점수 &gt;
+            {t("creditScoreLink")} &gt;
           </div>
           <div>
             <Card>
               <CardContent className="flex flex-col items-center justify-center ">
-                <p className="text-sm font-medium">Creditto 점수</p>
+                <p className="text-sm font-medium">{t("credittoScore")}</p>
                 <CircleProgress
                   value={50}
                   maxValue={100}
@@ -51,7 +53,7 @@ function CarouselDemo() {
           }}
         >
           <div className="w-full cursor-pointer flex justify-center items-center text-gray-300  text-lg font-medium">
-            계좌 연결 &gt;
+            {t("accountConnectionLink")} &gt;
           </div>
           <div className="">
             <Card>

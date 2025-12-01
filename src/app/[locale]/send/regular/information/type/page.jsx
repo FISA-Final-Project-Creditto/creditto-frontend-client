@@ -10,15 +10,7 @@ import BottomBar from "../../../components/BottomBar";
 import { setTypeData } from "@/src/store/features/send/sendSlice";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { credittoApi } from "@/src/app/api/axios";
-
-// 요일
-const DAYS = [
-  { name: "월요일", value: "MONDAY" },
-  { name: "화요일", value: "TUESDAY" },
-  { name: "수요일", value: "WEDNESDAY" },
-  { name: "목요일", value: "THURSDAY" },
-  { name: "금요일", value: "FRIDAY" },
-];
+import { useTranslations } from "next-intl";
 
 // 국가별 통화 코드
 const currency = {
@@ -27,15 +19,22 @@ const currency = {
   JP: "JPY",
 };
 
-// 연결된 계좌 (TODO: 나중에 실제 계좌 리스트로 교체)
-// const connectedAccounts = ["1002-123-123124", "1002-346-346234"];
-
 export default function TypePage() {
+  const t = useTranslations("send");
   const [showKRWAmount, setShowKRWAmount] = useState(false); // 금액 작성 여부
   const [krwAmount, setKrwAmount] = useState(0); // 환율 적용된 원화 금액
 
   const router = useRouter();
   const dispatch = useDispatch();
+
+  // 요일
+  const DAYS = [
+    { name: t("common.dayOfWeek.MONDAY"), value: "MONDAY" },
+    { name: t("common.dayOfWeek.TUESDAY"), value: "TUESDAY" },
+    { name: t("common.dayOfWeek.WEDNESDAY"), value: "WEDNESDAY" },
+    { name: t("common.dayOfWeek.THURSDAY"), value: "THURSDAY" },
+    { name: t("common.dayOfWeek.FRIDAY"), value: "FRIDAY" },
+  ];
 
   const selectedCountry = useSelector((state) => state.send.selectedCountry); // 선택된 국가 가져오기
   const receiveCurrency = currency[selectedCountry]; // 수취 통화 코드
@@ -208,7 +207,7 @@ export default function TypePage() {
     <main>
       {/* 상단 바 */}
       <AppHeader
-        title="해외 송금"
+        title={t("common.remittance")}
         show={true}
         showHamburger={false}
         showBack={true}
@@ -220,16 +219,14 @@ export default function TypePage() {
 
         <section className="flex flex-col gap-[2.188rem] mt-4">
           <h1 className="text-left text-[1.563rem] font-bold">
-            <span className="text-[#1A3668]">해외 송금</span> 기본 정보를
-            <br />
-            입력해주세요
+            {t("regular.information.title")}
           </h1>
 
           <hr className="border-t border-[#E5E6EB]" />
 
           <section className="flex flex-col gap-6">
             <h2 className="text-left text-[1.563rem] text-[#1A3668] font-bold">
-              송금 유형
+              {t("regular.information.type")}
             </h2>
 
             {/* 입력칸 */}
@@ -240,7 +237,7 @@ export default function TypePage() {
               {/* 송금 계좌 */}
               <div className="flex flex-col items-start">
                 <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                  송금 계좌
+                  {t("regular.information.account")}
                 </label>
                 <div className="relative w-full">
                   <select
@@ -253,7 +250,7 @@ export default function TypePage() {
                         : "text-black"
                     }`}
                   >
-                    <option value="">계좌를 선택하세요</option>
+                    <option value="">{t("common.selectAccount")}</option>
                     {connectedAccounts.map((account, index) => (
                       <option key={index} value={account}>
                         {account}
@@ -267,7 +264,7 @@ export default function TypePage() {
               {/* 송금 통화 코드(원화로 고정) */}
               <div className="flex flex-col items-start">
                 <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                  송금 통화 코드
+                  {t("regular.information.sendCurrency")}
                 </label>
                 <div className="relative w-full">
                   <input
@@ -282,14 +279,16 @@ export default function TypePage() {
               {/* 수취 통화 코드 */}
               <div className="flex flex-col items-start">
                 <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                  수취 통화 코드
+                  {t("regular.information.receiveCurrency")}
                 </label>
                 <div className="relative w-full">
                   <input
                     name="receiveCurrency"
                     value={receiveCurrency || ""}
                     readOnly
-                    placeholder="수취 통화 코드를 입력하세요(USD, CNY, JPY)"
+                    placeholder={t(
+                      "regular.information.receiveCurrencyPlaceholder"
+                    )}
                     className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none placeholder:text-[#86909C] focus:outline-none ${
                       receiveCurrency ? "text-black" : "text-[#86909C]"
                     }`}
@@ -301,14 +300,16 @@ export default function TypePage() {
               <section className="flex flex-col gap-2">
                 <div className="flex flex-col items-start">
                   <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                    외화 거래 금액({receiveCurrency})
+                    {t("regular.information.amount", {
+                      currency: receiveCurrency,
+                    })}
                   </label>
                   <input
                     type="text"
                     inputMode="numeric"
                     value={formData.sendAmount}
                     onChange={handleAmountChange}
-                    placeholder="송금할 금액을 입력하세요"
+                    placeholder={t("regular.information.amountPlaceholder")}
                     className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
                   />
                 </div>
@@ -316,7 +317,7 @@ export default function TypePage() {
                 {/* 환율 적용된 금액(원화) */}
                 {showKRWAmount && (
                   <p className="text-sm text-[#334D79] text-left font-semibold">
-                    원화: {new Intl.NumberFormat().format(krwAmount)} KRW
+                    {new Intl.NumberFormat().format(krwAmount)} KRW
                   </p>
                 )}
               </section>
@@ -324,7 +325,7 @@ export default function TypePage() {
               {/* 송금 주기 */}
               <div className="flex flex-col items-start">
                 <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                  송금 주기
+                  {t("regular.information.cycle")}
                 </label>
                 <div className="relative w-full">
                   <select
@@ -338,10 +339,14 @@ export default function TypePage() {
                     }`}
                   >
                     <option value="">
-                      송금 주기를 선택하세요 (매월 / 매주)
+                      {t("regular.information.cyclePlaceholder")}
                     </option>
-                    <option value="MONTHLY">매월</option>
-                    <option value="WEEKLY">매주</option>
+                    <option value="MONTHLY">
+                      {t("regular.information.monthly")}
+                    </option>
+                    <option value="WEEKLY">
+                      {t("regular.information.weekly")}
+                    </option>
                   </select>
                   <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86909C] pointer-events-none" />
                 </div>
@@ -350,7 +355,7 @@ export default function TypePage() {
               {/* 송금 주기 상세 */}
               <div className="flex flex-col items-start">
                 <label className="block text-sm font-semibold text-[#4E5969] mb-[6px]">
-                  송금 주기 상세
+                  {t("regular.information.cycleDetail")}
                 </label>
                 <div className="relative w-full">
                   <select
@@ -363,11 +368,14 @@ export default function TypePage() {
                         : "text-black"
                     }`}
                   >
-                    <option value="">송금 주기의 상세 시점을 선택하세요</option>
+                    <option value="">
+                      {t("regular.information.cycleDetailPlaceholder")}
+                    </option>
                     {formData.regRemType === "MONTHLY" &&
                       Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
                         <option key={day} value={day}>
-                          {day}일
+                          {day}
+                          {t("common.day")}
                         </option>
                       ))}
                     {formData.regRemType === "WEEKLY" &&
@@ -384,14 +392,13 @@ export default function TypePage() {
                 {formData.scheduled !== "" &&
                   formData.regRemType === "WEEKLY" && (
                     <p className="text-xs mt-1 text-[#F53F3F]">
-                      우리은행은 평일에만 송금이 가능하오니 이용에 참고해주세요
+                      {t("regular.information.weekdayWarning")}
                     </p>
                   )}
                 {Number(formData.scheduled) > 28 &&
                   formData.regRemType === "MONTHLY" && (
                     <p className="text-xs mt-1 text-[#F53F3F]">
-                      해당 월에 해당 날짜가 없으면 자동으로 그 달의 마지막 날에
-                      실행됩니다
+                      {t("regular.information.monthEndWarning")}
                     </p>
                   )}
               </div>
@@ -399,7 +406,7 @@ export default function TypePage() {
               {/* 송금 시작일 */}
               <div className="flex flex-col items-start">
                 <label className="block text-sm font-semibold text-[#4E5969] mb-[6px]">
-                  송금 시작일
+                  {t("regular.information.startDate")}
                 </label>
                 <DatePicker
                   value={formData.startedDate}
@@ -410,7 +417,11 @@ export default function TypePage() {
           </section>
         </section>
       </div>
-      <BottomBar label="다음" onClick={handleSubmit} isActive={isFormValid} />
+      <BottomBar
+        label={t("common.next")}
+        onClick={handleSubmit}
+        isActive={isFormValid}
+      />
     </main>
   );
 }
