@@ -13,6 +13,17 @@ import {
 import BottomBar from "../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { credittoApi } from "../../../api/axios";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
 
 // 요일
 const DAYS = [
@@ -26,8 +37,9 @@ const DAYS = [
 // 국가별 통화 코드
 const currency = {
   US: "USD",
-  CN: "CHN",
   JP: "JPY",
+  MY: "MYR",
+  TH: "THB",
 };
 
 export default function TypePage() {
@@ -37,6 +49,7 @@ export default function TypePage() {
   const selectedCountry = useSelector((state) => state.send.selectedCountry); // 선택된 국가 가져오기
   const recipientBankInfo = useSelector((state) => state.send.recipientInfo); // 선택된 은행 정보 가져오기
   const [connectedAccounts, setConnectedAccounts] = useState([]);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     // 클라이언트 사이드에서만 sessionStorage에 접근합니다.
@@ -135,7 +148,12 @@ export default function TypePage() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = () => {
+    if (isFormValid) {
+      setIsDrawerOpen(true);
+    }
+  };
+  const handleFinalSubmit = async (e) => {
     e.preventDefault();
 
     if (isFormValid) {
@@ -183,19 +201,18 @@ export default function TypePage() {
 
       try {
         const accessToken = sessionStorage.getItem("accessToken");
-        const res = await credittoApi.post(
-          `/api/remittance/once`,
-          requestData,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const res = await credittoApi.post(`/api/remittance/once`, requestData, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
         console.log("전송 반응:", res.data);
+        // 성공 후 페이지 이동 또는 다른 처리
+        setIsDrawerOpen(false);
       } catch (error) {
         console.error("송금 요청 실패:", error);
         alert("송금 요청 중 오류가 발생했습니다.");
+        setIsDrawerOpen(false);
       }
     } else {
       console.log("모든 입력 칸이 채워져야 됩니다");
@@ -224,7 +241,7 @@ export default function TypePage() {
 
           <hr className="border-t border-[#E5E6EB]" />
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6">
             <div className="flex flex-col items-start">
               <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
                 송금 계좌
@@ -301,8 +318,9 @@ export default function TypePage() {
                 >
                   <option value="+82">한국 (+82)</option>
                   <option value="+1">미국 (+1)</option>
-                  <option value="+86">중국 (+86)</option>
                   <option value="+81">일본 (+81)</option>
+                  <option value="+60">말레이시아 (+60)</option>
+                  <option value="+66">태국 (+66)</option>
                 </select>
                 <input
                   name="phoneNo"
@@ -358,10 +376,28 @@ export default function TypePage() {
                 className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
               />
             </div>
-          </form>
+          </div>
         </section>
       </div>
-      <BottomBar label="다음" onClick={handleSubmit} isActive={isFormValid} />
+      <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+        <DrawerTrigger asChild>
+          <BottomBar label="다음" onClick={handleSubmit} isActive={isFormValid} />
+        </DrawerTrigger>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>입력하신 정보가 맞나요?</DrawerTitle>
+            <DrawerDescription>
+              입력하신 정보로 송금을 진행합니다.
+            </DrawerDescription>
+          </DrawerHeader>
+          <DrawerFooter>
+            <Button onClick={handleFinalSubmit}>네, 맞아요</Button>
+            <DrawerClose asChild>
+              <Button variant="outline">아니요, 수정할게요</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </main>
   );
 }

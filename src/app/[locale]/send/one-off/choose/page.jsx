@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { US, CN, JP } from "country-flag-icons/react/3x2";
+import { US, JP, MY, TH } from "country-flag-icons/react/3x2";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import clsx from "clsx";
@@ -19,15 +19,20 @@ const BANK_OPTIONS = {
     { name: "뱅크 오브 아메리카", code: "BOFAUS3N" },
     { name: "웰스 파고", code: "WFBIUS6S" },
   ],
-  CNY: [
-    { name: "교통은행", code: "COMMCNSH" },
-    { name: "중국은행", code: "BKCHCNBJ" },
-    { name: "중국농업은행", code: "ABOCCNBJ" },
-  ],
   JPY: [
     { name: "미쓰비시UFJ은행", code: "BOTKJPJT" },
     { name: "미쓰이스미토모은행", code: "SMBCJPJT" },
     { name: "미즈호은행", code: "MHCBJPJT" },
+  ],
+  MYR: [
+    { name: "메이뱅크", code: "MBBEMYKL" },
+    { name: "CIMB", code: "BNIAIDJA" },
+    { name: "퍼블릭 뱅크", code: "PBLLMYKA" },
+  ],
+  THB: [
+    { name: "방콕 은행", code: "BKKBTHB1" },
+    { name: "끄룽타이은행", code: "KRTHTHBK" },
+    { name: "시암 상업 은행", code: "SICOTHBK" },
   ],
 };
 
@@ -71,18 +76,25 @@ export default function ChooseCountryPage() {
               Icon: US,
             },
             {
-              code: "CN",
-              currency: "CNY",
-              name: "중국",
-              currencyName: "위안",
-              Icon: CN,
-            },
-            {
               code: "JP",
               currency: "JPY",
               name: "일본",
               currencyName: "엔",
               Icon: JP,
+            },
+            {
+              code: "MY",
+              currency: "MYR",
+              name: "말레이시아",
+              currencyName: "링깃",
+              Icon: MY,
+            },
+            {
+              code: "TH",
+              currency: "THB",
+              name: "태국",
+              currencyName: "바트",
+              Icon: TH,
             },
           ].map(({ code, currency, name, currencyName, Icon }) => (
             <div key={code}>
@@ -128,7 +140,7 @@ export default function ChooseCountryPage() {
                       <h3 className="text-left font-semibold text-gray-700 mb-2">
                         은행 선택
                       </h3>
-                      {BANK_OPTIONS[currency].map((bank) => (
+                      {BANK_OPTIONS[currency]?.map((bank) => (
                         <button
                           key={bank.code}
                           type="button"
