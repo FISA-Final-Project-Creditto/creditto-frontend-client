@@ -396,8 +396,8 @@
       "locationAllowed": "Location allowed: {lat}, {lon}",
       "locationDenied": "Location denied/error: {code}",
       "title": "Access Rights",
-      "description1": "Please check the app access rights",
-      "description2": "to use the service",
+      "description1": "Please check the app access rights to use the service",
+      "description2": "",
       "optional": "Optional Rights",
       "camera": "Camera",
       "cameraDescription": "Used for ID card shooting, QR code recognition, photo transfer,\nvideo counseling, etc.",
@@ -422,10 +422,10 @@
       "timer": "3:00",
       "success": "Authentication successful",
       "title": "SMS Verification",
-      "description": "Please enter the 6-digit verification code\nreceived by text message",
+      "description": "Please enter the verification code",
       "label": "Verification Code",
       "placeholder": "000000",
-      "requestCode": "Request Code",
+      "requestCode": "Request",
       "reRequestCode": "Request Again",
       "verify": "Verify"
     },
@@ -511,7 +511,7 @@
       "supportedFormats": "Supported formats: JPG · JPEG · PNG"
     },
     "password": {
-      "title1": "Set a simple password for certificate login",
+      "title1": "Set a simple password\nfor certificate login",
       "title2": "",
       "enter6DigitPin": "Enter a 6-digit simple password",
       "enter6DigitPinToUse": "Enter the 6-digit simple password to use",

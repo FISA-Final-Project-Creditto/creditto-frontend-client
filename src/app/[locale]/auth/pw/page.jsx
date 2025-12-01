@@ -55,7 +55,7 @@ export default function SecurePage({ length = 6 }) {
           setStep(2); // 두 번째 입력 단계로 전환
           setPin(""); // 입력값 초기화
           setErrorMessage(""); // 에러 메시지 초기화
-          setShuffleToken((t) => t + 1); // 키패드 셔플
+          setShuffleToken((prev) => prev + 1); // 키패드 셔플
           return;
         }
 
@@ -86,7 +86,7 @@ export default function SecurePage({ length = 6 }) {
               setStep(1);
               setIsShaking(true);
               setErrorMessage(t("certificateIssueError"));
-              setShuffleToken((t) => t + 1);
+              setShuffleToken((prev) => prev + 1);
             }
           } else {
             // 두 번째 입력이 첫 번째와 불일치하는 경우
@@ -95,7 +95,7 @@ export default function SecurePage({ length = 6 }) {
             setFirstPin(null);
             setStep(1);
             setErrorMessage(t("passwordsDoNotMatch"));
-            setShuffleToken((t) => t + 1);
+            setShuffleToken((prev) => prev + 1);
           }
 
           return;
@@ -185,6 +185,7 @@ export default function SecurePage({ length = 6 }) {
     length,
     router,
     dispatch,
+    t,
   ]);
 
   // 붙여넣기/복사/자르기 차단
@@ -225,11 +226,11 @@ export default function SecurePage({ length = 6 }) {
       />
       {/* 상단: 타이틀/서브타이틀/인디케이터 */}
       <div>
-        {isSettingMode && (
-          <h1 className="text-[1.375rem] font-medium text-black leading-snug mb-[1.875rem]">
+        {settingMode && (
+          <h1 className="text-[1.375rem] font-medium text-black leading-snug mb-[1.875rem] whitespace-pre-line">
             {t("title1")}
             <br />
-            {t("title2")}
+            {tt("title2")}
           </h1>
         )}
         <div className="flex flex-col items-center ">
