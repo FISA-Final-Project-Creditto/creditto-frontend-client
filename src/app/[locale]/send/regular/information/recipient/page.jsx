@@ -10,15 +10,16 @@ import { setRecipientData } from "@/src/store/features/send/sendSlice";
 
 const phoneCodes = {
   USD: "🇺🇸 +1",
-  CNY: "🇨🇳 +86",
-  CNY: "🇨🇳 +86",
   JPY: "🇯🇵 +81",
+  MYR: "🇲🇾 +60",
+  THB: "🇹🇭 +66",
 };
 
 const countries = {
   USD: "USA",
-  CNY: "CHINA",
   JPY: "JAPAN",
+  MYR: "MALAYSIA",
+  THB: "THAILAND",
 };
 
 // 국가 번호만 추출하는 함수 (예: "🇺🇸 +1" -> "1")
@@ -28,22 +29,24 @@ function extractDialCode(phoneCode) {
   return match ? match[1] : "";
 }
 
-// 전화번호 포맷팅 함수
+// 국가별 전화번호 포맷팅 함수
 const formatPhoneNumber = (digits, phoneCode) => {
-  // digits: 숫자만 들어있는 문자열
-  // phoneCode: 숫자 (예: 1, 86, 81)
-
   let pattern;
   switch (phoneCode) {
     case 1: // 미국: 3-3-4
       pattern = [3, 3, 4];
       break;
-    case 86: // 중국: 3-4-4
     case 81: // 일본: 3-4-4
       pattern = [3, 4, 4];
       break;
+    case 60: // 말레이시아: 2-3-4
+      pattern = [2, 3, 4];
+      break;
+    case 66: // 태국: 1-4-4
+      pattern = [1, 4, 4];
+      break;
     default:
-      return digits; // 패턴 없으면 그냥 숫자만
+      return digits; // 패턴 없으면 그냥 원본 숫자만 반환
   }
 
   let result = "";

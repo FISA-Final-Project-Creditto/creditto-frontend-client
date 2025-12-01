@@ -23,8 +23,9 @@ const DAYS = [
 // 국가별 통화 코드
 const currency = {
   US: "USD",
-  CN: "CNY",
   JP: "JPY",
+  MY: "MYR",
+  TH: "THB",
 };
 
 // 연결된 계좌 (TODO: 나중에 실제 계좌 리스트로 교체)

@@ -24,15 +24,20 @@ const BANK_OPTIONS = {
     { name: "뱅크 오브 아메리카", code: "BOFAUS3N" },
     { name: "웰스 파고", code: "WFBIUS6S" },
   ],
-  CNY: [
-    { name: "교통은행", code: "COMMCNSH" },
-    { name: "중국은행", code: "BKCHCNBJ" },
-    { name: "중국농업은행", code: "ABOCCNBJ" },
-  ],
   JPY: [
     { name: "미쓰비시UFJ은행", code: "BOTKJPJT" },
     { name: "미쓰이스미토모은행", code: "SMBCJPJT" },
     { name: "미즈호은행", code: "MHCBJPJT" },
+  ],
+  MYR: [
+    { name: "메이뱅크", code: "MBBEMYKL" },
+    { name: "CIMB", code: "BNIAIDJA" },
+    { name: "퍼블릭 뱅크", code: "PBLLMYKA" },
+  ],
+  THB: [
+    { name: "방콕 은행", code: "BKKBTHB1" },
+    { name: "끄룽타이은행", code: "KRTHTHBK" },
+    { name: "시암 상업 은행", code: "SICOTHBK" },
   ],
 };
 

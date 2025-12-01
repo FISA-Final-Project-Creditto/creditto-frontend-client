@@ -12,8 +12,9 @@ import { setClientData } from "@/src/store/features/send/sendSlice";
 // 수취 통화 코드를 송금인의 국적으로 변환할 때 사용
 const currencyToNationality = {
   USD: "USA",
-  CNY: "CHINA",
   JPY: "JAPAN",
+  MYR: "MALAYSIA",
+  THB: "THAILAND",
 };
 
 export default function RemittancePage() {
