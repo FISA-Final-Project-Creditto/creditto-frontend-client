@@ -4,17 +4,8 @@ import { Button } from "@/components/ui/button";
 import { credittoApi } from "@/src/app/api/axios";
 import { useEffect, useState } from "react";
 
-const remittanceData = {
-  accountNo: "1002444079921", // 계좌번호
-  totalFee: 26888.0, // 수수료
-  sendAmount: 1486098.0, // 송금 금액
-  recipientBankName: "Bank of America", // 수취 은행명
-  recipientAccountNo: "3333059825555", // 수취 계좌번호
-  remittanceStatus: "REQUESTED", // 송금 상태
-};
-
 export default function RecurringHistory({ regRemId, remittanceId, onClose }) {
-  const [remittanceData, setRemittanceData] = useState({});
+  const [remittanceData, setRemittanceData] = useState(null);
 
   // ,(쉼표)를 3자리로 끊어서 설정
   const formatNumber = (num) => {
@@ -37,15 +28,16 @@ export default function RecurringHistory({ regRemId, remittanceId, onClose }) {
           }
         );
 
-        if (res.data.code === 200 && res.data) {
-          console.log(
-            "정기 해외 송금 기록의 내역 상세 조회 응답 성공: ",
-            res.data
-          );
-          setDetails(res.data.data); // 상세 정보들 저장
+        const { code, data } = res.data;
+        if (code === 200) {
+          console.log("정기 해외 송금 기록의 내역 상세 조회 응답 성공");
+          setRemittanceData(data); // 상세 정보 저장
         }
       } catch (error) {
-        console.log("정기 해외 송금 기록의 내역 상세 조회 응답 실패: ", error);
+        console.error(
+          "정기 해외 송금 기록의 내역 상세 조회 응답 실패: ",
+          error
+        );
       }
     };
   });

@@ -24,6 +24,9 @@ export default function RecurringPage({ params: paramsPromise }) {
   const [remRecords, setRemRecords] = useState([]);
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
+  // 어떤 송금 기록 내역을 클릭했는지 저장
+  const [selectedRecord, setSelectedRecord] = useState(null);
+
   // 수취인과 수취 계좌번호 가져오기
   const recipientName = searchParams.get("recipientName");
   const recipientAccountNo = searchParams.get("accountNo");
@@ -107,11 +110,6 @@ export default function RecurringPage({ params: paramsPromise }) {
 
   const { count: sixMonthCycles } = getSixMonthCycles(remRecords); // 사이클 횟수
   const creditScoreBonus = sixMonthCycles * 50; // 보너스 점수
-
-  // 리스트 아이템 클릭 시 모달 열기
-  const handleHistoryItemClick = async () => {
-    setIsHistoryModalOpen(true);
-  };
 
   // 하나의 정기송금 설정에 대한 송금 기록 조회
   useEffect(() => {
@@ -200,7 +198,10 @@ export default function RecurringPage({ params: paramsPromise }) {
       <main className="space-y-[1.875rem] mb-[2.813rem] px-8 mt-[2.875rem]">
         <RemRecordList
           records={remRecords}
-          onRecordClick={handleHistoryItemClick}
+          onRecordClick={() => {
+            setSelectedRecord(record); // 어떤 기록을 클릭했는지 저장
+            setIsHistoryModalOpen(true); // 모달 열기
+          }}
         />
       </main>
 
@@ -235,6 +236,8 @@ export default function RecurringPage({ params: paramsPromise }) {
             <RecurringHistory
               // 필요하면 props로 데이터도 넘길 수 있음
               // remittanceData={...}
+              regRemId={id}
+              remittanceId={selectedRecord}
               onClose={() => setIsHistoryModalOpen(false)}
             />
           </div>
