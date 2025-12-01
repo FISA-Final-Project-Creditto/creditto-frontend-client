@@ -7,7 +7,7 @@ import CreditChart from "../../maine/components/Chart/CreditChart";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-export default function RoundedIconTabs() {
+export default function RoundedIconTabs({accountState}) {
   const [activeTab, setActiveTab] = useState("home");
   const router = useRouter();
   const t = useTranslations("main.tabs");
@@ -49,7 +49,7 @@ export default function RoundedIconTabs() {
       <div className="flex items-center justify-center mt-4">
         {activeTab === "home" && (
           <div className=" px-4 w-full flex justify-center flex-col items-center ">
-            <Credit />
+            <Credit accountState={accountState} />
             <CreditChart/>
           </div>
         )}

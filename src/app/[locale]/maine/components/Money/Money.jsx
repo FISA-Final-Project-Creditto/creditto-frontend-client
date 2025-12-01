@@ -4,40 +4,8 @@ import { Eye, EyeOff } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 
-export default function Money({}) {
+export default function Money({ accountState, isLoading }) {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
-  const [accountState, setAccountState] = useState({
-    balance: null,
-    accountCount: 0,
-  });
-  const t = useTranslations("maine");
-
-  useEffect(() => {
-    const fetchBalance = async () => {
-      try {
-        const accessToken = sessionStorage.getItem("accessToken");
-        if (!accessToken) return;
-        const response = await credittoApi.get("/api/accounts/me/balance", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        // API 응답에서 balance와 accountCount를 모두 상태로 저장
-        setAccountState({
-          balance: response.data.data.totalBalance,
-          accountCount: response.data.data.accountCount,
-        });
-        console.log("반응 : ", response.data);
-      } catch (error) {
-        console.error("Error fetching accounts:", error);
-        setAccountState({ balance: null, accountCount: 0 }); // 에러 발생 시 초기화
-      } finally {
-        setIsLoading(false); // 로딩 종료
-      }
-    };
-    fetchBalance();
-  }, []);
 
   const toggleBalanceVisibility = () => {
     setIsBalanceVisible((prev) => !prev);
@@ -58,7 +26,7 @@ export default function Money({}) {
     if (accountState.balance === null) {
       return t("money.cantLoad");
     }
-    
+
     const formattedBalance = new Intl.NumberFormat("ko-KR", {
       style: "currency",
       currency: "KRW",
