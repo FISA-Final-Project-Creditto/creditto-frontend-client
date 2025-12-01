@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "@/src/store/features/signup/userSlice";
 import { registerUser } from "@/src/app/api/axios";
 import { countryCodes } from "../../constants/countryCode";
-import { settingMode as settingModeAction } from "@/src/store/features/simplepw/simplepwSlice";
+import { startSettingMode as settingModeAction } from "@/src/store/features/simplepw/simplepwSlice";
 
 export default function InfoInputPage() {
   // Redux 스토어에서 ocr과 user 데이터 전체를 가져오기
