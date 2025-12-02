@@ -59,6 +59,7 @@ export default function RoundedIconTabs({accountState}) {
             <div className="w-40 h-40 bg-gray-200 rounded-lg"></div>
             <div className="w-full h-full mt-6 ">
                 <CreditCard
+                accountState={accountState}
         variant="dark"
         cardNumber=""
         cardHolder={t("name")}
