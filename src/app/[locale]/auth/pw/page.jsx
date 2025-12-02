@@ -157,7 +157,6 @@ export default function SecurePage({ length = 6 }) {
         // 검증 성공!
         dispatch(resetVerification()); // 사용한 인증 모드 상태 초기화
 
-
         // 만약 목적지가 '/main'이면(로그인 시도), 토큰을 세션 스토리지에 저장
         if (redirectPath === "/main") {
           sessionStorage.setItem("accessToken", response.data.access_token);
@@ -227,7 +226,7 @@ export default function SecurePage({ length = 6 }) {
       />
       {/* 상단: 타이틀/서브타이틀/인디케이터 */}
       <div>
-        {settingMode && (
+        {isSettingMode && (
           <h1 className="text-[1.375rem] font-medium text-black leading-snug mb-[1.875rem] whitespace-pre-line">
             {t("title1")}
             <br />
