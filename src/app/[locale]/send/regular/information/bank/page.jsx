@@ -23,51 +23,27 @@ export default function BankPage() {
   const dispatch = useDispatch();
   const t = useTranslations("send");
 
-// 국가별 은행 목록
-const BANK_OPTIONS = {
-  USD: [
-    { name: "JP모건 체이스", code: "JPMCUS33" },
-    { name: "뱅크 오브 아메리카", code: "BOFAUS3N" },
-    { name: "웰스 파고", code: "WFBIUS6S" },
-  ],
-  JPY: [
-    { name: "미쓰비시UFJ은행", code: "BOTKJPJT" },
-    { name: "미쓰이스미토모은행", code: "SMBCJPJT" },
-    { name: "미즈호은행", code: "MHCBJPJT" },
-  ],
-  MYR: [
-    { name: "메이뱅크", code: "MBBEMYKL" },
-    { name: "CIMB", code: "BNIAIDJA" },
-    { name: "퍼블릭 뱅크", code: "PBLLMYKA" },
-  ],
-  THB: [
-    { name: "방콕 은행", code: "BKKBTHB1" },
-    { name: "끄룽타이은행", code: "KRTHTHBK" },
-    { name: "시암 상업 은행", code: "SICOTHBK" },
-  ],
-};
-
-export default function BankPage() {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const t = useTranslations("send");
-
   // 국가별 은행 목록
   const BANK_OPTIONS = {
     USD: [
-      { name: t("oneOff.choose.bankJPMorgan"), code: "JPMCUS33" },
-      { name: t("oneOff.choose.bankBOA"), code: "BOFAUS3N" },
-      { name: t("oneOff.choose.bankWellsFargo"), code: "WFBIUS6S" },
-    ],
-    CNY: [
-      { name: t("oneOff.choose.bankBOC"), code: "COMMCNSH" },
-      { name: t("oneOff.choose.bankICBC"), code: "BKCHCNBJ" },
-      { name: t("oneOff.choose.bankABC"), code: "ABOCCNBJ" },
+      { name: "JP모건 체이스", code: "JPMCUS33" },
+      { name: "뱅크 오브 아메리카", code: "BOFAUS3N" },
+      { name: "웰스 파고", code: "WFBIUS6S" },
     ],
     JPY: [
-      { name: t("oneOff.choose.bankMUFG"), code: "BOTKJPJT" },
-      { name: t("oneOff.choose.bankSMBC"), code: "SMBCJPJT" },
-      { name: t("oneOff.choose.bankMizuho"), code: "MHCBJPJT" },
+      { name: "미쓰비시UFJ은행", code: "BOTKJPJT" },
+      { name: "미쓰이스미토모은행", code: "SMBCJPJT" },
+      { name: "미즈호은행", code: "MHCBJPJT" },
+    ],
+    MYR: [
+      { name: "메이뱅크", code: "MBBEMYKL" },
+      { name: "CIMB", code: "BNIAIDJA" },
+      { name: "퍼블릭 뱅크", code: "PBLLMYKA" },
+    ],
+    THB: [
+      { name: "방콕 은행", code: "BKKBTHB1" },
+      { name: "끄룽타이은행", code: "KRTHTHBK" },
+      { name: "시암 상업 은행", code: "SICOTHBK" },
     ],
   };
 

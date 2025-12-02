@@ -6,11 +6,8 @@ import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
-import Image from "next/image";
 
 export default function AccountConnectionPage() {
-  const t = useTranslations("account.connection");
   const t = useTranslations("account.connection");
   const router = useRouter();
   // Redux 스토어에서 계좌 목록을 가져옵니다.
