@@ -202,7 +202,7 @@ export default function CardCarousel() {
                         title={t("sendNow")}
                         subtitle={t("sendNowSubtitle")}
                         icon="plus"
-                        onClick={() => {}}
+                        onClick={() => {router.push('/send/one-off/choose')}}
                       />
                       <SendBtn
                         title={t("historyOneOffTitle")}
