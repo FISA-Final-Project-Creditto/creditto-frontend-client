@@ -60,6 +60,11 @@ export default function TypePage() {
   const recipientBankInfo = useSelector((state) => state.send.recipientInfo); // 선택된 은행 정보 가져오기
   const [connectedAccounts, setConnectedAccounts] = useState([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [fee, setFee] = useState(0);
+  const [actualReceivedAmount, setActualReceivedAmount] = useState(0);
+  const [exchangeRate, setExchangeRate] = useState(null);
+  const [amountError, setAmountError] = useState("");
+  const [totalKrwAmount, setTotalKrwAmount] = useState(0);
 
   useEffect(() => {
     // 클라이언트 사이드에서만 sessionStorage에 접근합니다.
@@ -68,6 +73,23 @@ export default function TypePage() {
       setConnectedAccounts(JSON.parse(storedAccounts));
     }
   }, []);
+
+  useEffect(() => {
+    const fetchExchangeRate = async () => {
+      if (selectedCountry) {
+        try {
+          const response = await credittoApi.get(
+            `/api/exchange/${currency[selectedCountry]}`
+          );
+          setExchangeRate(response.data.data.exchangeRate);
+        } catch (error) {
+          console.error("환율 정보 조회 실패:", error);
+          // 기본 환율 설정 또는 에러 처리
+        }
+      }
+    };
+    fetchExchangeRate();
+  }, [selectedCountry]);
   // 송금 유형 정보값 상태 관리
   const [formData, setFormData] = useState({
     senderAccountNO: "", // 나의 계좌 (드롭다운)
@@ -99,15 +121,63 @@ export default function TypePage() {
     }));
   };
 
+  // 선택된 계좌 찾기
+  const selectedAccountDetails = connectedAccounts.find(
+    (acc) => acc.accountNo === formData.senderAccountNO
+  );
+
   const handleAmountChange = (e) => {
+    setAmountError(""); // 입력 시작 시 에러 메시지 초기화
     const { value } = e.target;
     const rawValue = value.replace(/[^0-9]/g, "");
     if (rawValue === "" || Number(rawValue) === 0) {
-      setFormData({ ...formData, targetAmount: "" });
+      setFormData((prev) => ({ ...prev, targetAmount: "" }));
+      setFee(0);
+      setActualReceivedAmount(0);
+      setTotalKrwAmount(0);
+      setAmountError("");
       return;
     }
-    const formattedValue = new Intl.NumberFormat().format(Number(rawValue));
-    setFormData({ ...formData, targetAmount: formattedValue });
+    const numericValue = Number(rawValue);
+    // 예상 수수료 (예: 0.5%) 및 실제 수취 금액 계산
+    const calculatedFee = numericValue * 0.005;
+    const calculatedActualAmount = numericValue - calculatedFee;
+    const krwAmount = exchangeRate
+      ? (numericValue + calculatedFee) * exchangeRate
+      : 0;
+
+    // 잔액 초과 확인
+    if (selectedAccountDetails && krwAmount > selectedAccountDetails.balance) {
+      setAmountError("최대 금액입니다");
+
+      if (exchangeRate > 0) {
+        // 보낼 수 있는 최대 외화 금액을 계산합니다. (수수료 포함)
+        const maxTargetAmount =
+          selectedAccountDetails.balance / (exchangeRate * 1.005);
+
+        // 계산된 최대 금액으로 상태를 업데이트합니다.
+        const maxFee = maxTargetAmount * 0.005;
+        const maxActualReceived = maxTargetAmount - maxFee;
+        const maxKrwAmount = (maxTargetAmount + maxFee) * exchangeRate;
+
+        setFee(maxFee);
+        setActualReceivedAmount(maxActualReceived);
+        setTotalKrwAmount(maxKrwAmount);
+        setFormData((prev) => ({
+          ...prev,
+          targetAmount: new Intl.NumberFormat().format(
+            Math.floor(maxTargetAmount)
+          ),
+        }));
+      }
+      return;
+    }
+
+    setFee(calculatedFee);
+    setActualReceivedAmount(calculatedActualAmount);
+    setTotalKrwAmount(krwAmount);
+    const formattedValue = new Intl.NumberFormat().format(numericValue);
+    setFormData((prev) => ({ ...prev, targetAmount: formattedValue }));
   };
 
   // 계좌 자동 하이픈 생성 함수
@@ -185,7 +255,6 @@ export default function TypePage() {
       const selectedAccount = connectedAccounts.find(
         (acc) => acc.accountNo === formData.senderAccountNO
       );
-      const accountId = selectedAccount ? selectedAccount.accountId : null;
 
       // 수취 통화 코드 값 저장
       dispatch(setReceivedCurrency(formData.receiveCurrency));
@@ -207,15 +276,19 @@ export default function TypePage() {
         targetAmount: submissionData.targetAmount,
       };
 
-      console.log("전송 준비 데이터:", { accountId, ...requestData });
+      console.log("전송 준비 데이터:", { ...requestData });
 
       try {
         const accessToken = sessionStorage.getItem("accessToken");
-        const res = await credittoApi.post(`/api/remittance/once`, requestData, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const res = await credittoApi.post(
+          `/api/remittance/once`,
+          requestData,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
         console.log("전송 반응:", res.data);
         // 성공 후 페이지 이동 또는 다른 처리
         setIsDrawerOpen(false);
@@ -228,6 +301,11 @@ export default function TypePage() {
       console.log(t("oneOff.page.fillAllFields"));
     }
   };
+
+  const isBalanceInsufficient =
+    selectedAccountDetails && totalKrwAmount > selectedAccountDetails.balance;
+
+  const isFormValidWithBalance = isFormValid && !isBalanceInsufficient;
 
   return (
     <main>
@@ -252,10 +330,19 @@ export default function TypePage() {
           <hr className="border-t border-[#E5E6EB]" />
 
           <div className="flex flex-col gap-6">
-            <div className="flex flex-col items-start">
-              <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                {t("oneOff.form.account")}
-              </label>
+            <div className="flex flex-col items-start ">
+              <div className="flex items-center justify-between w-full">
+                <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
+                  송금 계좌
+                </label>
+                <span className="text-[0.875rem] text-[#4E5969] mb-[6px]">
+                  잔액:{" "}
+                  {new Intl.NumberFormat("ko-KR").format(
+                    selectedAccountDetails ? selectedAccountDetails.balance : 0
+                  )}
+                  원
+                </span>
+              </div>
               <div className="relative w-full">
                 <select
                   name="senderAccountNO"
@@ -385,13 +472,55 @@ export default function TypePage() {
                 placeholder={t("oneOff.form.amountPlaceholder")}
                 className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
               />
+              {amountError && (
+                <p className="mt-1 text-sm text-red-500">{amountError}</p>
+              )}
+              {formData.targetAmount && (
+                <div className="mt-2 w-full text-sm text-gray-600 space-y-1">
+                  <div className="flex justify-between">
+                    <span>예상 수수료:</span>
+                    <span>
+                      {new Intl.NumberFormat().format(fee.toFixed(2))}{" "}
+                      {formData.receiveCurrency}
+                    </span>
+                  </div>
+                  <div className="flex justify-between font-semibold">
+                    <span>실제 수취 금액:</span>
+                    <span>
+                      {new Intl.NumberFormat().format(actualReceivedAmount.toFixed(2))}{" "}
+                      {formData.receiveCurrency}
+                    </span>
+                  </div>
+                </div>
+              )}
+              {exchangeRate && formData.targetAmount && (
+                <div className="mt-2 w-full text-sm space-y-1">
+                  <div
+                    className={`flex justify-between ${
+                      isBalanceInsufficient ? "text-red-500" : "text-gray-600"
+                    }`}
+                  >
+                    <span>총 출금 예상 금액:</span>
+                    <span className="font-semibold">
+                      {new Intl.NumberFormat("ko-KR").format(
+                        totalKrwAmount.toFixed(0)
+                      )}{" "}
+                      원
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </section>
       </div>
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
         <DrawerTrigger asChild>
-          <BottomBar label="다음" onClick={handleSubmit} isActive={isFormValid} />
+          <BottomBar
+            label="다음"
+            onClick={handleSubmit} // isFormValidWithBalance를 사용하도록 수정할 수 있습니다.
+            isActive={isFormValidWithBalance}
+          />
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
@@ -399,9 +528,61 @@ export default function TypePage() {
             <DrawerDescription>
               입력하신 정보로 송금을 진행합니다.
             </DrawerDescription>
+            <div className="mt-4 space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-500">보내는 계좌</span>
+                <span className="font-medium">{formData.senderAccountNO}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">받는 분</span>
+                <span className="font-medium">{formData.recipientName}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">받는 분 계좌</span>
+                <span className="font-medium">
+                  {recipientBankInfo.bankName} {formData.recipientAccountNO}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">송금 날짜</span>
+                <span className="font-medium">{formData.startDate}</span>
+              </div>
+              <hr className="my-2" />
+              <div className="flex justify-between">
+                <span className="text-gray-500">송금 금액</span>
+                <span className="font-medium">
+                  {formData.targetAmount} {formData.receiveCurrency}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">원화 환산 금액</span>
+                <span className="font-medium">
+                  {new Intl.NumberFormat("ko-KR").format(
+                    totalKrwAmount.toFixed(0)
+                  )}{" "}
+                  원
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">예상 수수료</span>
+                <span className="font-medium">
+                  {new Intl.NumberFormat().format(fee.toFixed(2))}{" "}
+                  {formData.receiveCurrency}
+                </span>
+              </div>
+              <div className="flex justify-between font-semibold">
+                <span className="text-gray-800">실제 수취 금액</span>
+                <span className="text-lg text-black">
+                  {new Intl.NumberFormat().format(
+                    actualReceivedAmount.toFixed(2)
+                  )}{" "}
+                  {formData.receiveCurrency}
+                </span>
+              </div>
+            </div>
           </DrawerHeader>
           <DrawerFooter>
-            <Button onClick={handleFinalSubmit}>네, 맞아요</Button>
+            <Button onClick={handleFinalSubmit}>송금하기</Button>
             <DrawerClose asChild>
               <Button variant="outline">아니요, 수정할게요</Button>
             </DrawerClose>

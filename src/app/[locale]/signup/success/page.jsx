@@ -42,16 +42,13 @@ export default function SuccessPage() {
             {t("doItLater")}
           </div>
         </div>
-
-        <footer>
-          <BottomBar
-            label={t("issueCertificate")}
-            onClick={() => {
-              router.push("/auth/ocr/ocr-step");
-            }}
-            isActive={true}
-          />
-        </footer>
+   <footer>
+        <BottomBar
+          label="인증서 발급하기"
+          // onClick={()=>{router.push('/auth/ocr')}}
+          isActive={true}
+        />
+      </footer>
       </div>
     </main>
   );
