@@ -11,32 +11,17 @@ export default function AccountCreatePage() {
   const t = useTranslations("account.create");
   const [accountName, setAccountName] = useState("");
   const [accountType, setAccountType] = useState(""); // 기본값을 빈 문자열로 설정
-  const [savedToken, setSavedToken] = useState(null);
+  const [createAccount, setCreateAccount] = useState(null);
   const dispatch = useDispatch();
   const router = useRouter();
-  useEffect(() => {
-    const accessToken = sessionStorage.getItem("accessToken");
-    if (accessToken) {
-      setSavedToken(accessToken);
+
+  // 새 계좌 개설 API 요청
+  const createHandle = async () => {
+    if (accountName && accountType) {
+      router.push(
+        `/account/pw?accountName=${accountName}&accountType=${accountType}`
+      );
     }
-  }, []);
-
-  const CreateHandle = async (e) => {
-    e.preventDefault(); //새로고침 방지
-    const res = await credittoApi.post(
-      "/api/accounts",
-      {
-        accountName,
-        accountType,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${savedToken}`,
-        },
-      }
-    );
-
-    console.log("데이터 정보:", res.data); // 서버 응답 확인
   };
 
   const Accountfield = (
@@ -91,7 +76,7 @@ export default function AccountCreatePage() {
         showHamburger={true}
         showBack={true}
       />
-      <form onSubmit={CreateHandle} className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1">
         <div className="flex-1 px-8 pt-8 pb-10 text-left space-y-6">
           {/* 상단 문구 */}
           <h1 className="text-[20px] font-bold mb-5">
@@ -105,9 +90,13 @@ export default function AccountCreatePage() {
           {AccountTypefield}
         </div>
         <footer>
-          <BottomBar label={t("button")} isActive={!!savedToken} />
+          <BottomBar
+            label={t("button")}
+            isActive={accountName && accountType}
+            onClick={createHandle}
+          />
         </footer>
-      </form>
+      </div>
     </>
   );
 }

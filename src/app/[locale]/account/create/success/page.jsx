@@ -3,7 +3,7 @@
 import React from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useRouter } from "next/navigation";
-import BottomBar from "../../send/components/BottomBar";
+import BottomBar from "../../../send/components/BottomBar";
 import { useTranslations } from "next-intl";
 
 export default function AccountSuccessPage() {
@@ -12,12 +12,12 @@ export default function AccountSuccessPage() {
   return (
     <main className="h-[100dvh] flex justify-end items-center bg-[#e5e5e5]">
       <div className="w-full max-w-[440px] min-h-[100dvh] mx-auto flex flex-col bg-white">
-        <h1 className="text-[22px] font-semibold text-gray-900 mt-17"></h1>
+        <h1 className="text-[22px] font-semibold mt-17"></h1>
         <div className=" flex-1 px-10 pt-16 pb-10">
-          <p className="text-2xl font-semibold leading-relaxed text-gray-900 text-left">
+          <p className="text-2xl font-semibold leading-relaxed text-black text-left">
             {t("title")}
             <br />
-            <span className="block text-lg font-normal text-gray-500 mb-32">
+            <span className="block text-lg font-normal text-[#86909C] mb-32">
               {t("description")}
             </span>
           </p>
