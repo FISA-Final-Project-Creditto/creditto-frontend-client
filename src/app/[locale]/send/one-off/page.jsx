@@ -24,6 +24,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 // 요일
 const DAYS = [
