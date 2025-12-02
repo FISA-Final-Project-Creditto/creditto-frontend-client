@@ -12,6 +12,7 @@ import {
   setRecipientInfo,
   setCountryData as setReduxSelectedCountry,
 } from "@/src/store/features/send/sendSlice";
+import { useTranslations } from "next-intl";
 
 const BANK_OPTIONS = {
   USD: [
