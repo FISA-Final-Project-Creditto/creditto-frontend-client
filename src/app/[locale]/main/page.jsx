@@ -20,7 +20,7 @@ export default function MainPage() {
     accountCount: 0,
   });
   useEffect(() => {
-    const fetchBalance = async () => {
+    const fetchData = async () => {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
         if (!accessToken) {
@@ -28,17 +28,36 @@ export default function MainPage() {
           router.replace("/");
           return;
         }
-        const response = await credittoApi.get("/api/accounts/me/balance", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        // API 응답에서 balance와 accountCount를 모두 상태로 저장
-        setAccountState({
-          balance: response.data.data.totalBalance,
-          accountCount: response.data.data.accountCount,
-        });
-        console.log("반응 : ", response.data);
+
+        const headers = { Authorization: `Bearer ${accessToken}` };
+
+        // 두 API를 동시에 호출합니다.
+        const [balanceResponse, accountsResponse] = await Promise.all([
+          credittoApi.get("/api/accounts/me/balance", { headers }),
+          credittoApi.get("/api/accounts/me", { headers }),
+        ]);
+
+        // 잔액 정보 처리
+        if (balanceResponse.data && balanceResponse.data.data) {
+          setAccountState({
+            balance: balanceResponse.data.data.totalBalance,
+            accountCount: balanceResponse.data.data.accountCount,
+          });
+          console.log("잔액 정보 응답 : ", balanceResponse.data);
+        }
+
+        // 계좌 목록 정보 처리
+        if (accountsResponse.data && accountsResponse.data.data) {
+          // 계좌 목록 전체를 JSON 문자열로 변환하여 sessionStorage에 저장합니다.
+          sessionStorage.setItem(
+            "accounts",
+            JSON.stringify(accountsResponse.data.data)
+          );
+          console.log(
+            "계좌 목록 저장 성공",
+            accountsResponse.data.data
+          );
+        }
       } catch (error) {
         console.error("Error fetching accounts:", error);
         setAccountState({ balance: null, accountCount: 0 }); // 에러 발생 시 초기화
@@ -46,7 +65,7 @@ export default function MainPage() {
         setIsLoading(false); // 로딩 종료
       }
     };
-    fetchBalance();
+    fetchData();
   }, []);
 
   return (

@@ -3,7 +3,6 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useSelector } from "react-redux";
 
 const PERSPECTIVE = 400;
 const CARD_ANIMATION_DURATION = 0.5;

@@ -39,16 +39,16 @@ const scorePercentage = creditInfo ? (creditInfo / maxScore) * 100 : 0;
         });
 
         
- 
+  
         setCreditInfo(res.data.credit_score);
         // setHistoryScore(r);
-        // console.log("신용점수 : ", res.data);
+        console.log("신용점수 크레디토 : ", res.data);
       } catch (error) {
         console.error("신용점수 조회 실패:", error);
       }
     };
     fetchCreditScore();
-  }, [accountState]);
+  }, [accountState.accountCount]);
 
   return (
     <div className="w-full mt-5 bg-gradient-to-br from-[#1A3668] via-[#1A3668] to-[#1A3668]/80 rounded-3xl p-6 text-primary-foreground shadow-lg ">

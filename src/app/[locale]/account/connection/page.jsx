@@ -11,16 +11,21 @@ export default function AccountConnectionPage() {
   const t = useTranslations("account.connection");
   const router = useRouter();
   // Redux 스토어에서 계좌 목록을 가져옵니다.
-  const accounts = useSelector((state) => state.account.accounts);
   const name = "정용준"; // TODO: get user name from store
 
   useEffect(() => {
-    // accounts 상태가 null이 아니거나 배열의 길이가 0보다 크면
-    // 이미 계좌 정보가 있는 것으로 간주하고 페이지를 이동시킵니다.
-    if (accounts && accounts.length > 0) {
-      router.replace("/account/my_account");
+    const accountsString = sessionStorage.getItem("accounts");
+    if (accountsString) {
+      try {
+        const accounts = JSON.parse(accountsString);
+        if (Array.isArray(accounts) && accounts.length > 0) {
+          router.replace("/account/my_account");
+        }
+      } catch (e) {
+        console.error("Failed to parse accounts from sessionStorage", e);
+      }
     }
-  }, [accounts, router]);
+  }, [router]);
 
   return (
     <>
