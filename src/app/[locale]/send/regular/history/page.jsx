@@ -19,21 +19,32 @@ export default function HistoryPage() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  // ✅ sessionStorage에서 가져오는 방법으로 변경
-  const accounts = useSelector((state) => state.account.accounts); // Redux에서 저장된 연동계좌 목록 조회
-  const connectedAccounts = accounts?.map((acc) => acc.accountNo) ?? []; // 계좌 번호만 추출
+  // 계좌 가져오기
+  const [allAccounts, setAllAccounts] = useState([]);
 
-  // 연동된 계좌가 없을 때 메인 페이지로 이동 처리
-  // ✅ TODO: UI로 보여줘야 함
   useEffect(() => {
-    if (!accounts || accounts.length === 0) {
-      alert(t("regular.history.noLinkedAccount"));
-      router.replace("/");
-    }
-  }, [accounts, router, t]);
+    // 모든 계좌 조회 by UserId
+    const fetchAllAccounts = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
 
-  // 사용자 정기 송금 설정 내역 조회
-  useEffect(() => {
+        const res = await credittoApi.get("/api/accounts/me", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        const { code, data } = res.data;
+        if (code === 200) {
+          console.log("모든 계좌 조회 성공: ", data);
+          setAllAccounts(data);
+        }
+      } catch (error) {
+        console.error("모든 계좌 조회 중 오류 발생: ", error);
+      }
+    };
+
+    // 사용자 정기 송금 설정 내역 조회
     const fetchRemittanceHistory = async () => {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
@@ -45,12 +56,13 @@ export default function HistoryPage() {
           },
         });
 
-        if (res.data.code === 200) {
-          console.log("정기송금 설정 내역: ", res.data.data);
+        const { code, data } = res.data;
 
-          setHistories(res.data.data); // 현재 페이지 표시용 정기 송금 설정 목록 저장
+        if (code === 200) {
+          console.log("정기송금 설정 내역: ", data);
 
-          dispatch(setDetailData(res.data.data)); // 상세 페이지에서 사용할 정기 송금 설정 목록 Redux 저장
+          setHistories(data); // 현재 페이지 표시용 정기 송금 설정 목록 저장
+          dispatch(setDetailData(data)); // 상세 페이지에서 사용할 정기 송금 설정 목록 Redux 저장
         }
       } catch (error) {
         console.log("사용자 정기송금 설정 내역 조회 실패: ", error);
@@ -59,8 +71,9 @@ export default function HistoryPage() {
       }
     };
 
+    fetchAllAccounts();
     fetchRemittanceHistory();
-  }, [dispatch]);
+  }, []);
 
   // histories가 배열인지 계산
   const safeHistories = Array.isArray(histories) ? histories : [];
@@ -99,9 +112,9 @@ export default function HistoryPage() {
               onChange={(e) => setSelectedAccount(e.target.value)}
             >
               <option value="">{t("common.selectAccount")}</option>
-              {connectedAccounts.map((account) => (
-                <option key={account} value={account}>
-                  {account}
+              {allAccounts.map((account) => (
+                <option key={account.accountId} value={account.accountNo}>
+                  {account.accountNo}
                 </option>
               ))}
             </select>

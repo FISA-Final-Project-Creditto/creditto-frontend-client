@@ -37,12 +37,18 @@ export default function AccountConnectionPage() {
       />
       <div className="w-full text-left p-5 text-xl font-bold">
         <div className="flex items-end">
-          <div className="text-[#0C72BA] text-2xl">{t("wonClick")}&nbsp;</div>{t("withOneClick")}
+          <div className="text-[#0C72BA] text-2xl">{t("wonClick")}&nbsp;</div>
+          {t("withOneClick")}
         </div>
         <div>{t("description", { name })}</div>
       </div>
       <div className="w-full  min-h-[440px] justify-center items-center flex">
-        <Image src="/icon/woori.png" alt={t('wooriLogo')} width={60} height={60} />
+        <Image
+          src="/icon/woori.png"
+          alt={t("wooriLogo")}
+          width={60}
+          height={60}
+        />
       </div>
       <footer>
         <BottomBar

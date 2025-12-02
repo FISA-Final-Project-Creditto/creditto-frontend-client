@@ -51,50 +51,102 @@ export default function CreditFirst() {
           </div>
           <div
             className="cursor-pointer w-full max-w-[440px] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white"
-            onClick={() => setOpen(true)}
+            onClick={() => router.push("/credit/consent")}
           >
             해외계좌 조회하기
           </div>
         </div>
-        
-        <BottomSheet open={open} onOpenChange={setOpen} title="신용도 확인 및 활용 동의">
+
+        <BottomSheet
+          open={open}
+          onOpenChange={setOpen}
+          title="신용도 확인 및 활용 동의"
+        >
           <div className="px-3 pb-6 text-sm">
             {/* 체크 항목 */}
             <div className="space-y-3 mb-4">
               <div className="flex items-start gap-3">
                 <div className="shrink-0 w-6 h-6 flex items-center justify-center text-[#0C72BA]">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                  <svg
+                    className="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      d="M20 6L9 17l-5-5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </div>
-                <div className="text-gray-800">[필수] 해외·국내 금융거래 정보 수집 및 이용 동의</div>
+                <div className="text-gray-800">
+                  [필수] 해외·국내 금융거래 정보 수집 및 이용 동의
+                </div>
               </div>
 
               <div className="flex items-start gap-3">
                 <div className="shrink-0 w-6 h-6 flex items-center justify-center text-[#0C72BA]">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                  <svg
+                    className="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      d="M20 6L9 17l-5-5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </div>
-                <div className="text-gray-800">[필수] 신용도 평가를 위한 개인(신용)정보 제공 동의</div>
+                <div className="text-gray-800">
+                  [필수] 신용도 평가를 위한 개인(신용)정보 제공 동의
+                </div>
               </div>
 
               <div className="flex items-start gap-3">
                 <div className="shrink-0 w-6 h-6 flex items-center justify-center text-[#0C72BA]">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                  <svg
+                    className="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      d="M20 6L9 17l-5-5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </div>
-                <div className="text-gray-800">[필수] 신용도 평가 결과 보고서 생성 및 제공 동의</div>
+                <div className="text-gray-800">
+                  [필수] 신용도 평가 결과 보고서 생성 및 제공 동의
+                </div>
               </div>
 
               <div className="flex items-start gap-3">
                 <div className="shrink-0 w-6 h-6 flex items-center justify-center text-[#0C72BA]">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                  <svg
+                    className="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      d="M20 6L9 17l-5-5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </div>
-                <div className="text-gray-800">[필수] 신용도 평가 서비스 이용 약관 동의</div>
+                <div className="text-gray-800">
+                  [필수] 신용도 평가 서비스 이용 약관 동의
+                </div>
               </div>
             </div>
 
@@ -110,13 +162,16 @@ export default function CreditFirst() {
             </button>
 
             <div className="mt-3 text-center">
-              <button className="text-sm text-gray-500 underline" onClick={() => setOpen(false)}>
+              <button
+                className="text-sm text-gray-500 underline"
+                onClick={() => setOpen(false)}
+              >
                 닫기
               </button>
             </div>
           </div>
         </BottomSheet>
-          </div>
+      </div>
     </main>
   );
 }

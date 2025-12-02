@@ -230,7 +230,7 @@ export default function SecurePage({ length = 6 }) {
           <h1 className="text-[1.375rem] font-medium text-black leading-snug mb-[1.875rem] whitespace-pre-line">
             {t("title1")}
             <br />
-            {tt("title2")}
+            {t("title2")}
           </h1>
         )}
         <div className="flex flex-col items-center ">

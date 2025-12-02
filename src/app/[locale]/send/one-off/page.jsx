@@ -355,7 +355,9 @@ export default function TypePage() {
                       : "text-black"
                   }`}
                 >
-                  <option value="">{t("oneOff.form.accountPlaceholder")}</option>
+                  <option value="">
+                    {t("oneOff.form.accountPlaceholder")}
+                  </option>
                   {connectedAccounts.map((account) => (
                     <option key={account.accountId} value={account.accountNo}>
                       {account.accountNo}
@@ -488,7 +490,9 @@ export default function TypePage() {
                   <div className="flex justify-between font-semibold">
                     <span>실제 수취 금액:</span>
                     <span>
-                      {new Intl.NumberFormat().format(actualReceivedAmount.toFixed(2))}{" "}
+                      {new Intl.NumberFormat().format(
+                        actualReceivedAmount.toFixed(2)
+                      )}{" "}
                       {formData.receiveCurrency}
                     </span>
                   </div>

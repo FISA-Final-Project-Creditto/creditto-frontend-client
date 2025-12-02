@@ -53,10 +53,7 @@ export default function MainPage() {
             "accounts",
             JSON.stringify(accountsResponse.data.data)
           );
-          console.log(
-            "계좌 목록 저장 성공",
-            accountsResponse.data.data
-          );
+          console.log("계좌 목록 저장 성공", accountsResponse.data.data);
         }
       } catch (error) {
         console.error("Error fetching accounts:", error);

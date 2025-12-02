@@ -7,22 +7,21 @@ export default function Credit({ accountState }) {
   const creditScore = 750;
   const maxScore = 900;
   const [creditInfo, setCreditInfo] = useState();
-const scorePercentage = creditInfo ? (creditInfo / maxScore) * 100 : 0;
+  const scorePercentage = creditInfo ? (creditInfo / maxScore) * 100 : 0;
 
-  const renderCredit = () =>{
+  const renderCredit = () => {
     if (accountState.accountCount === 0) {
       return "조회하기";
     }
     // API 로딩 중이거나 점수가 없을 때 '...' 표시
-    return creditInfo || '0';
+    return creditInfo || "0";
   };
-  const renderTier=()=>{
-      if (accountState.accountCount === 0) {
+  const renderTier = () => {
+    if (accountState.accountCount === 0) {
       return "신규";
     }
-    return creditInfo || '신규';
-  
-  }
+    return creditInfo || "신규";
+  };
   useEffect(() => {
     const fetchCreditScore = async () => {
       try {
@@ -38,8 +37,6 @@ const scorePercentage = creditInfo ? (creditInfo / maxScore) * 100 : 0;
           },
         });
 
-        
-  
         setCreditInfo(res.data.credit_score);
         // setHistoryScore(r);
         console.log("신용점수 크레디토 : ", res.data);
@@ -56,7 +53,8 @@ const scorePercentage = creditInfo ? (creditInfo / maxScore) * 100 : 0;
         <div>
           <p className="text-xs font-medium opacity-80 mb-1">Creditto 점수</p>
           <h3 className="text-3xl font-bold">
-            {renderCredit()} {accountState && accountState.accountCount > 0 && '점'}
+            {renderCredit()}{" "}
+            {accountState && accountState.accountCount > 0 && "점"}
           </h3>
           <p className="text-xs opacity-70 mt-1">최고 {maxScore}점</p>
         </div>
@@ -83,9 +81,8 @@ const scorePercentage = creditInfo ? (creditInfo / maxScore) * 100 : 0;
           ></div>
         </div>
         <p className="text-xs opacity-75 mt-2">
-          지난달 대비{" "}
-          {creditInfo >= 0 ? `+${creditInfo}` : creditInfo}
-          점 {creditInfo >= 0 ? "상승" : "하락"}
+          지난달 대비 {creditInfo >= 0 ? `+${creditInfo}` : creditInfo}점{" "}
+          {creditInfo >= 0 ? "상승" : "하락"}
         </p>
       </div>
     </div>

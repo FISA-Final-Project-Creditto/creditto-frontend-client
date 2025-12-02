@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { US, CN, JP } from "country-flag-icons/react/3x2";
+import { US, CN, JP, MY, TH } from "country-flag-icons/react/3x2";
 import BottomBar from "../../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import clsx from "clsx";
@@ -21,9 +21,10 @@ export default function ChooseCountryPage() {
 
   const handleSelectButtonClick = () => {
     const currencyMap = {
-      US: "USD",
-      CN: "CHN",
-      JP: "JPY",
+      US: "USD", // 미국
+      JP: "JPY", // 일본
+      MY: "MYR", // 말레이시아
+      TH: "THB", // 태국
     };
     const currency = currencyMap[localSelectedCountry];
     if (currency) {
@@ -83,32 +84,6 @@ export default function ChooseCountryPage() {
             </div>
           </button>
 
-          {/* 중국 */}
-          <button
-            className="flex w-full items-center justify-between"
-            type="button"
-            onClick={() => setLocalSelectedCountry("CN")}
-          >
-            <div
-              className={clsx(
-                "w-full flex items-center gap-10 border px-3 py-3 rounded-lg",
-                localSelectedCountry === "CN"
-                  ? "border-[#4485EE]"
-                  : " border-[#C9CDD4]"
-              )}
-            >
-              <CN className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
-              <div className="flex flex-col items-start justify-center">
-                <span className=" text-[18px] font-semibold text-[#1F2329]">
-                  {t("chooseCountry.china")}
-                </span>
-                <span className="text-sm font-medium text-[#86909C]">
-                  {t("chooseCountry.yuan")}
-                </span>
-              </div>
-            </div>
-          </button>
-
           {/* 일본 */}
           <button
             className="flex w-full items-center justify-between"
@@ -131,6 +106,54 @@ export default function ChooseCountryPage() {
                 <span className="text-sm font-medium text-[#86909C]">
                   {t("chooseCountry.yen")}
                 </span>
+              </div>
+            </div>
+          </button>
+
+          {/* 말레이시아 */}
+          <button
+            className="flex w-full items-center justify-between"
+            type="button"
+            onClick={() => setLocalSelectedCountry("MY")}
+          >
+            <div
+              className={clsx(
+                "w-full flex items-center gap-10 border px-3 py-3 rounded-lg",
+                localSelectedCountry === "MY"
+                  ? "border-[#4485EE]"
+                  : " border-[#C9CDD4]"
+              )}
+            >
+              <MY className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
+              <div className="flex flex-col items-start justify-center">
+                <span className=" text-[18px] font-semibold text-[#1F2329]">
+                  말레이시아 MYR
+                </span>
+                <span className="text-sm font-medium text-[#86909C]">링깃</span>
+              </div>
+            </div>
+          </button>
+
+          {/* 태국 */}
+          <button
+            className="flex w-full items-center justify-between"
+            type="button"
+            onClick={() => setLocalSelectedCountry("TH")}
+          >
+            <div
+              className={clsx(
+                "w-full flex items-center gap-10 border px-3 py-3 rounded-lg",
+                localSelectedCountry === "TH"
+                  ? "border-[#4485EE]"
+                  : " border-[#C9CDD4]"
+              )}
+            >
+              <TH className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
+              <div className="flex flex-col items-start justify-center">
+                <span className=" text-[18px] font-semibold text-[#1F2329]">
+                  태국 THB
+                </span>
+                <span className="text-sm font-medium text-[#86909C]">밧</span>
               </div>
             </div>
           </button>

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
-import RegSendHistoryItem from "../components/RegSendHistoryItem";
+import RegSendHistoryItem from "../components/RemRecordList";
 import { useTranslations } from "next-intl";
 
 // 정기적으로 송금 내역을 보여주는 페이지

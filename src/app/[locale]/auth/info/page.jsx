@@ -14,6 +14,7 @@ import { useTranslations } from "next-intl";
 
 export default function InfoInputPage() {
   const t = useTranslations("auth.info");
+
   // Redux 스토어에서 ocr과 user 데이터 전체를 가져오기
   const { imageData: previewUrl, ...ocrData } = useSelector(
     (state) => state.ocr
