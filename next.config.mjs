@@ -1,10 +1,12 @@
-import createNextIntlPlugin from 'next-intl/plugin';
-import NextPWA from 'next-pwa';
+import createNextIntlPlugin from "next-intl/plugin";
+import NextPWA from "next-pwa";
 
 const withNextIntl = createNextIntlPlugin();
 const withPWA = NextPWA({
-  dest: 'public',
-  disable: process.env.NODE_ENV === 'development' || process.env.DISABLE_PWA === 'true',
+  dest: "public",
+  disable:
+    process.env.NODE_ENV === "development" ||
+    process.env.DISABLE_PWA === "true",
   register: true,
   skipWaiting: true,
 });

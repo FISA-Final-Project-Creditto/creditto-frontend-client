@@ -37,7 +37,7 @@ export default function BankPage() {
     ],
     JPY: [
       { name: t("oneOff.choose.bankMUFG"), code: "BOTKJPJT" },
-      { name: t("one-off.choose.bankSMBC"), code: "SMBCJPJT" },
+      { name: t("oneOff.choose.bankSMBC"), code: "SMBCJPJT" },
       { name: t("oneOff.choose.bankMizuho"), code: "MHCBJPJT" },
     ],
   };
