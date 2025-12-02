@@ -41,10 +41,7 @@ export default function TypePage() {
   const receiveCurrency = currency[selectedCountry]; // 수취 통화 코드
   const sendCurrency = "KRW"; // 송금 통화 코드를 KRW로 고정
 
-  const accounts = useSelector((state) => state.account.accounts);
-  const connectedAccounts = Array.isArray(accounts)
-    ? accounts.map((acc) => acc.accountNo)
-    : [];
+  const [allAccounts, setAllAccounts] = useState([]); // 계좌 가져오기
 
   // 송금 유형 정보값 상태 관리
   const [formData, setFormData] = useState({
@@ -145,8 +142,29 @@ export default function TypePage() {
     router.push("/send/regular/information/remittance");
   };
 
-  // 환율 조회
   useEffect(() => {
+    // 모든 계좌 조회 by UserId
+    const fetchAllAccounts = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+
+        const res = await credittoApi.get("/api/accounts/me", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        const { code, data } = res.data;
+        if (code === 200) {
+          console.log("모든 계좌 조회 성공: ", data);
+          setAllAccounts(data);
+        }
+      } catch (error) {
+        console.error("모든 계좌 조회 중 오류 발생: ", error);
+      }
+    };
+
+    // 환율 조회
     const fetchExchange = () => {
       // 수취 통화 코드가 없거나, 금액이 비어 있으면 아무 것도 하지 않음
       if (!receiveCurrency || !formData.sendAmount.trim()) {
@@ -201,8 +219,9 @@ export default function TypePage() {
       return () => clearTimeout(timer);
     };
 
-    fetchExchange();
-  }, [formData.sendAmount, receiveCurrency]);
+    fetchAllAccounts();
+    //   fetchExchange();
+  }, [formData.sendAmount]);
 
   return (
     <main>
@@ -252,9 +271,9 @@ export default function TypePage() {
                     }`}
                   >
                     <option value="">{t("common.selectAccount")}</option>
-                    {connectedAccounts.map((account, index) => (
-                      <option key={index} value={account}>
-                        {account}
+                    {allAccounts.map((account) => (
+                      <option key={account.accountId} value={account.accountNo}>
+                        {account.accountNo}
                       </option>
                     ))}
                   </select>

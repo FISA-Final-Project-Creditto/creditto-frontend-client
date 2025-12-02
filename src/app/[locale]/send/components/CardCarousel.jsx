@@ -35,15 +35,9 @@ export default function CardCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // 연동된 계좌 정보
-  const [accountState, setAccountState] = useState({
-    balance: null, // 잔액
-    accountCount: 0, // 연동된 계좌 수
-  });
-
-  // 계좌 잔액 합산 조회 by UserId
   useEffect(() => {
-    const fetchAllAccounts = async () => {
+    // 계좌 잔액 합산 조회 by UserId
+    const fetchAccountBalance = async () => {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
 
@@ -55,18 +49,19 @@ export default function CardCarousel() {
 
         const { code, data } = res.data;
         if (code === 200) {
-          setAccountState(data); // 응답값을 setAccountState에 상태 저장
+          // 송금 화면 이용 가능
           console.log("연동된 계좌 있음");
         } else {
+          // 메인페이지로 이동
           alert("연동된 계좌가 없습니다");
-          router.push("/");
+          router.replace("/");
         }
       } catch (error) {
         console.error("계좌 잔액 합산 조회 by UserId 오류 발생: ", error);
       }
     };
 
-    fetchAllAccounts();
+    fetchAccountBalance();
   }, []);
 
   return (
