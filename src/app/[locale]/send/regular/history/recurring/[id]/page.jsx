@@ -125,7 +125,7 @@ export default function RecurringPage({ params: paramsPromise }) {
       {/* 상단바 */}
       <header>
         <AppHeader
-          title="해외 정기 송금 내역"
+          title={t("recurringTitle")}
           showBack={true}
           showHamburger={false}
         />
@@ -142,14 +142,16 @@ export default function RecurringPage({ params: paramsPromise }) {
       <section className="px-8 mt-[1.875rem]">
         <div className="w-full rounded-lg border border-[#E5E6EB] bg-[#F7F8FA] px-[1.25rem] py-[0.938rem] flex flex-col gap-2">
           <div className="flex justify-between items-center">
-            <span className="text-xs text-[#86909C]">수취인</span>
+            <span className="text-xs text-[#86909C]">{t("recipient")}</span>
             <span className="text-sm font-semibold text-black">
               {recipientName}
             </span>
           </div>
 
           <div className="flex justify-between mt-2">
-            <span className="text-xs text-[#86909C]">수취인 계좌번호</span>
+            <span className="text-xs text-[#86909C]">
+              {t("recipientAccount")}
+            </span>
             <div className="text-sm font-medium text-black">
               {recipientAccountNo}
             </div>

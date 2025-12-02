@@ -12,6 +12,8 @@ import { useDispatch } from "react-redux";
 import { setOcrData } from "@/src/store/features/ocr/ocrSlice";
 import { countryCodes } from "@/src/app/[locale]/constants/countryCode";
 import { useTranslations } from "next-intl";
+import { countryCodes } from "@/src/app/[locale]/constants/countryCode";
+import { useTranslations } from "next-intl";
 
 const DOCUMENT_TYPE_ALIEN_CARD = "Alien Registration Card"; // 외국인등록증 상수로 선언
 
@@ -34,6 +36,10 @@ const requestOCR = async (file) => {
 };
 
 export default function ScanPage() {
+  const t = useTranslations("auth.scan");
+  const router = useRouter();
+  const dispatch = useDispatch();
+
   const t = useTranslations("auth.scan");
   const router = useRouter();
   const dispatch = useDispatch();

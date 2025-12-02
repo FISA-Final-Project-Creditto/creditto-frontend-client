@@ -3,8 +3,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useDispatch, useSelector } from "react-redux";
 import api, { issueCertificate, registerUser } from "../../../api/axios";
+import { resetVerification } from "@/src/store/features/simplepw/simplepwSlice";
+import { useTranslations } from "next-intl";
 import { resetVerification } from "@/src/store/features/simplepw/simplepwSlice";
 import { useTranslations } from "next-intl";
 
@@ -14,6 +16,17 @@ const SecurePinKeyboard = dynamic(
 );
 
 export default function SecurePage({ length = 6 }) {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const t = useTranslations("auth.password");
+
+  // 목적지 기반 인증을 위한 새로운 Redux 상태
+  const { isVerificationRequired, redirectPath, mode } = useSelector(
+    (state) => state.simplepw
+  );
+  // 비밀번호 '설정' 모드인지 확인
+  const isSettingMode = mode === "setting";
+
   const dispatch = useDispatch();
   const router = useRouter();
   const t = useTranslations("auth.password");
@@ -49,12 +62,14 @@ export default function SecurePage({ length = 6 }) {
 
       // 비밀번호 설정 모드일 때만 처리
       if (isSettingMode) {
+      if (isSettingMode) {
         // ① 첫 번째 입력 완료
         if (step === 1) {
           setFirstPin(v); // 첫 PIN 저장
           setStep(2); // 두 번째 입력 단계로 전환
           setPin(""); // 입력값 초기화
           setErrorMessage(""); // 에러 메시지 초기화
+          setShuffleToken((prev) => prev + 1); // 키패드 셔플
           setShuffleToken((prev) => prev + 1); // 키패드 셔플
           return;
         }
@@ -185,6 +200,7 @@ export default function SecurePage({ length = 6 }) {
     length,
     router,
     dispatch,
+    t,
   ]);
 
   // 붙여넣기/복사/자르기 차단

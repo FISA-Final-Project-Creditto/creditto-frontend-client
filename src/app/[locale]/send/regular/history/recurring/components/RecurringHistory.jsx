@@ -60,7 +60,7 @@ export default function RecurringHistory({ record, onClose }) {
           onClick={onClose}
           className="w-full bg-[#1A3668] text-white py-3 text-lg font-semibold mt-2"
         >
-          확인
+          {t("confirm")}
         </Button>
       </div>
     </div>

@@ -16,6 +16,12 @@ import {
   selectBankData,
 } from "@/src/store/features/send/sendSelectors";
 import { credittoApi } from "@/src/app/api/axios";
+import { useTranslations } from "next-intl";
+
+export default function BankPage() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const t = useTranslations("send");
 
 // 국가별 은행 목록
 const BANK_OPTIONS = {

@@ -2,6 +2,9 @@
 
 import CardCarousel from "./components/CardCarousel";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function SendMainPage() {
   const t = useTranslations("send.common");
