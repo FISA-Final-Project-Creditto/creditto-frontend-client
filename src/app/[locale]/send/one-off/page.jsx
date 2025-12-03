@@ -47,6 +47,7 @@ export default function TypePage() {
   const router = useRouter();
   const dispatch = useDispatch();
   const t = useTranslations("send");
+  const [personalFee, setPersonalFee] = useState()
 
   // 요일
   const DAYS = [
@@ -65,6 +66,7 @@ export default function TypePage() {
   const [fee, setFee] = useState(0);
   const [actualReceivedAmount, setActualReceivedAmount] = useState(0);
   const [exchangeRate, setExchangeRate] = useState(null);
+  const [appliedExchangeRate, setAppliedExchangeRate] = useState(null); // 최종 적용 환율 상태
   const [amountError, setAmountError] = useState("");
   const [totalKrwAmount, setTotalKrwAmount] = useState(0);
 
@@ -79,8 +81,18 @@ export default function TypePage() {
   useEffect(() => {
     const fetchExchangeRate = async () => {
       if (selectedCountry) {
+        const userId = sessionStorage.getItem("userId");
         try {
           const accessToken = sessionStorage.getItem("accessToken");
+          // TODO: 우대 환율 API 호출 결과(res)가 사용되지 않고 있습니다. 필요 시 로직을 추가해야 합니다.
+          const res = await credittoApi.get(
+            `/api/exchange/preferential-rate/${userId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
           const response = await credittoApi.get(
             `/api/exchange/${currency[selectedCountry]}`,
             {
@@ -89,7 +101,15 @@ export default function TypePage() {
               },
             }
           );
+          setPersonalFee(res.data.data.preferentialRate);
+          console.log("res.data.data.preferentialRate :" ,res.data)
           setExchangeRate(response.data.data.exchangeRate);
+
+          // 최종 적용 환율 계산 (우대율을 할인으로 적용)
+          const baseRate = response.data.data.exchangeRate;
+          const preferentialDiscount = res.data.data.preferentialRate; // 예: 0.005 (0.5%)
+          const finalRate = baseRate * (1 - preferentialDiscount);
+          setAppliedExchangeRate(finalRate);
         } catch (error) {
           console.error("환율 정보 조회 실패:", error);
           // 기본 환율 설정 또는 에러 처리
@@ -150,16 +170,16 @@ export default function TypePage() {
     const numericValue = Number(rawValue);
 
     // 예상 수수료 (외화 기준) 및 총 출금액 (원화 기준) 계산
-    const calculatedFee = numericValue * 0.005;
-    const totalAmountInForeignCurrency = numericValue + calculatedFee;
-    const totalKrwAmountWithFee = exchangeRate
-      ? totalAmountInForeignCurrency * exchangeRate
+    // 수수료는 별도 정책이 없다면 0으로 가정하거나, 별도 API로 받아와야 합니다. 여기서는 0으로 처리합니다.
+    const calculatedFee = 0; // 예: numericValue * 0.005; (0.5% 수수료)
+    const totalKrwAmountWithFee = appliedExchangeRate
+      ? numericValue * appliedExchangeRate
       : 0;
 
     // 잔액 초과 확인
     if (
       selectedAccountDetails &&
-      totalKrwAmountWithFee > selectedAccountDetails.balance
+      totalKrwAmountWithFee > selectedAccountDetails.balance - (calculatedFee * appliedExchangeRate) // 원화 수수료까지 고려
     ) {
       setAmountError("잔액이 부족합니다. 보낼 수 있는 최대 금액으로 자동 입력됩니다.");
 
@@ -167,11 +187,11 @@ export default function TypePage() {
         // 보낼 수 있는 최대 외화 금액(수수료 제외)을 계산합니다.
         const maxSendableAmount =
           selectedAccountDetails.balance / (exchangeRate * 1.005);
-
+        
         // 계산된 최대 금액으로 상태를 업데이트합니다.
-        const maxFee = maxSendableAmount * 0.005;
+        const maxFee = 0; // 수수료 정책에 따라 계산
         setFee(maxFee);
-        setFeeInKrw(maxFee * exchangeRate);
+        setFeeInKrw(maxFee * appliedExchangeRate);
         setTotalKrwAmount(selectedAccountDetails.balance);
         setActualReceivedAmount(Math.floor(maxSendableAmount));
         setFormData((prev) => ({
@@ -185,7 +205,7 @@ export default function TypePage() {
     }
 
     setFee(calculatedFee);
-    setFeeInKrw(calculatedFee * exchangeRate);
+    setFeeInKrw(calculatedFee * appliedExchangeRate);
     setTotalKrwAmount(totalKrwAmountWithFee);
     setActualReceivedAmount(numericValue);
     const formattedValue = new Intl.NumberFormat().format(numericValue);
@@ -488,6 +508,26 @@ export default function TypePage() {
               />
               {amountError && (
                 <p className="mt-1 text-sm text-red-500">{amountError}</p>
+              )}
+              {formData.targetAmount && (
+                <div className="mt-2 w-full text-sm text-gray-500 space-y-1 border-t pt-2">
+                  <div className="flex justify-between">
+                    <span>기준 환율:</span>
+                    <span>
+                      1 {formData.receiveCurrency} = {exchangeRate?.toFixed(2)} 원
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-blue-600">
+                    <span>우대율:</span>
+                    <span>{(personalFee * 100).toFixed(1)}%</span>
+                  </div>
+                   <div className="flex justify-between font-semibold text-black">
+                    <span>적용 환율:</span>
+                    <span>
+                      1 {formData.receiveCurrency} = {appliedExchangeRate?.toFixed(2)} 원
+                    </span>
+                  </div>
+                </div>
               )}
               {formData.targetAmount && (
                 <div className="mt-2 w-full text-sm text-gray-600 space-y-1">
