@@ -6,6 +6,7 @@ import { CreditCard } from "@/components/ui/credit-card"
 import CreditChart from "../../maine/components/Chart/CreditChart";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import NaverMap from "./FunctionButton/NaverMap/Navermap";
 
 export default function RoundedIconTabs({accountState}) {
   const [activeTab, setActiveTab] = useState("home");
@@ -69,7 +70,9 @@ export default function RoundedIconTabs({accountState}) {
           </div>
         )}
         {activeTab === "location" && (
-          <div className="w-[368px] h-[373px]">{t("naverMapAPI")}</div>
+          <div className="w-[368px] h-[373px]">
+            <NaverMap/>
+          </div>
         )}
       </div>
     </div>
