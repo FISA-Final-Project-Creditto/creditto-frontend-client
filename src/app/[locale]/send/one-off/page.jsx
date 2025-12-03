@@ -86,7 +86,7 @@ export default function TypePage() {
           const accessToken = sessionStorage.getItem("accessToken");
           // TODO: 우대 환율 API 호출 결과(res)가 사용되지 않고 있습니다. 필요 시 로직을 추가해야 합니다.
           const res = await credittoApi.get(
-            `/api/exchange/preferential-rate/${userId}`,
+            `/api/exchange/preferential-rate/${userId}/${currency[selectedCountry]}`,
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -107,8 +107,9 @@ export default function TypePage() {
 
           // 최종 적용 환율 계산 (우대율을 할인으로 적용)
           const baseRate = response.data.data.exchangeRate;
-          const preferentialDiscount = res.data.data.preferentialRate; // 예: 0.005 (0.5%)
-          const finalRate = baseRate * (1 - preferentialDiscount);
+          const preferentialDiscount = res.data.data.preferentialRate;
+           // 예: 0.005 (0.5%)
+          const finalRate = res.data.data.appliedRate;
           setAppliedExchangeRate(finalRate);
         } catch (error) {
           console.error("환율 정보 조회 실패:", error);
