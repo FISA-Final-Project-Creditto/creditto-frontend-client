@@ -73,30 +73,14 @@ export default function FunctionButton() {
         <span className="text-xs font-medium">{t("loan")}</span>
       </button>
 
-      {/* Language Select */}
-      <Select
-        className="w-full flex justify-center flex-row border border-border rounded-br-2xl p-2 flex flex-col items-start gap-2 hover:bg-muted transition mb-4"
-        aria-label="신용분석 리포트 언어 선택"
-        onSelectionChange={(key) => setLang(String(key))}
+      <button
+        className="w-full flex justify-center flex-row bg-card border border-border rounded-br-2xl p-2 flex flex-col items-center gap-2 hover:bg-muted transition mb-4"
+        onClick={() => router.push("/credit/analysis")}
       >
-        <SelectTrigger>
-          <div className="flex items-center gap-2">
-            <FileChartColumnIcon className="w-6 h-6 text-primary" />
-            <SelectValue placeholder="신용분석" />
-          </div>
-        </SelectTrigger>
+        <FileChartColumnIcon className="w-6 h-6 text-primary" />
+        <span className="text-xs font-medium">신용도 분석</span>
+      </button>
 
-        <SelectPopover>
-          <SelectListBox>
-            <SelectItem id="ko" value="ko">
-              <span className="text-xs font-medium">한국어</span>
-            </SelectItem>
-            <SelectItem id="en" value="en">
-              <span className="text-xs font-medium">영어</span>
-            </SelectItem>
-          </SelectListBox>
-        </SelectPopover>
-      </Select>
     </div>
   );
 }

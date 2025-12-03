@@ -67,6 +67,7 @@ export default function TypePage() {
   const [amountError, setAmountError] = useState("");
   const [totalKrwAmount, setTotalKrwAmount] = useState(0);
 
+ㅌ
   useEffect(() => {
     // 클라이언트 사이드에서만 sessionStorage에 접근합니다.
     const storedAccounts = sessionStorage.getItem("accounts");
@@ -475,46 +476,6 @@ export default function TypePage() {
                 placeholder={t("oneOff.form.amountPlaceholder")}
                 className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
               />
-              {amountError && (
-                <p className="mt-1 text-sm text-red-500">{amountError}</p>
-              )}
-              {formData.targetAmount && (
-                <div className="mt-2 w-full text-sm text-gray-600 space-y-1">
-                  <div className="flex justify-between">
-                    <span>예상 수수료:</span>
-                    <span>
-                      {new Intl.NumberFormat().format(fee.toFixed(2))}{" "}
-                      {formData.receiveCurrency}
-                    </span>
-                  </div>
-                  <div className="flex justify-between font-semibold">
-                    <span>실제 수취 금액:</span>
-                    <span>
-                      {new Intl.NumberFormat().format(
-                        actualReceivedAmount.toFixed(2)
-                      )}{" "}
-                      {formData.receiveCurrency}
-                    </span>
-                  </div>
-                </div>
-              )}
-              {exchangeRate && formData.targetAmount && (
-                <div className="mt-2 w-full text-sm space-y-1">
-                  <div
-                    className={`flex justify-between ${
-                      isBalanceInsufficient ? "text-red-500" : "text-gray-600"
-                    }`}
-                  >
-                    <span>총 출금 예상 금액:</span>
-                    <span className="font-semibold">
-                      {new Intl.NumberFormat("ko-KR").format(
-                        totalKrwAmount.toFixed(0)
-                      )}{" "}
-                      원
-                    </span>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </section>
