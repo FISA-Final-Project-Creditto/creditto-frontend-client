@@ -218,7 +218,7 @@ export default function CardCarousel() {
                         subtitle={"지금까지 보낸\n기록을 모아봐요"}
                         icon="file"
                         onClick={() => {
-                          router.push("/send/one-off/");
+                          router.push("/send/one-off/history");
                         }}
                       />
                     </div>

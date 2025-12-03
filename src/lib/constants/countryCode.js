@@ -19,8 +19,9 @@ export const countryCodes = [
 export const COUNTRY_TO_KOREAN = {
   KOR: "대한민국",
   USA: "미국",
-  CHINA: "중국",
   JAPAN: "일본",
+  MALAYSIA: "말레이시아",
+  THAILAND: "태국",
 };
 
 export const STATUS_TO_KOREAN = {

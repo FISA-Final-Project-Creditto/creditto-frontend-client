@@ -6,7 +6,10 @@ import { useRouter } from "next/navigation";
 import InfoInput from "./components/InfoInput";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserData } from "@/src/store/features/signup/userSlice";
+import {
+  setUserData,
+  setPhoneData,
+} from "@/src/store/features/signup/userSlice";
 import { registerUser } from "@/src/app/api/axios";
 import { countryCodes } from "../../constants/countryCode";
 import { startSettingMode as settingModeAction } from "@/src/store/features/simplepw/simplepwSlice";
@@ -35,6 +38,11 @@ export default function InfoInputPage() {
   const settingMode = useSelector((state) => state.simplepw.settingMode);
   const handleChange = (field, value) => {
     let formattedValue = value;
+
+    // 이름 입력 시 자동 대문자 변환
+    if (field === "name") {
+      formattedValue = value.toUpperCase();
+    }
 
     // 생년월일 형식(yyyy-mm-dd)
     if (field === "birthDate") {
@@ -66,6 +74,18 @@ export default function InfoInputPage() {
         )}-${cleaned.slice(7)}`;
       } else if (cleaned.length > 3) {
         formattedValue = `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
+      } else {
+        formattedValue = cleaned;
+      }
+    }
+
+    // 외국인등록번호 13자리 (앞 6자리 + '-' + 뒤 7자리)
+    if (field === "registrationNumber") {
+      let cleaned = value.replace(/\D/g, ""); // 숫자만 남김
+      cleaned = cleaned.slice(0, 13); // 최대 13자리
+
+      if (cleaned.length > 6) {
+        formattedValue = `${cleaned.slice(0, 6)}-${cleaned.slice(6)}`;
       } else {
         formattedValue = cleaned;
       }

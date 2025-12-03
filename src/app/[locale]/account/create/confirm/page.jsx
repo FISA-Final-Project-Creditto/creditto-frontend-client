@@ -24,7 +24,6 @@ export default function AccountConfirm() {
           accountName,
           accountType,
           password,
-          passwordConfirmation: password, // 한번 더 확인하는 비밀번호
         },
         {
           headers: {
@@ -86,7 +85,7 @@ export default function AccountConfirm() {
 
         {/* 생성 버튼 */}
         <footer className="flex flex-co">
-          <BottomBar label="게좌 생성" isActive={true} onClick={handleCreate} />
+          <BottomBar label="계좌 생성" isActive={true} onClick={handleCreate} />
           {/* <button>다시 생성하기</button> */}
         </footer>
 
