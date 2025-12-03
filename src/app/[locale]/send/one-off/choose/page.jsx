@@ -44,23 +44,23 @@ export default function ChooseCountryPage() {
   const router = useRouter();
   const t = useTranslations("send");
 
-  const BANK_OPTIONS = {
-    USD: [
-      { name: t("oneOff.choose.bankJPMorgan"), code: "JPMCUS33" },
-      { name: t("oneOff.choose.bankBOA"), code: "BOFAUS3N" },
-      { name: t("oneOff.choose.bankWellsFargo"), code: "WFBIUS6S" },
-    ],
-    CNY: [
-      { name: t("oneOff.choose.bankBOC"), code: "COMMCNSH" },
-      { name: t("oneOff.choose.bankICBC"), code: "BKCHCNBJ" },
-      { name: t("oneOff.choose.bankABC"), code: "ABOCCNBJ" },
-    ],
-    JPY: [
-      { name: t("oneOff.choose.bankMUFG"), code: "BOTKJPJT" },
-      { name: t("oneOff.choose.bankSMBC"), code: "SMBCJPJT" },
-      { name: t("oneOff.choose.bankMizuho"), code: "MHCBJPJT" },
-    ],
-  };
+  // const BANK_OPTIONS = {
+  //   USD: [
+  //     { name: t("oneOff.choose.bankJPMorgan"), code: "JPMCUS33" },
+  //     { name: t("oneOff.choose.bankBOA"), code: "BOFAUS3N" },
+  //     { name: t("oneOff.choose.bankWellsFargo"), code: "WFBIUS6S" },
+  //   ],
+  //   CNY: [
+  //     { name: t("oneOff.choose.bankBOC"), code: "COMMCNSH" },
+  //     { name: t("oneOff.choose.bankICBC"), code: "BKCHCNBJ" },
+  //     { name: t("oneOff.choose.bankABC"), code: "ABOCCNBJ" },
+  //   ],
+  //   JPY: [
+  //     { name: t("oneOff.choose.bankMUFG"), code: "BOTKJPJT" },
+  //     { name: t("oneOff.choose.bankSMBC"), code: "SMBCJPJT" },
+  //     { name: t("oneOff.choose.bankMizuho"), code: "MHCBJPJT" },
+  //   ],
+  // };
 
   return (
     <div>

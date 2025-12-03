@@ -5,9 +5,10 @@ const initialState = {
 
   // ----- 송금 유형 -----
   accountNo: null, // 출금 계좌번호
+  accountId: null, // 비밀번호 동일 여부를 위해 사용
   sendCurrency: null, // 송금 통화
   receiveCurrency: null, // 수취 통화
-  sendAmount: null, // 송금 금액(외화)
+  sendAmount: null, // 송금 금액(외화), 일회 송금에도 사용
   regRemType: null, // 송금 주기
   scheduledDate: null, // 정기 송금일(매일)
   scheduledDay: null, // 정기 송금일(매주)
@@ -31,6 +32,8 @@ const initialState = {
   recipientAccountNo: null, // 수취 은행 계좌
 
   // ----- 일회성 송금 데이터 -----
+  accountNo: null, // 송금 계좌
+  accountId: null, // 송금 계좌 아이디
   receivedCurrency: null,
   targetAmount: null,
   startDate: null,
@@ -41,6 +44,7 @@ const initialState = {
     phoneNo: null,
     bankName: null,
     bankCode: null,
+    country: null,
   },
 };
 
@@ -73,15 +77,19 @@ export const sendSlice = createSlice({
       Object.assign(state, action.payload);
     },
 
+    // ---------- 일회성 송금 ----------
     // 수취 통화 코드
-    setReceivedCurrency: (state, action) => {
-      state.receivedCurrency = action.payload;
+    setReceiveCurrency: (state, action) => {
+      state.receiveCurrency = action.payload;
     },
 
-    // 송금 정보 (금액, 시작일)
+    // 송금 정보 (금액, 시작일, 계좌 번호 및 아이디)
     setSendInfo: (state, action) => {
       state.targetAmount = action.payload.targetAmount;
       state.startDate = action.payload.startDate;
+      state.accountNo = action.payload.accountNo;
+      state.accountId = action.payload.accountId;
+      state.sendCurrency = action.payload.sendCurrency;
     },
 
     // 수취인 정보 (이름, 계좌번호, 전화번호)
@@ -97,7 +105,7 @@ export const {
   setClientData,
   setRecipientData,
   setBankData,
-  setReceivedCurrency,
+  setReceiveCurrency,
   setSendInfo,
   setRecipientInfo,
 } = sendSlice.actions;

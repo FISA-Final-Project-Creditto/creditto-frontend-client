@@ -3,9 +3,9 @@
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import { Globe, Repeat } from "lucide-react";
-import { useState, useEffect } from "react"; // ✅ useEffect 추가
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux"; // ✅ 계좌 가져오기
+import { useSelector } from "react-redux";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import SendBtn from "../regular/components/SendBtn";
 import { credittoApi } from "@/src/app/api/axios";
@@ -35,35 +35,34 @@ export default function CardCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // 다른 팀원의 작업으로 주석 처리!!
-  // useEffect(() => {
-  //   // 계좌 잔액 합산 조회 by UserId
-  //   const fetchAccountBalance = async () => {
-  //     try {
-  //       const accessToken = sessionStorage.getItem("accessToken");
+  useEffect(() => {
+    // 계좌 잔액 합산 조회 by UserId
+    const fetchAccountBalance = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
 
-  //       const res = await credittoApi.get("/api/accounts/me/balance", {
-  //         headers: {
-  //           Authorization: `Bearer ${accessToken}`,
-  //         },
-  //       });
+        const res = await credittoApi.get("/api/accounts/me/balance", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
-  //       const { code, data } = res.data;
-  //       if (code === 200) {
-  //         // 송금 화면 이용 가능
-  //         console.log("연동된 계좌 있음");
-  //       } else {
-  //         // 메인페이지로 이동
-  //         alert("연동된 계좌가 없습니다");
-  //         router.replace("/");
-  //       }
-  //     } catch (error) {
-  //       console.error("계좌 잔액 합산 조회 by UserId 오류 발생: ", error);
-  //     }
-  //   };
+        const { code, data } = res.data;
+        if (code === 200) {
+          // 송금 화면 이용 가능
+          console.log("연동된 계좌 있음");
+        } else {
+          // 메인페이지로 이동
+          alert("연동된 계좌가 없습니다");
+          router.replace("/");
+        }
+      } catch (error) {
+        console.error("계좌 잔액 합산 조회 by UserId 오류 발생: ", error);
+      }
+    };
 
-  //   fetchAccountBalance();
-  // }, []);
+    fetchAccountBalance();
+  }, []);
 
   return (
     <div className="flex-1 flex justify-center relative">
@@ -191,9 +190,9 @@ export default function CardCarousel() {
                         title="새로운 송금 등록"
                         subtitle={"원하는 날짜와\n금액을 설정해요"}
                         icon="plus"
-                        onClick={() =>
-                          router.push("/send/consent?type=regular")
-                        } // 약관 동의 페이지로 이동
+                        onClick={
+                          () => router.push("/send/consent?type=regular") // 약관 동의 페이지로 이동
+                        }
                       />
                       <SendBtn
                         title="송금 조회 · 관리"
@@ -218,7 +217,9 @@ export default function CardCarousel() {
                         title="송금 내역 조회"
                         subtitle={"지금까지 보낸\n기록을 모아봐요"}
                         icon="file"
-                        onClick={() => {}}
+                        onClick={() => {
+                          router.push("/send/one-off/");
+                        }}
                       />
                     </div>
                   )}

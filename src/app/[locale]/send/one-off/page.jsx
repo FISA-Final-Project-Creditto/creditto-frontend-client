@@ -7,8 +7,8 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setRecipientInfo,
-  setReceivedCurrency,
   setSendInfo,
+  setReceiveCurrency,
 } from "@/src/store/features/send/sendSlice";
 import BottomBar from "../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
@@ -59,6 +59,7 @@ export default function TypePage() {
 
   const selectedCountry = useSelector((state) => state.send.selectedCountry); // 선택된 국가 가져오기
   const recipientBankInfo = useSelector((state) => state.send.recipientInfo); // 선택된 은행 정보 가져오기
+
   const [connectedAccounts, setConnectedAccounts] = useState([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [fee, setFee] = useState(0);
@@ -89,8 +90,9 @@ export default function TypePage() {
         }
       }
     };
-    fetchExchangeRate();
+    // fetchExchangeRate();
   }, [selectedCountry]);
+
   // 송금 유형 정보값 상태 관리
   const [formData, setFormData] = useState({
     senderAccountNO: "", // 나의 계좌 (드롭다운)
@@ -126,6 +128,10 @@ export default function TypePage() {
   const selectedAccountDetails = connectedAccounts.find(
     (acc) => acc.accountNo === formData.senderAccountNO
   );
+
+  // 선택된 계좌의 accountId
+  const selectedAccountId = selectedAccountDetails?.accountId ?? null;
+  console.log("accountId: ", selectedAccountId);
 
   const handleAmountChange = (e) => {
     setAmountError(""); // 입력 시작 시 에러 메시지 초기화
@@ -234,6 +240,8 @@ export default function TypePage() {
       setIsDrawerOpen(true);
     }
   };
+
+  // 송금하기 버튼 실행 함수
   const handleFinalSubmit = async (e) => {
     e.preventDefault();
 
@@ -242,6 +250,14 @@ export default function TypePage() {
         targetAmount: Number(formData.targetAmount.replace(/,/g, "")),
         startDate: formData.startDate.replace(/\./g, "-"),
       };
+
+      // 송금 계좌 선택 여부
+      if (!selectedAccountDetails || !selectedAccountId) {
+        alert("송금 계좌 정보를 찾을 수 없습니다. 다시 선택해주세요.");
+        return;
+      }
+
+      // 수취인 데이터
       const recipientData = {
         name: formData.recipientName,
         accountNo: formData.recipientAccountNO.replace(/-/g, ""),
@@ -252,52 +268,36 @@ export default function TypePage() {
         country: selectedCountry,
       };
 
-      // 선택된 계좌번호(senderAccountNO)를 기반으로 accountId를 찾습니다.
-      const selectedAccount = connectedAccounts.find(
-        (acc) => acc.accountNo === formData.senderAccountNO
+      // 수취 통화 코드 값 저장
+      dispatch(setReceiveCurrency(formData.receiveCurrency));
+
+      // 송금 정보(금액, 시작일, 계좌 아이디) 저장
+      dispatch(
+        setSendInfo({
+          ...submissionData,
+          accountId: selectedAccountId, // 송금 계좌 아이디 저장
+          accountNo: formData.senderAccountNO, // 송금 계좌번호
+          sendCurrency: "KRW",
+        })
       );
 
-      // 수취 통화 코드 값 저장
-      dispatch(setReceivedCurrency(formData.receiveCurrency));
-      // 송금 정보(금액, 시작일) 저장
-      dispatch(setSendInfo(submissionData));
       // 수취인 정보 저장
       dispatch(setRecipientInfo(recipientData));
 
-      // API 요청 형식에 맞게 데이터 구조화
-      const requestData = {
-        accountNo: formData.senderAccountNO,
-        recipientInfo: {
-          ...recipientData,
-          receiveCurrency: formData.receiveCurrency,
+      console.log("[송금하기 버튼 클릭 시 Redux로 보낸 데이터]", {
+        receiveCurrency: formData.receiveCurrency,
+        sendInfo: {
+          ...submissionData,
+          accountId: selectedAccountId,
+          accountNo: formData.senderAccountNO,
+          sendCurrency: "KRW",
         },
-        recurId: null,
-        startDate: submissionData.startDate,
-        sendCurrency: "KRW", // 송금 통화는 원화(KRW)로 고정
-        targetAmount: submissionData.targetAmount,
-      };
+        recipientInfo: recipientData,
+      });
 
-      console.log("전송 준비 데이터:", { ...requestData });
-
-      try {
-        const accessToken = sessionStorage.getItem("accessToken");
-        const res = await credittoApi.post(
-          `/api/remittance/once`,
-          requestData,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        console.log("전송 반응:", res.data);
-        // 성공 후 페이지 이동 또는 다른 처리
-        setIsDrawerOpen(false);
-      } catch (error) {
-        console.error("송금 요청 실패:", error);
-        alert("송금 요청 중 오류가 발생했습니다.");
-        setIsDrawerOpen(false);
-      }
+      // 계좌 번호 페이지로 이동
+      const mode = "send";
+      router.push(`/account/create/pw?mode=${mode}`);
     } else {
       console.log(t("oneOff.page.fillAllFields"));
     }
@@ -586,6 +586,7 @@ export default function TypePage() {
               </div>
             </div>
           </DrawerHeader>
+
           <DrawerFooter>
             <Button onClick={handleFinalSubmit}>송금하기</Button>
             <DrawerClose asChild>
