@@ -35,7 +35,7 @@ export default function IDPage() {
   };
 
   return (
-    <div className="min-h-dvh bg-white flex flex-col pt-[100px] pb-[calc(68px+24px+env(safe-area-inset-bottom))]">
+    <div className="min-h-dvh bg-white flex flex-col pt-[100px] px-8 pb-[calc(68px+24px+env(safe-area-inset-bottom))]">
       <h1 className="text-[1.375rem] font-semibold text-[#000] mb-[35px] leading-tight">
         {t("title")}
       </h1>

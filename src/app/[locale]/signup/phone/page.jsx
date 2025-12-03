@@ -2,7 +2,7 @@
 import BottomSheet from "@/src/app/[locale]/signup/phone/components/BottomSheet";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 
 export default function PhonePage() {
@@ -13,27 +13,20 @@ export default function PhonePage() {
   const [name, setName] = useState("");
   const [birthday, setBirthDay] = useState("");
   const [phonenumber, setPhoneNumber] = useState("");
-
-  function handleOnInput(el, maxlength) {
-    if (el.value.length > maxlength) {
-      el.value = el.value.substr(0, maxlength);
-    }
-  }
-  // 이름 입력 → 1초 후 step 2
+  
+  const nameInputRef = useRef(null);
+  const birthdayInputRef = useRef(null);
+  const phoneInputRef = useRef(null);
+  
   useEffect(() => {
-    if (name.trim() !== "" && step === 1) {
-      const t = setTimeout(() => setStep(2), 1000);
-      return () => clearTimeout(t);
+    if (step === 1 && nameInputRef.current) {
+      nameInputRef.current.focus();
+    } else if (step === 2 && birthdayInputRef.current) {
+      birthdayInputRef.current.focus();
+    } else if (step === 3 && phoneInputRef.current) {
+      phoneInputRef.current.focus();
     }
-  }, [name, step]);
-
-  // 생일 입력 → 1초 후 step 3
-  useEffect(() => {
-    if (birthday.trim() !== "" && step === 2) {
-      const t = setTimeout(() => setStep(3), 1000);
-      return () => clearTimeout(t);
-    }
-  }, [birthday, step]);
+  }, [step]);
 
   // 상단 문구
   const labelText =
@@ -44,27 +37,31 @@ export default function PhonePage() {
       : t("phoneLabel");
 
   const NameField = (
-    <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
+    <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5 focus-within:border-[#1A3668] transition-colors">
       <label className="text-sm text-gray-600">{t("name")}</label>
       <input
+        ref={nameInputRef}
         value={name}
         type="text"
-        className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[20px] pb-1"
+        className="w-full focus:outline-none text-[20px] pb-1 bg-transparent"
         onChange={(e) => setName(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && name.trim() !== "") setStep(2);
+        }}
       />
     </div>
   );
 
   const BirthdayField = (
-    <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
+    <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5 focus-within:border-[#1A3668] transition-colors">
       <label className="text-sm text-gray-600 ">{t("birthdate")}</label>
       <input
+        ref={birthdayInputRef}
         value={birthday}
         type="text"
         placeholder={t("birthdatePlaceholder")}
-        className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[20px] pb-1"
-        onChange={(e) => setBirthDay(e.target.value)}
-        onInput={(e) => {
+        className="w-full focus:outline-none text-[20px] pb-1 bg-transparent"
+        onChange={(e) => {
           let value = e.target.value.replace(/\D/g, "");
           if (value.length > 8) {
             value = value.slice(0, 8); // 최대 8자리로 제한
@@ -79,22 +76,23 @@ export default function PhonePage() {
             value = `${value.slice(0, 4)}-${value.slice(4)}`;
           }
 
-          e.target.value = value;
           setBirthDay(value);
+          if (value.length === 10) setStep(3);
         }}
       />
     </div>
   );
 
   const PhoneField = (
-    <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5">
+    <div className="w-full h-[70px] border border-gray-300 rounded-lg flex flex-col justify-center px-5 focus-within:border-[#1A3668] transition-colors">
       <label className="text-sm text-gray-600 ">{t("phoneNumber")}</label>
       <input
+        ref={phoneInputRef}
         value={phonenumber}
         type="text"
         placeholder={t("phonePlaceholder")}
-        className="w-full border-gray-300 focus:outline-none focus:border-[#1A3668] text-[20px] pb-1 tracking-wider"
-        onInput={(e) => {
+        className="w-full focus:outline-none text-[20px] pb-1 tracking-wider bg-transparent"
+        onChange={(e) => {
           // 1️⃣ 숫자만 남기기
           let value = e.target.value.replace(/[^0-9]/g, "");
 
@@ -108,7 +106,6 @@ export default function PhonePage() {
             value = value.replace(/(\d{3})(\d{1,4})/, "$1-$2");
           }
 
-          e.target.value = value;
           setPhoneNumber(value);
         }}
       />
