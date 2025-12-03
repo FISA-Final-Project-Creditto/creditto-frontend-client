@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { ChevronDown } from "lucide-react";
@@ -22,8 +22,8 @@ const currency = {
 
 export default function TypePage() {
   const t = useTranslations("send");
-  const [showKRWAmount, setShowKRWAmount] = useState(false); // 금액 작성 여부
-  const [krwAmount, setKrwAmount] = useState(0); // 환율 적용된 원화 금액
+
+  const [preferentialRate, setPreferentialRate] = useState(0); // 우대율
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -37,15 +37,16 @@ export default function TypePage() {
     { name: t("common.dayOfWeek.FRIDAY"), value: "FRIDAY" },
   ];
 
-  const selectedCountry = useSelector((state) => state.send.selectedCountry); // 선택된 국가 가져오기
+  const selectedCountry = useSelector((state) => state.send.selectedCountry);
   const receiveCurrency = currency[selectedCountry]; // 수취 통화 코드
-  const sendCurrency = "KRW"; // 송금 통화 코드를 KRW로 고정
+  const sendCurrency = "KRW"; // 송금 통화
 
-  const [allAccounts, setAllAccounts] = useState([]); // 계좌 가져오기
+  const [allAccounts, setAllAccounts] = useState([]); // 계좌 목록
 
   // 송금 유형 정보값 상태 관리
   const [formData, setFormData] = useState({
     accountNo: "", // 송금 계좌
+    accountId: 0, // 송금 계좌 아이디
     sendAmount: "", // 외화 거래 금액 (문자열 + 콤마 포맷)
     regRemType: "", // 송금 주기
     scheduled: "", // 송금 주기 상세(날짜 or 요일)
@@ -64,6 +65,20 @@ export default function TypePage() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
+    // accountNo 변경 시 accountId도 같이 설정
+    if (name === "accountNo") {
+      const selectedAccount = allAccounts.find(
+        (account) => account.accountNo === value
+      );
+
+      setFormData((prevData) => ({
+        ...prevData,
+        accountNo: value,
+        accountId: selectedAccount ? selectedAccount.accountId : "",
+      }));
+      return;
+    }
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -73,20 +88,17 @@ export default function TypePage() {
   // 송금 금액(외화) 변경 핸들러 (숫자만 받게 + 3자리 콤마)
   const handleAmountChange = (e) => {
     const { value } = e.target;
-    const rawValue = value.replace(/[^0-9]/g, ""); // 숫자만 남기기(문자 제거)
+    const rawValue = value.replace(/[^0-9]/g, ""); // 숫자만 남기기
 
     if (rawValue === "") {
       setFormData((prev) => ({ ...prev, sendAmount: "" }));
-      setShowKRWAmount(false);
-      setKrwAmount(0);
       return;
     }
 
     const formattedValue = new Intl.NumberFormat("ko-KR").format(
       Number(rawValue)
-    ); // 숫자 포맷팅(3자리 콤마)
+    );
     setFormData((prev) => ({ ...prev, sendAmount: formattedValue }));
-    setShowKRWAmount(false); // 새로 입력 시작 -> 다시 숨김
   };
 
   // 날짜 변경 핸들러
@@ -97,8 +109,35 @@ export default function TypePage() {
     }));
   };
 
+  // 계좌 목록 조회, select 태그 클릭 시 호출
+  const fetchAllAccounts = useCallback(async () => {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+      if (!accessToken) return;
+
+      const res = await credittoApi.get("/api/accounts/me", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const { code, data } = res.data;
+      if (code === 200) {
+        console.log("모든 계좌 조회 성공: ", data);
+        // DEPOSIT인 계좌만 필터링
+        const depositAccounts = data.filter(
+          (account) => account.accountType === "DEPOSIT"
+        );
+
+        setAllAccounts(depositAccounts);
+      }
+    } catch (error) {
+      console.error("모든 계좌 조회 중 오류 발생: ", error);
+    }
+  }, []);
+
   // 송금 유형 저장 후 다음 페이지로 이동
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, accountId) => {
     e.preventDefault();
 
     if (!isFormValid) {
@@ -115,113 +154,61 @@ export default function TypePage() {
     let scheduledDay = null;
 
     if (formData.regRemType === "MONTHLY" && formData.scheduled) {
-      scheduledDate = Number(formData.scheduled); // 숫자 (1~31)
+      scheduledDate = Number(formData.scheduled);
     }
 
     if (formData.regRemType === "WEEKLY" && formData.scheduled) {
-      scheduledDay = formData.scheduled; // "MONDAY" 등 문자열
+      scheduledDay = formData.scheduled;
     }
 
-    // 제출 데이터 폼
     const submissionData = {
       accountNo: formData.accountNo,
       sendCurrency,
       receiveCurrency,
       sendAmount: numericAmount,
       regRemType: formData.regRemType,
-      scheduledDate, // MONTHLY일 때만 값, 나머지는 null
-      scheduledDay, // WEEKLY일 때만 값, 나머지는 null
+      scheduledDate,
+      scheduledDay,
       startedDate: formData.startedDate,
     };
 
     console.log("작성된 폼: ", submissionData);
 
-    // 정기 해외 송금 신규 등록 요청바디 저장
-    dispatch(setTypeData(submissionData));
+    dispatch(setTypeData({ ...submissionData, accountId: formData.accountId }));
 
     router.push("/send/regular/information/remittance");
   };
 
+  // 고객별 우대율 조회 API
   useEffect(() => {
-    // 모든 계좌 조회 by UserId
-    const fetchAllAccounts = async () => {
-      try {
-        const accessToken = sessionStorage.getItem("accessToken");
-
-        const res = await credittoApi.get("/api/accounts/me", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        const { code, data } = res.data;
-        if (code === 200) {
-          console.log("모든 계좌 조회 성공: ", data);
-          setAllAccounts(data);
-        }
-      } catch (error) {
-        console.error("모든 계좌 조회 중 오류 발생: ", error);
-      }
-    };
-
-    // 환율 조회
-    const fetchExchange = () => {
-      // 수취 통화 코드가 없거나, 금액이 비어 있으면 아무 것도 하지 않음
+    const timer = setTimeout(async () => {
       if (!receiveCurrency || !formData.sendAmount.trim()) {
-        setShowKRWAmount(false);
-        setKrwAmount(0);
+        setPreferentialRate(0);
         return;
       }
 
-      const timer = setTimeout(async () => {
-        try {
-          const accessToken = sessionStorage.getItem("accessToken");
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const userId = sessionStorage.getItem("userId");
 
-          const res = await credittoApi.get(
-            `/api/exchange/${receiveCurrency}`,
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
-          );
-
-          const { code, data } = res.data;
-
-          if (code === 200 && data && data.exchangeRate) {
-            const rate = data.exchangeRate; // 환율
-
-            const raw = formData.sendAmount.replace(/,/g, "");
-            const amount = Number(raw);
-
-            if (!amount) {
-              setShowKRWAmount(false);
-              setKrwAmount(0);
-              return;
-            }
-
-            const krw = amount * rate; // 외화 * 환율 = 원화
-            setKrwAmount(krw);
-            setShowKRWAmount(true); // 환율 보여줌
-            console.log("환율이 적용된 금액(원화): ", krw);
-          } else {
-            setShowKRWAmount(false);
-            setKrwAmount(0);
+        const res = await credittoApi.get(
+          `/api/exchange/preferential-rate/${userId}/${receiveCurrency}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
           }
-        } catch (error) {
-          console.log("환율 조회 실패", error);
-          setShowKRWAmount(false);
-          setKrwAmount(0);
+        );
+
+        const { code, data } = res.data;
+        if (code === 200) {
+          setPreferentialRate(data.preferentialRate);
         }
-      }, 500); // 0.5초 동안 입력이 없으면 "작성 완료"로 인식
+      } catch (error) {
+        console.error("고객별 환전 우대율 조회 오류:", error);
+      }
+    }, 500);
 
-      // 다음 입력이 들어오면 타이머 취소 (디바운스)
-      return () => clearTimeout(timer);
-    };
-
-    fetchAllAccounts();
-    //   fetchExchange();
-  }, [formData.sendAmount]);
+    return () => clearTimeout(timer);
+  }, [formData.sendAmount, receiveCurrency]);
 
   return (
     <main>
@@ -264,6 +251,13 @@ export default function TypePage() {
                     name="accountNo"
                     value={formData.accountNo}
                     onChange={handleChange}
+                    // 클릭/포커스 시 계좌 조회
+                    onClick={() => {
+                      if (!allAccounts.length) fetchAllAccounts();
+                    }}
+                    onFocus={() => {
+                      if (!allAccounts.length) fetchAllAccounts();
+                    }}
                     className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none ${
                       formData.accountNo === ""
                         ? "text-[#86909C]"
@@ -334,10 +328,10 @@ export default function TypePage() {
                   />
                 </div>
 
-                {/* 환율 적용된 금액(원화) */}
-                {showKRWAmount && (
+                {/* 우대율 */}
+                {preferentialRate > 0 && (
                   <p className="text-sm text-[#334D79] text-left font-semibold">
-                    {new Intl.NumberFormat().format(krwAmount)} KRW
+                    우대율: {preferentialRate}%
                   </p>
                 )}
               </section>
@@ -408,7 +402,6 @@ export default function TypePage() {
                   <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86909C] pointer-events-none" />
                 </div>
 
-                {/* 송금 주기 상세가 매월일 경우, 매주일 경우 보여지는 경고 문자가 다르게 보여짐 */}
                 {formData.scheduled !== "" &&
                   formData.regRemType === "WEEKLY" && (
                     <p className="text-xs mt-1 text-[#F53F3F]">
@@ -437,6 +430,7 @@ export default function TypePage() {
           </section>
         </section>
       </div>
+
       <BottomBar
         label={t("common.next")}
         onClick={handleSubmit}
