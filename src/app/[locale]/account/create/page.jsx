@@ -6,21 +6,28 @@ import BottomBar from "../../send/components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import api, { credittoApi } from "../../../api/axios";
 import { useTranslations } from "next-intl";
+import { setCreateAccount } from "@/src/store/features/account/accountSlice";
 
 export default function AccountCreatePage() {
   const t = useTranslations("account.create");
   const [accountName, setAccountName] = useState("");
   const [accountType, setAccountType] = useState(""); // 기본값을 빈 문자열로 설정
-  const [createAccount, setCreateAccount] = useState(null);
+  // const [createAccount, setCreateAccount] = useState(null);
   const dispatch = useDispatch();
   const router = useRouter();
 
   // 새 계좌 개설 API 요청
   const createHandle = async () => {
     if (accountName && accountType) {
-      router.push(
-        `/account/pw?accountName=${accountName}&accountType=${accountType}`
+      // 계좌명과 종류 저장
+      dispatch(
+        setCreateAccount({
+          accountName: accountName,
+          accountType: accountType,
+        })
       );
+
+      router.push("/account/create/pw");
     }
   };
 
@@ -91,7 +98,7 @@ export default function AccountCreatePage() {
         </div>
         <footer>
           <BottomBar
-            label={t("button")}
+            label="비밀번호 설정"
             isActive={accountName && accountType}
             onClick={createHandle}
           />

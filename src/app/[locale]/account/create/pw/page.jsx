@@ -8,6 +8,7 @@ import { resetVerification } from "@/src/store/features/simplepw/simplepwSlice";
 import { useTranslations } from "next-intl";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import BottomBar from "../../../send/components/BottomBar";
+import { setCreateAccount } from "@/src/store/features/account/accountSlice";
 
 // 보안 키보드 컴포넌트를 동적으로 가져옵니다. 서버 사이드 렌더링을 비활성화합니다.
 const SecurePinKeyboard = dynamic(
@@ -19,16 +20,6 @@ export default function SecurePage({ length = 4 }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const t = useTranslations("auth.password"); // 다국어 번역 함수
-
-  const searchParams = useSearchParams(); // URL 쿼리 파라미터를 가져옵니다.
-  const accountName = searchParams.get("accountName"); // 'accountName' 쿼리 파라미터를 가져옵니다.
-  const accountType = searchParams.get("accountType"); // 'accountType' 쿼리 파라미터를 가져옵니다.
-
-  // 계좌 이름과 종류가 잘 전달되었는지 콘솔에 출력하여 확인합니다.
-  useEffect(() => {
-    console.log("계좌 이름:", accountName);
-    console.log("계좌 종류:", accountType);
-  }, [accountName, accountType]);
 
   const [pin, setPin] = useState(""); // 현재 입력된 비밀번호를 저장하는 상태
   const [firstPin, setFirstPin] = useState(null); // 첫 번째 단계에서 입력한 비밀번호를 저장하는 상태
@@ -59,13 +50,21 @@ export default function SecurePage({ length = 4 }) {
       if (step === 2) {
         // --- 비밀번호 일치 ---
         if (v === firstPin) {
-          // 여기에 실제 계좌 생성 API 호출 로직이 들어갑니다.
-          // 현재는 성공 상태만 변경하여 UI에 성공 메시지를 표시합니다.
-          console.log("계좌 생성 성공!");
-          console.log("계좌 이름:", accountName);
-          console.log("계좌 종류:", accountType);
           console.log("비밀번호:", v);
+          setPin(v); // 비밀번호 저장
           setIsSuccess(true); // 성공 상태로 변경
+
+          if (isSuccess) {
+            // 새 계좌 비밀번호 저장
+            dispatch(
+              setCreateAccount({
+                password: pin,
+              })
+            );
+
+            // 여기서 페이지 이동
+            router.push("/account/create/confirm");
+          }
         }
         // --- 비밀번호 불일치 ---
         else {
@@ -78,7 +77,7 @@ export default function SecurePage({ length = 4 }) {
         }
       }
     },
-    [length, step, firstPin, t, accountName, accountType]
+    [length, step, firstPin, t, isSuccess, pin, dispatch, router]
   );
 
   // 키보드에서 숫자 버튼 클릭 시 호출되는 함수
@@ -117,35 +116,6 @@ export default function SecurePage({ length = 4 }) {
     if (e.key === "Backspace") return onBackspace();
     if (/^[0-9]$/.test(e.key)) return onDigit(e.key);
   };
-
-  // 성공 화면
-  if (isSuccess) {
-    return (
-      <>
-        <AppHeader title="계좌 생성 완료" show={true} />
-        <section className="min-h-dvh flex flex-col justify-center items-center text-center p-8 bg-white">
-          <h1 className="text-2xl font-bold mb-4">
-            계좌 생성이 완료되었습니다.
-          </h1>
-          <div className="text-lg">
-            <p>
-              <strong>계좌 이름:</strong> {accountName}
-            </p>
-            <p>
-              <strong>계좌 종류:</strong> {accountType}
-            </p>
-          </div>
-          <div className="w-full mt-10">
-            <BottomBar
-              label="확인"
-              isActive={true}
-              onClick={() => router.push("/main")} // 메인 페이지로 이동
-            />
-          </div>
-        </section>
-      </>
-    );
-  }
 
   // 비밀번호 입력 화면
   return (

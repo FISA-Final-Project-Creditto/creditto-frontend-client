@@ -4,19 +4,45 @@ import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import BottomBar from "../../../send/components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
+import { useSelector } from "react-redux";
+import { credittoApi } from "@/src/app/api/axios";
 
 export default function AccountConfirm() {
   const router = useRouter();
+  const { accountName, accountType, password } = useSelector(
+    (state) => state.account
+  );
 
-  // 샘플 계좌 정보
-  const accountInfo = {
-    accountNo: "1002076577072",
-    accountName: "해외송금 전용 계좌",
-    accountType: "외화보통예금",
-  };
+  // 새 계좌 개설 API 요청 후 성공 페이지로 이동
+  const handleCreate = async () => {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
 
-  const handleCreate = () => {
-    router.push("/account-success");
+      const res = await credittoApi.post(
+        "/api/accounts",
+        {
+          accountName,
+          accountType,
+          password,
+          passwordConfirmation: password, // 한번 더 확인하는 비밀번호
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      const { code, data } = res.data;
+      if (code === 200) {
+        console.log("새 계좌 개설 성공:", data);
+
+        // 요청 성공 시 성공 페이지로 이동
+        router.push("/account/create/success");
+      }
+    } catch (error) {
+      console.error("새 계좌 개설 중 오류 발생: ", error);
+    }
   };
 
   return (
@@ -29,7 +55,7 @@ export default function AccountConfirm() {
         showBack={true}
       />
 
-      <main className="flex flex-col min-h-screen px-8 py-30 max-w-lg mx-auto">
+      <div className="flex flex-col min-h-dvh px-8 py-10 max-w-lg mx-auto">
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-2 text-black">
             계좌 정보를 확인해주세요
@@ -39,20 +65,12 @@ export default function AccountConfirm() {
 
         {/* 생성할 계좌 정보 */}
         <section className="flex-1">
-          <div className="bg-card border border-border rounded-xl px-6">
-            {/* 계좌 번호 */}
-            <div className="flex items-center justify-between py-8 border-b border-border">
-              <div className="text-sm text-[#86909C]">계좌 번호</div>
-              <div className="text-xl font-semibold text-black tracking-wide">
-                {accountInfo.accountNo}
-              </div>
-            </div>
-
+          <div className="border-rounded-xl px-6">
             {/* 계좌명 */}
             <div className="flex items-center justify-between py-8 border-b border-border">
               <div className="text-sm text-[#86909C]">계좌 이름</div>
               <div className="text-lg font-semibold text-black">
-                {accountInfo.accountName}
+                {accountName}
               </div>
             </div>
 
@@ -60,19 +78,16 @@ export default function AccountConfirm() {
             <div className="flex items-center justify-between py-8 border-b border-border">
               <div className="text-sm text-[#86909C]">계좌 타입</div>
               <div className="text-lg font-semibold text-black">
-                {accountInfo.accountType}
+                {accountType}
               </div>
             </div>
           </div>
         </section>
 
         {/* 생성 버튼 */}
-        <footer>
-          <BottomBar
-            label="생성"
-            isActive={true}
-            onClick={() => router.push("/account/create/success")}
-          />
+        <footer className="flex flex-co">
+          <BottomBar label="게좌 생성" isActive={true} onClick={handleCreate} />
+          {/* <button>다시 생성하기</button> */}
         </footer>
 
         {/* 생성 알림 */}
@@ -82,7 +97,7 @@ export default function AccountConfirm() {
             확인해주세요.
           </p>
         </div> */}
-      </main>
+      </div>
     </div>
   );
 }
