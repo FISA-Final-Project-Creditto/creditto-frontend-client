@@ -159,7 +159,7 @@ export default function ScanPage() {
   };
 
   return (
-    <main className="min-h-dvh flex flex-col justify-center pt-10 pb-0">
+    <main className="min-h-dvh flex flex-col justify-center pt-10 pb-0 px-8">
       {/* 업로드 박스 또는 미리보기 */}
       {!preview ? (
         <UploadBox onSelect={handleSelectFile} />

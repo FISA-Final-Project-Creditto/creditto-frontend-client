@@ -10,6 +10,7 @@ export default function PhoneCodePage() {
   const router = useRouter();
   const [code, setCode] = useState("");
   const [timeLeft, setTimeLeft] = useState(0); // 남은 시간(초)
+  const [isRequested, setIsRequested] = useState(false); // 인증번호를 요청했는지 여부
 
   // 타이머
   useEffect(() => {
@@ -31,6 +32,7 @@ export default function PhoneCodePage() {
   const handleRequest = () => {
     // TODO: 서버에 인증번호 요청
     setTimeLeft(180); // 3분
+    setIsRequested(true);
   };
 
   const handleResend = () => {
@@ -93,7 +95,12 @@ export default function PhoneCodePage() {
             <button
               type="button"
               onClick={handleRequest}
-              className="w-[70px] px-3 py-2 cursor-pointer rounded-md bg-[#1A3668] text-white text-[13px] font-medium"
+              disabled={isRequested}
+              className={`w-[70px] px-3 py-2 cursor-pointer rounded-md text-[13px] font-medium transition-colors ${
+                isRequested
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-[#1A3668] text-white"
+              }`}
             >
               {t("requestCode")}
             </button>
@@ -104,7 +111,10 @@ export default function PhoneCodePage() {
         <button
           type="button"
           onClick={handleResend}
-          className="mt-3 text-[13px] text-gray-500 underline ml-auto block cursor-pointer mr-5"
+          disabled={timeLeft > 0}
+          className={`mt-3 text-[13px] ml-auto block cursor-pointer mr-5 transition-colors ${
+            timeLeft > 0 ? "text-gray-400 underline" : "text-gray-500 underline"
+          }`}
         >
           {t("reRequestCode")}
         </button>

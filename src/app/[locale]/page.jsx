@@ -30,27 +30,29 @@ export default function SplashPage({ hasSerial }) {
   };
 
   return (
-    <>
-      <Image src="/접속로딩1.svg" alt="logo" fill className="w-full h-[50%]" />
+    <div className="flex flex-col h-screen">
+      <div className="relative flex-grow">
+        <Image src="/접속로딩1.svg" alt="logo" fill style={{ objectFit: "contain" }} />
+      </div>
 
-      <div className="relative z-10">
+      <div className="flex-shrink-0">
         <div
-          className="w-full h-[90px] cursor-pointer flex justify-center items-center text-gray9000 underline text-lg"
+          className="w-full h-[60px] cursor-pointer flex justify-center items-center text-gray-500 underline text-base"
           onClick={(e) => {
             e.stopPropagation();
             router.push("/select-lang?next=/signup/permission");
           }}
         >
-          {t("signUp")}
+          {t("signUp")} 
         </div>
 
         <div
-          className="cursor-pointer w-full absolute h-[90px] bg-[#190668] text-white text-[26px] font-medium flex justify-center items-center"
+          className="cursor-pointer w-full h-[90px] bg-[#1A3668] text-white text-[22px] font-medium flex justify-center items-center"
           onClick={handleLogin}
         >
           {t("logIn")}
         </div>
       </div>
-    </>
+    </div>
   );
 }
