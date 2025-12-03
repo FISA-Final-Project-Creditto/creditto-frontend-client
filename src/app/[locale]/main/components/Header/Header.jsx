@@ -1,10 +1,15 @@
-import React from 'react'
-import Hambuger from '../Hambuger'
-import { Bell, CreditCard, Settings } from 'lucide-react'
+'use client';
+
+import React, { useState } from 'react';
+import { CreditCard, Settings } from 'lucide-react';
+import SettingsSidebar from './SettingsSidebar';
 
 export default function Header() {
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-        <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm  ">
+    <>
+      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm  ">
         <div className="bg-white px-5 py-3 flex items-center justify-between max-w-2xl mx-auto w-full">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 bg-gradient-to-br from-[#1A3668] via-[#1A3668] to-[#1A3668]/80 rounded-3xl  rounded-lg flex items-center justify-center flex-shrink-0">
@@ -13,14 +18,20 @@ export default function Header() {
             <h1 className="text-lg font-bold text-foreground">Creditto</h1>
           </div>
           <div className="flex items-center gap-2">
-            <button className="p-2 hover:bg-muted rounded-lg transition">
+            {/* <button className="p-2 hover:bg-muted rounded-lg transition">
               <Bell className="w-5 h-5 text-muted-foreground" />
-            </button>
-            <button className="p-2 hover:bg-muted rounded-lg transition">
+            </button> */}
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="p-2 hover:bg-muted rounded-lg transition"
+              aria-label="설정 열기"
+            >
               <Settings className="w-5 h-5 text-muted-foreground" />
             </button>
           </div>
         </div>
       </header>
-  )
+      <SettingsSidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
+    </>
+  );
 }
