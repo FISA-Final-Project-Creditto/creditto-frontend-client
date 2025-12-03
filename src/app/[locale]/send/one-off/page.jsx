@@ -61,6 +61,7 @@ export default function TypePage() {
   const recipientBankInfo = useSelector((state) => state.send.recipientInfo); // 선택된 은행 정보 가져오기
   const [connectedAccounts, setConnectedAccounts] = useState([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [feeInKrw, setFeeInKrw] = useState(0);
   const [fee, setFee] = useState(0);
   const [actualReceivedAmount, setActualReceivedAmount] = useState(0);
   const [exchangeRate, setExchangeRate] = useState(null);
@@ -79,8 +80,14 @@ export default function TypePage() {
     const fetchExchangeRate = async () => {
       if (selectedCountry) {
         try {
+          const accessToken = sessionStorage.getItem("accessToken");
           const response = await credittoApi.get(
-            `/api/exchange/${currency[selectedCountry]}`
+            `/api/exchange/${currency[selectedCountry]}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
           );
           setExchangeRate(response.data.data.exchangeRate);
         } catch (error) {
@@ -134,40 +141,43 @@ export default function TypePage() {
     if (rawValue === "" || Number(rawValue) === 0) {
       setFormData((prev) => ({ ...prev, targetAmount: "" }));
       setFee(0);
+      setFeeInKrw(0);
       setActualReceivedAmount(0);
       setTotalKrwAmount(0);
       setAmountError("");
       return;
     }
     const numericValue = Number(rawValue);
-    // 예상 수수료 (예: 0.5%) 및 실제 수취 금액 계산
+
+    // 예상 수수료 (외화 기준) 및 총 출금액 (원화 기준) 계산
     const calculatedFee = numericValue * 0.005;
-    const calculatedActualAmount = numericValue - calculatedFee;
-    const krwAmount = exchangeRate
-      ? (numericValue + calculatedFee) * exchangeRate
+    const totalAmountInForeignCurrency = numericValue + calculatedFee;
+    const totalKrwAmountWithFee = exchangeRate
+      ? totalAmountInForeignCurrency * exchangeRate
       : 0;
 
     // 잔액 초과 확인
-    if (selectedAccountDetails && krwAmount > selectedAccountDetails.balance) {
-      setAmountError("최대 금액입니다");
+    if (
+      selectedAccountDetails &&
+      totalKrwAmountWithFee > selectedAccountDetails.balance
+    ) {
+      setAmountError("잔액이 부족합니다. 보낼 수 있는 최대 금액으로 자동 입력됩니다.");
 
       if (exchangeRate > 0) {
-        // 보낼 수 있는 최대 외화 금액을 계산합니다. (수수료 포함)
-        const maxTargetAmount =
+        // 보낼 수 있는 최대 외화 금액(수수료 제외)을 계산합니다.
+        const maxSendableAmount =
           selectedAccountDetails.balance / (exchangeRate * 1.005);
 
         // 계산된 최대 금액으로 상태를 업데이트합니다.
-        const maxFee = maxTargetAmount * 0.005;
-        const maxActualReceived = maxTargetAmount - maxFee;
-        const maxKrwAmount = (maxTargetAmount + maxFee) * exchangeRate;
-
+        const maxFee = maxSendableAmount * 0.005;
         setFee(maxFee);
-        setActualReceivedAmount(maxActualReceived);
-        setTotalKrwAmount(maxKrwAmount);
+        setFeeInKrw(maxFee * exchangeRate);
+        setTotalKrwAmount(selectedAccountDetails.balance);
+        setActualReceivedAmount(Math.floor(maxSendableAmount));
         setFormData((prev) => ({
           ...prev,
           targetAmount: new Intl.NumberFormat().format(
-            Math.floor(maxTargetAmount)
+            Math.floor(maxSendableAmount)
           ),
         }));
       }
@@ -175,8 +185,9 @@ export default function TypePage() {
     }
 
     setFee(calculatedFee);
-    setActualReceivedAmount(calculatedActualAmount);
-    setTotalKrwAmount(krwAmount);
+    setFeeInKrw(calculatedFee * exchangeRate);
+    setTotalKrwAmount(totalKrwAmountWithFee);
+    setActualReceivedAmount(numericValue);
     const formattedValue = new Intl.NumberFormat().format(numericValue);
     setFormData((prev) => ({ ...prev, targetAmount: formattedValue }));
   };
@@ -486,6 +497,11 @@ export default function TypePage() {
                       {new Intl.NumberFormat().format(fee.toFixed(2))}{" "}
                       {formData.receiveCurrency}
                     </span>
+                    <span className="text-gray-500 ml-1">
+                      (약{" "}
+                      {new Intl.NumberFormat("ko-KR").format(feeInKrw.toFixed(0))}
+                      원)
+                    </span>
                   </div>
                   <div className="flex justify-between font-semibold">
                     <span>실제 수취 금액:</span>
@@ -571,8 +587,12 @@ export default function TypePage() {
               <div className="flex justify-between">
                 <span className="text-gray-500">예상 수수료</span>
                 <span className="font-medium">
-                  {new Intl.NumberFormat().format(fee.toFixed(2))}{" "}
-                  {formData.receiveCurrency}
+                  {new Intl.NumberFormat().format(fee.toFixed(2))} {formData.receiveCurrency}
+                  <span className="text-gray-500 ml-1">
+                    (약{" "}
+                    {new Intl.NumberFormat("ko-KR").format(feeInKrw.toFixed(0))}
+                    원)
+                  </span>
                 </span>
               </div>
               <div className="flex justify-between font-semibold">

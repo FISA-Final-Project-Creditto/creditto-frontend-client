@@ -1,5 +1,5 @@
 "use client";
-import { FileChartColumnIcon, Wallet } from "lucide-react";
+import { Earth, FileChartColumnIcon, Wallet } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -67,10 +67,10 @@ export default function FunctionButton() {
       {/* Loan Button */}
       <button
         className="w-full flex justify-center flex-row bg-card border border-border rounded-bl-2xl p-2 flex flex-col items-center gap-2 hover:bg-muted transition mb-4"
-        onClick={() => router.push("/loan")}
+        onClick={() => router.push("/credit/first")}
       >
-        <Wallet className="w-6 h-6 text-primary" />
-        <span className="text-xs font-medium">{t("loan")}</span>
+        <Earth className="w-6 h-6 text-primary" />
+        <span className="text-xs font-medium">해외 신용정보</span>
       </button>
 
       {/* Language Select */}
