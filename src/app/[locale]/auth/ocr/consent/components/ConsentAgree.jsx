@@ -14,8 +14,6 @@ export default function ConsentAgree({
   const router = useRouter();
   const dispatch = useDispatch();
   const consentChecked = useSelector((state) => state.consent.checked);
-  const sendMode = useSelector((state) => state.sendMode.mode); // 송금 방식 가져오기
-  console.log("송금방식: ", sendMode);
 
   // 체크 상태: { all: false, consent1: false, consent2: false, ... }
   const [checked, setChecked] = useState(() =>
@@ -28,39 +26,44 @@ export default function ConsentAgree({
     )
   );
 
-  // 필수 약관만 따로 모으고 싶으면 여기서 필터
+  // 필수 약관 리스트
   const requiredConsents = consents.filter((c) => c.required);
 
   // 전체 동의 클릭
   const toggleAll = () => {
-    // 이미 전체 동의 상태라면 → 전체 해제
+    // 이미 전체 동의 상태라면 전체 해제
     if (checked.all) {
       const updated = consents.reduce(
         (acc, consent) => ({ ...acc, [consent.id]: false }),
         { all: false }
       );
+
       setChecked(updated);
 
       consents.forEach((consent) => {
         dispatch(setConsentChecked({ id: consent.id, checked: false }));
       });
+
       return;
     }
 
-    // 아직 전체 동의가 아니라면 → 순차 동의 모드 시작
-    const sequence = requiredConsents.length > 0 ? requiredConsents : consents;
-    if (sequence.length === 0) return;
+    // 전체 동의 상태가 아니라면 모든 약관 체크
+    const updated = consents.reduce(
+      (acc, consent) => ({ ...acc, [consent.id]: true }),
+      { all: true }
+    );
 
-    const ids = sequence.map((c) => c.id);
-    const idsParam = ids.join(",");
+    setChecked(updated);
 
-    // 첫 번째 약관 페이지로 이동 + 쿼리스트링으로 시퀀스 정보 전달
-    router.push(`/send/consent/${ids[0]}?bulk=1&ids=${idsParam}&idx=0`);
+    consents.forEach((consent) => {
+      dispatch(setConsentChecked({ id: consent.id, checked: true }));
+    });
   };
 
   // 개별 토글
   const toggleOne = (id) => {
     const newChecked = { ...checked, [id]: !checked[id] };
+
     const allChecked =
       consents.length > 0 &&
       consents.every((consent) => newChecked[consent.id]);
@@ -99,7 +102,7 @@ export default function ConsentAgree({
     synChecked();
   }, [consents, consentChecked]);
 
-  // 다음 버튼: 다음 단계로 이동 + 동의 상태 초기화
+  // 다음 버튼(다음 단계로 이동 + 동의 상태 초기화)
   const handleNext = () => {
     if (!isRequiredAllChecked) return;
 
@@ -115,12 +118,7 @@ export default function ConsentAgree({
     );
     setChecked(resetChecked);
 
-    // Redux에서 가져온 sendMode에 따라 경로 분기
-    sendMode === "regular"
-      ? router.push("/send/regular/choose")
-      : router.push("/send/one-off/choose");
-
-    dispatch(clearModeData()); // 송금 방식 null로
+    router.push("/auth/ocr/identification");
   };
 
   return (
@@ -165,10 +163,12 @@ export default function ConsentAgree({
         <ul className="mt-6 space-y-6">
           {consents.map(({ id, label, required }) => (
             <li key={id}>
-              <label className="flex items-center gap-3 cursor-pointer">
-                {/* 체크박스 클릭 시에만 toggleOne 실행 */}
+              {/* 행 전체 클릭 시 바로 toggleOne */}
+              <label
+                className="flex items-center gap-3 cursor-pointer"
+                onClick={() => toggleOne(id)}
+              >
                 <span
-                  onClick={() => toggleOne(id)}
                   className={`flex items-center justify-center w-5 h-5 border rounded-sm transition-colors ${
                     checked[id]
                       ? "border-[#1A3668] bg-[#1A3668]"
@@ -192,14 +192,7 @@ export default function ConsentAgree({
                   )}
                 </span>
 
-                {/* 텍스트 클릭 시에는 라우팅만, 체크 변경 X */}
-                <p
-                  className="text-[15px] text-[#4E5969] leading-relaxed"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    router.push(`/send/consent/${id}`); // 여기서 id는 definitionId를 뜻함
-                  }}
-                >
+                <p className="text-[15px] text-[#4E5969] leading-relaxed">
                   {required && (
                     <span className="text-[#4E5969] mr-1">(필수)</span>
                   )}
