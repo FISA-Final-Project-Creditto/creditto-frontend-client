@@ -97,16 +97,10 @@ export default function ImportAccount() {
           ))
         ) : (
           <div className="text-center text-gray-500 py-8">
-            <div className=" w-full h-full bg-blue-300 ">
+            <div className=" w-full h-full ">
               <p>{t("noLinkedAccount")}</p>
             </div>
-            <footer>
-              <BottomBar
-                label={t("goToCreate")}
-                onClick={handleAccount}
-                isActive={true}
-              />
-            </footer>
+           
           </div>
         )}
       </div>
