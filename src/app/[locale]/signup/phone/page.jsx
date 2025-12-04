@@ -120,7 +120,7 @@ export default function PhonePage() {
         <AppHeader
           title={t("authTitle")}
           show={true}
-          showHamburger={true}
+          showHamburger={false}
           showBack={true}
         />
         <div className="flex-1 px-8 pt-8 pb-10 text-left space-y-6">

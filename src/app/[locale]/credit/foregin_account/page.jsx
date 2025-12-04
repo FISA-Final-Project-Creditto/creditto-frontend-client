@@ -12,8 +12,7 @@ export default function ForeginPage() {
     router.push(`?country=${country.code}`);
   };
   return (
-    <main className="h-dvh flex justify-center items-center bg-[#e5e5e5]">
-      <div className="w-full max-w-[440px] min-h-dvh mx-auto justify-start flex flex-col bg-white">
+   <main className="px-8">
         <AppHeader
           title="외국인 계좌 조회"
           showHamburger={false}
@@ -27,7 +26,6 @@ export default function ForeginPage() {
         <div className="mt-2">
           <PassportCountryGrid onSelect={handleSelect} />
         </div>
-      </div>
-    </main>
+  </main>
   );
 }
