@@ -44,40 +44,6 @@ export default function SecurePage({ length = 4 }) {
 
   const hiddenInputRef = useRef(null);
 
-  // // 일회성 송금 신청
-  // const handleConfirm = useCallback(async () => {
-  //   try {
-  //     const accessToken = sessionStorage.getItem("accessToken");
-  //     console.log("accessToken: ", accessToken);
-  //     if (!accessToken) {
-  //       console.error("Access Token이 없습니다.");
-  //       return;
-  //     }
-  //     const res = await credittoApi.post(
-  //       "/api/remittance/scheduled/add",
-  //       {
-  //         ...sendInfo,
-  //         ...recipientInfo,
-  //         receiveCurrency,
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${accessToken}`,
-  //         },
-  //       }
-  //     );
-
-  //     if (res.data.code === 200) {
-  //       const mode = "send"; // 송금 모드
-
-  //       // 신청 결과 페이지로 이동
-  //       router.push("/send/one-off/result");
-  //     }
-  //   } catch (error) {
-  //     console.log("정기 해외 송금 신청 실패: ", error.response);
-  //   }
-  // }, [sendInfo, recipientInfo, receiveCurrency, router]);
-
   // 비밀번호 입력이 완료될 때 호출되는 함수
   const emitChange = useCallback(
     async (v) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useTranslations } from "next-intl";
 
 // 0~9 배열을 무작위 순서로 변경
@@ -21,22 +21,25 @@ export default function SecurePinKeyboard({
   onDigit,
   onBackspace,
   onClear,
-  shuffleToken, // 🔹 SecurePage에서 내려주는 토큰
+  shuffleToken, // SecurePage에서 내려주는 토큰
+  onRequestShuffle, // “다시 섞어줘”를 부모에게 요청하는 콜백 추가
 }) {
   const t = useTranslations("auth.securePinKeyboard");
-  // shuffleToken이 바뀔 때마다 새로운 배열을 계산 (파생 상태)
+
+  // digits를 shuffleToken에 의해 결정되는 파생 상태로 처리 (useState/useEffect 제거)
   const digits = useMemo(() => {
     const base = "0123456789".split("");
     if (shuffleToken == null) return base;
     return shuffle(base);
-  }, [shuffleToken]);
+  }, [shuffleToken]); // shuffleToken이 바뀔 때마다 재계산
 
   // 숫자 버튼 클릭 시 상위 컴포넌트에 숫자 전달
   // 필요하면 옵션으로 "입력할 때마다 섞기"도 가능하게 유지
   const press = (d) => {
     onDigit?.(d);
+    // 부모에게 shuffleToken 갱신을 요청
     if (shuffleOnEveryPress) {
-      setDigits((cur) => shuffle(cur));
+      onRequestShuffle?.(); // 부모에서 shuffleToken을 변경하도록 위임
     }
   };
 

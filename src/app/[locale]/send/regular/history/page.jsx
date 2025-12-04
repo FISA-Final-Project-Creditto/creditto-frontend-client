@@ -23,67 +23,70 @@ export default function HistoryPage() {
   const [allAccounts, setAllAccounts] = useState([]);
 
   useEffect(() => {
-    // 모든 계좌 조회 by UserId
-    const fetchAllAccounts = async () => {
-      try {
-        const accessToken = sessionStorage.getItem("accessToken");
+    const initialize = async () => {
+      const accountsExist = await fetchAllAccounts(); // 계좌 조회
 
-        const res = await credittoApi.get("/api/accounts/me", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        const { code, data } = res.data;
-        if (code === 200) {
-          console.log("모든 계좌 조회 성공: ", data);
-          setAllAccounts(data);
-
-          return true;
-        }
-      } catch (error) {
-        console.error("모든 계좌 조회 중 오류 발생: ", error);
+      if (accountsExist) {
+        await fetchRemittanceHistory(); // 계좌 있으면 내역 조회
+      } else {
+        alert("연동된 계좌가 없습니다");
+        router.push("/main");
       }
     };
 
-    // 사용자 정기 송금 설정 내역 조회
-    const fetchRemittanceHistory = async () => {
-      try {
-        const accessToken = sessionStorage.getItem("accessToken");
-        setIsLoading(true);
-
-        const res = await credittoApi.get("/api/remittance/scheduled", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        const { code, data } = res.data;
-
-        if (code === 200) {
-          console.log("정기송금 설정 내역: ", data);
-
-          setHistories(data); // 현재 페이지 표시용 정기 송금 설정 목록 저장
-          dispatch(setDetailData(data)); // 상세 페이지에서 사용할 정기 송금 설정 목록 Redux 저장
-        } else {
-          return false;
-        }
-      } catch (error) {
-        console.log("사용자 정기송금 설정 내역 조회 실패: ", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // 계좌가 있으면 내역 조회
-    if (fetchAllAccounts()) {
-      fetchRemittanceHistory();
-    } else {
-      // 계좌가 없으면 메인페이지로 이동
-      alert("연동된 계좌가 없습니다");
-      router.push("/main");
-    }
+    initialize();
   }, []);
+
+  // 모든 계좌 조회
+  const fetchAllAccounts = async () => {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+
+      const res = await credittoApi.get("/api/accounts/me", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const { code, data } = res.data;
+      if (code === 200 && data && data.length > 0) {
+        console.log("모든 계좌 조회 성공:", data);
+        setAllAccounts(data);
+        return true; // 계좌 존재
+      }
+
+      return false; // 빈 배열 등도 계좌 없음 처리
+    } catch (error) {
+      console.error("모든 계좌 조회 중 오류 발생:", error);
+      return false; // 오류 시에도 계좌 없음 취급
+    }
+  };
+
+  // 정기 송금 설정 조회
+  const fetchRemittanceHistory = async () => {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+      setIsLoading(true);
+
+      const res = await credittoApi.get("/api/remittance/scheduled", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const { code, data } = res.data;
+
+      if (code === 200) {
+        console.log("정기송금 설정 내역:", data);
+        setHistories(data);
+        dispatch(setDetailData(data));
+      }
+    } catch (error) {
+      console.log("정기송금 설정 내역 조회 실패:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // histories가 배열인지 계산
   const safeHistories = Array.isArray(histories) ? histories : [];
