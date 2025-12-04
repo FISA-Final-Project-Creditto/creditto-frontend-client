@@ -9,12 +9,12 @@ export default function SuccessPage() {
   const t = useTranslations("auth.authSuccess");
   const router = useRouter();
   return (
-    <div className="min-h-dvh bg-white flex flex-col pt-[100px] pb-[calc(68px+24px+env(safe-area-inset-bottom))]">
-      <h1 className="text-[1.375rem] font-semibold text-[#000] mb-[35px] leading-tight">
+    <main className="px-8 flex flex-col justify-center items-center min-h-dvh">
+      <h1 className="text-[1.375rem] font-semibold text-[#000] mb-[35px] leading-tight text-center">
         {t("title")}
       </h1>
 
-      <h2 className="text-[#4E5969] mb-[35px]">{t("description")}</h2>
+      <h2 className="text-[#4E5969] mb-[35px] text-center">{t("description")}</h2>
 
       {/* 이미지 */}
       <Image
@@ -32,6 +32,6 @@ export default function SuccessPage() {
         }}
         isActive={true}
       />
-    </div>
-  );
+</main>
+    );
 }

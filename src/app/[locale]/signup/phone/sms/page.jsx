@@ -66,7 +66,7 @@ export default function PhoneCodePage() {
   return (
     <>
       {/* 상단 내용 */}
-      <AppHeader title={t("title")} show={true} showHamburger={true} />
+      <AppHeader title={t("title")} show={true} showHamburger={false} />
       <div className="flex-1 px-8 mt-5 pb-10">
         <p className="text-[22px] font-semibold leading-relaxed text-gray-900 text-left mb-10">
           {t("description")}

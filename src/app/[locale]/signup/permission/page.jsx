@@ -71,7 +71,7 @@ export default function PermissionPage() {
 
   return (
     <>
-      <AppHeader title={t("title")} show={true} showHamburger={true} />
+      <AppHeader title={t("title")} show={true} showHamburger={false} />
       <div className="flex-1 px-8 pt-16 pb-10 text-left">
         <h1 className="text-2xl font-bold leading-snug">
           {t("description1")}
