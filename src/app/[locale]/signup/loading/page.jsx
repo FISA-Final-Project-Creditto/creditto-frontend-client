@@ -8,13 +8,13 @@ export default function LoadingPage() {
   const t = useTranslations("signup.loading");
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     router.push("/signup/success");
-  //   }, 5000);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.push("/signup/success");
+    }, 5000);
 
-  //   return () => clearTimeout(timer);
-  // }, [router]);
+    return () => clearTimeout(timer);
+  }, [router]);
 
   return (
     <main className="flex min-h-dvh items-center justify-center bg-white">
