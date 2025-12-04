@@ -82,7 +82,7 @@ export default function ConsentDetailPage() {
         );
       } else {
         // 마지막 동의서까지 완료 → 동의 리스트 페이지로 이동
-        router.push("/credit/consent");
+        router.replace("/credit/consent");
       }
     } else {
       // 이전 페이지로 돌아가기
@@ -138,7 +138,7 @@ export default function ConsentDetailPage() {
               const isBulk = searchParams.get("bulk") === "1";
               if (isBulk) {
                 // bulk 모드에서는 리스트로 보내는 편이 UX 좋음
-                router.push("/credit/consent");
+                router.replace("/credit/consent");
               } else {
                 router.back();
               }
@@ -161,11 +161,11 @@ export default function ConsentDetailPage() {
 
         {/* 스크롤 바 */}
         {!scrolledToBottom && (
-          <div className="pointer-events-none absolute bottom-24 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent" />
+          <div className="pointer-events-none absolute bottom-24 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent" />
         )}
 
         {/* 고정 하단 버튼 */}
-        <div className="sticky bottom-0 bg-[card] px-6 py-4">
+        <div className="sticky bottom-0 bg-white px-6 py-4">
           <Button
             onClick={handleAgree}
             className="w-full rounded-xl py-6 text-base font-semibold bg-[#1A3668]"
