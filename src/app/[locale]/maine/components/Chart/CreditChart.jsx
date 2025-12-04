@@ -13,70 +13,42 @@ import {
 } from "recharts";
 import { useTranslations } from "next-intl";
 
-export default function CreditChart() {
+export default function CreditChart({historyScore}) {
   const t = useTranslations("maine");
-  const [historyScore, setHistoryScore] = useState();
-  useEffect(() => {
-    const fetchCreditScore = async () => {
-      try {
-        const accessToken = sessionStorage.getItem("accessToken");
-        const userId = sessionStorage.getItem("userId");
 
-        if (!accessToken) return;
-
-        const res = await credittoApi.get(
-          `/api/credit-score/history/${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-
-        setHistoryScore(res.data.history);
-        // setHistoryScore(r);
-        console.log("신용점수 : ", res.data);
-      } catch (error) {
-        console.error("신용점수 조회 실패:", error);
-      }
-    };
-    fetchCreditScore();
-  }, []);
 
   // 말풍선 모양의 커스텀 툴팁 컴포넌트
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="relative">
-          <div className="bg-white text-gray-800 p-3 rounded-lg shadow-lg">
-            <p className="font-bold text-sm text-gray-900">{label}</p>
-            <p className="text-base text-[#1A3668] font-semibold">{`${
-              payload[0].value
-            }${t("creditChart.score")}`}</p>
-          </div>
-          {/* 말풍선 꼬리 부분 */}
-          <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-white transform rotate-45 -bottom-1"></div>
+ const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="relative transform -translate-y-2">
+        <div className="bg-white/85 backdrop-blur-xl px-3 py-2 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.12)] border border-white/40 flex flex-col">
+          <span className="text-[11px] font-medium text-gray-600 tracking-tight">
+            {label}월
+          </span>
+          <span className="text-lg font-bold text-[#1A3668] leading-tight mt-0.5">
+            {payload[0].value}
+          </span>
         </div>
-      );
-    }
 
-    return null;
-  };
+       <div
+          className="absolute left-1/2 -top-1 w-2.5 h-2.5 
+                     bg-white/85 backdrop-blur-xl border border-white/40
+                     transform -translate-x-1/2 -rotate-45 
+                     shadow-[0_-2px_6px_rgba(0,0,0,0.06)]"
+        ></div>
+      </div>
+    );
+  }
+  return null;
+};
 
-  const creditScoreData = [
-    { month: t("creditChart.month", { month: 1 }), score: 400 },
-    { month: t("creditChart.month", { month: 2 }), score: 425 },
-    { month: t("creditChart.month", { month: 3 }), score: 680 },
-    { month: t("creditChart.month", { month: 4 }), score: 695 },
-    { month: t("creditChart.month", { month: 5 }), score: 400 },
-    { month: t("creditChart.month", { month: 6 }), score: 730 },
-    { month: t("creditChart.month", { month: 7 }), score: 840 },
-  ];
+
   return (
     <div className="w-full mt-3 bg-gradient-to-br from-[#1A3668] via-[#1A3668] to-[#1A3668]/80 rounded-3xl m-3 text-primary-foreground shadow-lg ">
       <div className="bg-white/10 backdrop-blur rounded-2xl m-3">
         <ResponsiveContainer width="100%" height={90}>
-          <LineChart data={historyScore}>
+          <LineChart data={historyScore || []}>
             <CartesianGrid
               strokeDasharray="3 3"
               stroke="rgba(255,255,255,0.1)"
@@ -85,8 +57,9 @@ export default function CreditChart() {
               dataKey="month"
               stroke="rgba(255,255,255,0.6)"
               style={{ fontSize: "10px" }}
+              tickFormatter={(v) => `${v}월`}
             />
-            {/* 커스텀 툴팁 컴포넌트를 content로 전달 */}
+
             <Tooltip
               cursor={{
                 stroke: "rgba(255, 255, 255, 0.3)",
@@ -95,14 +68,15 @@ export default function CreditChart() {
               }}
               content={<CustomTooltip />}
             />
+
             <Line
               type="monotone"
-              dataKey="score"
+              dataKey="avg_score"
               stroke="#ffffff"
               dot={false}
               strokeWidth={2}
               activeDot={{
-                r: 6, // 점 크기
+                r: 6,
                 stroke: "#ffffff",
               }}
             />

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Emoji from "../components/Emoji";
 import BottomSheet from "@/src/common/UI/BottomSheet/BottomSheet";
+import { credittoApi } from "@/src/app/api/axios";
 
 export default function CreditFirst() {
   const router = useRouter();
@@ -40,11 +41,38 @@ export default function CreditFirst() {
 
         <div className="w-full flex flex-col justify-center mt-auto mb-14 px-4">
           <div
-            className="w-full h-20 cursor-pointer flex justify-center items-center text-[#86909C] underline text-lg "
-            onClick={(e) => {
-              // 이벤트 버블링
+            className="w-full h-20 cursor-pointer flex justify-center items-center text-[#86909C] underline text-lg"
+            onClick={async (e) => {
               e.stopPropagation();
-              router.push("/signup/permission");
+              try {
+                const accessToken = sessionStorage.getItem("accessToken");
+                const userId = sessionStorage.getItem("userId");
+                if (!accessToken || !userId) {
+                  router.push("/signup/permission");
+                  return;
+                }
+
+                const res = await credittoApi.get(`/api/credit-score/${userId}`, {
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                  },
+                });
+
+                // 저장: 전체 응답과 점수 값 별도 보관
+                sessionStorage.setItem("creditScore", JSON.stringify(res.data));
+                if (res.data?.credit_score !== undefined) {
+                  sessionStorage.setItem("creditScoreValue", String(res.data.credit_score));
+                }
+                // 이력 정보도 저장 (변화율 표시용)
+                if (res.data?.history) {
+                  sessionStorage.setItem("creditScoreHistory", JSON.stringify(res.data.history));
+                }
+
+                router.push("/main");
+              } catch (error) {
+                // 실패 시 권한/설정 페이지로 이동
+                router.push("/signup/permission");
+              }
             }}
           >
             연동없이 바로 조회하기
