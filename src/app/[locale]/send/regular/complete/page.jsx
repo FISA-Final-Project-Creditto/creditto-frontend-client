@@ -37,11 +37,20 @@ export default function CompletePage() {
         const accessToken = sessionStorage.getItem("accessToken");
         const userId = sessionStorage.getItem("userId");
 
-        const res = await credittoApi.post(`/api/credit-score/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        if (!accessToken || !userId) {
+          console.error("인증 정보가 없어 신용점수를 조회할 수 없습니다.");
+          return;
+        }
+
+        const res = await credittoApi.post(
+          `/api/credit-score/${userId}`,
+          null, // POST 요청 본문이 없는 경우 null로 전달
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
 
         const data = res.data;
 
@@ -77,7 +86,7 @@ export default function CompletePage() {
           <center>
             <Image
               src="/creditto.png"
-              alt="Woori Bee"
+              alt="크레디토 캐릭터"
               width={180}
               height={200}
             />
