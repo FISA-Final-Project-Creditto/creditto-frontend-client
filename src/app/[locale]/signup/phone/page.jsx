@@ -4,10 +4,12 @@ import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
+import { useDispatch } from "react-redux";
 
 export default function PhonePage() {
   const t = useTranslations("signup.phone");
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [step, setStep] = useState(1); // 1: 이름, 2: 생일, 3: 전화번호
   const [name, setName] = useState("");

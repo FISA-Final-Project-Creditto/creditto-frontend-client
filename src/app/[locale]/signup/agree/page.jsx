@@ -45,15 +45,14 @@ export default function AgreePage() {
 
   return (
     <>
-     <AppHeader title={t("title")} show={true} showHamburger={true} />
+      <AppHeader title={t("title")} show={true} showHamburger={true} />
       <div className="flex-1 px-8 pt-16 pb-10 text-left">
         {/* 전체 동의 */}
-           
+
         <label
           onClick={toggleAll}
-          className="flex items-center p-5 w-full h-[60px] bg-gray-100 rounded-[6px] cursor-pointer"
+          className="flex items-center w-full h-[60px] cursor-pointer border-b border-[#E5E6EB]"
         >
-          
           <span
             className={`flex items-center justify-center w-6 h-6 border-2 rounded-full mr-3 transition-colors ${
               checked.all
@@ -77,7 +76,7 @@ export default function AgreePage() {
               </svg>
             )}
           </span>
-          <h1 className="text-[20px] font-bold text-gray-900">
+          <h1 className="text-[20px] font-bold text-[#4E5969]">
             {t("agreeAll")}
           </h1>
         </label>
@@ -122,22 +121,21 @@ export default function AgreePage() {
         </ul>
       </div>
       <div className="w-full  h-[118px]  flex justify-center">
-            <button
-        disabled={!checked.terms1 || !checked.terms2 || !checked.terms3}
-        className={`w-[90%] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg
+        <button
+          disabled={!checked.terms1 || !checked.terms2 || !checked.terms3}
+          className={`w-[90%] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg
             ${
               checked.terms1 && checked.terms2 && checked.terms3
                 ? "bg-[#1A3668] text-white cursor-pointer"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
-        onClick={() => {
-          router.push("/signup/phone");
-        }}
-      >
-        {t("next")}
-      </button>
+          onClick={() => {
+            router.push("/signup/phone");
+          }}
+        >
+          {t("next")}
+        </button>
       </div>
-  
     </>
   );
 }

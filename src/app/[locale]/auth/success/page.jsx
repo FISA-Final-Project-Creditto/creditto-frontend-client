@@ -14,9 +14,7 @@ export default function SuccessPage() {
         {t("title")}
       </h1>
 
-      <h2 className="text-[#4E5969] mb-[35px]">
-        {t("description")}
-      </h2>
+      <h2 className="text-[#4E5969] mb-[35px]">{t("description")}</h2>
 
       {/* 이미지 */}
       <Image
@@ -27,7 +25,13 @@ export default function SuccessPage() {
         className="mx-auto"
       />
 
-      <BottomBar label={t("start")} onClick={()=>{router.push('/')}} isActive={true} />
+      <BottomBar
+        label={t("start")}
+        onClick={() => {
+          router.push("/");
+        }}
+        isActive={true}
+      />
     </div>
   );
 }

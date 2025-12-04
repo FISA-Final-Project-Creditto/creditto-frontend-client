@@ -40,25 +40,25 @@ export default function IDPage() {
         {t("title")}
       </h1>
 
-      <h2 className="text-[#4E5969] mb-[24px]">
-        {t("description")}
-      </h2>
+      <h2 className="text-[#4E5969] mb-[24px]">{t("description")}</h2>
 
+      <div className="">
+        <Image
+          src="/id-sample.png"
+          alt={t("idCardExample")}
+          width={300}
+          height={200}
+          className="mx-auto"
+        />
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
+          accept="image/*"
+        />
+      </div>
       {/* 이미지 */}
-      <Image
-        src="/id-sample.png"
-        alt={t("idCardExample")}
-        width={300}
-        height={200}
-        className="mx-auto"
-      />
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        className="hidden"
-        accept="image/*"
-      />
 
       {/* 하단 버튼 */}
       <BottomBar

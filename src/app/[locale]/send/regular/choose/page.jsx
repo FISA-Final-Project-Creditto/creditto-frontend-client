@@ -3,12 +3,12 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { US, CN, JP, MY, TH } from "country-flag-icons/react/3x2";
+import { US, JP, MY, TH } from "country-flag-icons/react/3x2";
 import BottomBar from "../../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import clsx from "clsx";
 import {
-  setReceivedCurrency,
+  setReceiveCurrency,
   setCountryData,
 } from "@/src/store/features/send/sendSlice";
 import { useTranslations } from "next-intl";
@@ -28,7 +28,7 @@ export default function ChooseCountryPage() {
     };
     const currency = currencyMap[localSelectedCountry];
     if (currency) {
-      dispatch(setReceivedCurrency(currency));
+      dispatch(setReceiveCurrency(currency));
       dispatch(setCountryData(localSelectedCountry)); // Redux 액션 호출
     }
     router.push("/send/regular/information/type");
@@ -45,7 +45,7 @@ export default function ChooseCountryPage() {
         />
       </header>
 
-      <main className="flex flex-col gap-[2.188rem] px-5">
+      <main className="flex flex-col gap-[2.188rem] px-8">
         <section>
           <h1 className="text-left mt-[3.75rem] text-[1.563rem] font-bold whitespace-pre-line">
             {/* <span className="text-[#1A3668]">{t("common.remittance")}</span>{" "} */}

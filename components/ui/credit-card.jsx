@@ -27,6 +27,7 @@ const CreditCard = React.forwardRef(
       cardHolder,
       expiryDate,
       variant = "default",
+      accountState, // Tabs.jsx에서 accountState를 Props로 사용하기 위해 따로 빼줌
       ...props
     },
     ref

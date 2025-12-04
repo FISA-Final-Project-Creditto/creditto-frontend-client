@@ -7,8 +7,8 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setRecipientInfo,
-  setReceivedCurrency,
   setSendInfo,
+  setReceiveCurrency,
 } from "@/src/store/features/send/sendSlice";
 import BottomBar from "../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
@@ -27,13 +27,12 @@ import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 
 // 요일
-const DAYS = [
-  { name: "월요일", value: "MONDAY" },
-  { name: "화요일", value: "TUESDAY" },
-  { name: "수요일", value: "WEDNESDAY" },
-  { name: "목요일", value: "THRUSDAY" },
-  { name: "금요일", value: "FRIDAY" },
-];
+const COUNTRYTOCODE = {
+  US: "🇺🇸 +1",
+  JP: "🇯🇵 +81",
+  MY: "🇲🇾 +60",
+  TH: "🇹🇭 +66",
+};
 
 // 국가별 통화 코드
 const currency = {
@@ -59,7 +58,9 @@ export default function TypePage() {
   ];
 
   const selectedCountry = useSelector((state) => state.send.selectedCountry); // 선택된 국가 가져오기
+  console.log("선택된 국가: ", selectedCountry);
   const recipientBankInfo = useSelector((state) => state.send.recipientInfo); // 선택된 은행 정보 가져오기
+
   const [connectedAccounts, setConnectedAccounts] = useState([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [feeInKrw, setFeeInKrw] = useState(0);
@@ -70,15 +71,29 @@ export default function TypePage() {
   const [amountError, setAmountError] = useState("");
   const [totalKrwAmount, setTotalKrwAmount] = useState(0);
 
+  // 선택된 국가코드에서 실제 phoneCc("+1", "+81" 등)만 뽑는 함수
+  const getPhoneCcByCountry = (country) => {
+    if (!country || !COUNTRYTOCODE[country]) return "";
+    const parts = COUNTRYTOCODE[country].split(" "); // ["🇺🇸", "+1"]
+    return parts[1] || ""; // "+1"
+  };
+
   useEffect(() => {
     // 클라이언트 사이드에서만 sessionStorage에 접근합니다.
     const storedAccounts = sessionStorage.getItem("accounts");
     if (storedAccounts) {
-      setConnectedAccounts(JSON.parse(storedAccounts));
+      setConnectedAccounts(JSON.parse(storedAccjounts));
     }
   }, []);
 
   useEffect(() => {
+    if (selectedCountry) {
+      setFormData((prev) => ({
+        ...prev,
+        phoneCc: getPhoneCcByCountry(selectedCountry),
+        receiveCurrency: currency[selectedCountry] || "",
+      }));
+    }
     const fetchExchangeRate = async () => {
       if (selectedCountry) {
         const userId = sessionStorage.getItem("userId");
@@ -119,12 +134,13 @@ export default function TypePage() {
     };
     fetchExchangeRate();
   }, [selectedCountry]);
+
   // 송금 유형 정보값 상태 관리
   const [formData, setFormData] = useState({
     senderAccountNO: "", // 나의 계좌 (드롭다운)
     recipientAccountNO: "", // 받는 사람 계좌 (직접 입력)
     recipientName: "", // 받는 사람 이름
-    phoneCc: "+82", // 국가 코드
+    phoneCc: getPhoneCcByCountry(selectedCountry) || "", // 국가 코드
     phoneNo: "", // 전화번호
     receiveCurrency: currency[selectedCountry] || "", // 수취 통화 코드
     targetAmount: "", // 외화 거래 금액
@@ -154,6 +170,10 @@ export default function TypePage() {
   const selectedAccountDetails = connectedAccounts.find(
     (acc) => acc.accountNo === formData.senderAccountNO
   );
+
+  // 선택된 계좌의 accountId
+  const selectedAccountId = selectedAccountDetails?.accountId ?? null;
+  console.log("accountId: ", selectedAccountId);
 
   const handleAmountChange = (e) => {
     setAmountError(""); // 입력 시작 시 에러 메시지 초기화
@@ -236,21 +256,69 @@ export default function TypePage() {
   // 전화번호 자동 하이픈 생성 함수
   const handlePhoneNumberChange = (e) => {
     const { value } = e.target;
-    const rawValue = value.replace(/[^0-9]/g, "");
+    const rawValue = value.replace(/[^0-9]/g, ""); // 숫자만
     let formattedValue = "";
 
-    // 010-0000-0000 형식
-    if (rawValue.length > 0) {
-      formattedValue = rawValue.substring(0, 3);
-    }
-    if (rawValue.length > 3) {
-      formattedValue += "-" + rawValue.substring(3, 7);
-    }
-    if (rawValue.length > 7) {
-      formattedValue += "-" + rawValue.substring(7, 11);
+    const code = formData.phoneCc; // 현재 선택된 국가 코드 (+1, +81, +60, +66)
+
+    // 국가 코드에 따른 포맷 분기
+    switch (code) {
+      case "+1":
+        if (rawValue.length <= 3) {
+          formattedValue = rawValue;
+        } else if (rawValue.length <= 6) {
+          formattedValue = `${rawValue.slice(0, 3)}-${rawValue.slice(3)}`;
+        } else {
+          formattedValue = `${rawValue.slice(0, 3)}-${rawValue.slice(
+            3,
+            6
+          )}-${rawValue.slice(6, 10)}`;
+        }
+        break;
+
+      case "+81":
+        if (rawValue.length <= 3) {
+          formattedValue = rawValue;
+        } else if (rawValue.length <= 7) {
+          formattedValue = `${rawValue.slice(0, 3)}-${rawValue.slice(3)}`;
+        } else {
+          formattedValue = `${rawValue.slice(0, 3)}-${rawValue.slice(
+            3,
+            7
+          )}-${rawValue.slice(7, 11)}`;
+        }
+        break;
+
+      case "+60":
+      case "+66":
+        if (rawValue.length <= 3) {
+          formattedValue = rawValue;
+        } else if (rawValue.length <= 7) {
+          formattedValue = `${rawValue.slice(0, 3)}-${rawValue.slice(3)}`;
+        } else {
+          formattedValue = `${rawValue.slice(0, 3)}-${rawValue.slice(
+            3,
+            7
+          )}-${rawValue.slice(7, 11)}`;
+        }
+        break;
+
+      default:
+        if (rawValue.length <= 3) {
+          formattedValue = rawValue;
+        } else if (rawValue.length <= 7) {
+          formattedValue = `${rawValue.slice(0, 3)}-${rawValue.slice(3, 7)}`;
+        } else {
+          formattedValue = `${rawValue.slice(0, 3)}-${rawValue.slice(
+            3,
+            7
+          )}-${rawValue.slice(7, 11)}`;
+        }
+        break;
     }
 
-    setFormData({ ...formData, phoneNo: formattedValue });
+    // 이전 상태 기반으로 업데이트
+    setFormData((prev) => ({ ...prev, phoneNo: formattedValue }));
   };
 
   // 날짜 변경 핸들러
@@ -266,6 +334,8 @@ export default function TypePage() {
       setIsDrawerOpen(true);
     }
   };
+
+  // 송금하기 버튼 실행 함수
   const handleFinalSubmit = async (e) => {
     e.preventDefault();
 
@@ -274,6 +344,14 @@ export default function TypePage() {
         targetAmount: Number(formData.targetAmount.replace(/,/g, "")),
         startDate: formData.startDate.replace(/\./g, "-"),
       };
+
+      // 송금 계좌 선택 여부
+      if (!selectedAccountDetails || !selectedAccountId) {
+        alert("송금 계좌 정보를 찾을 수 없습니다. 다시 선택해주세요.");
+        return;
+      }
+
+      // 수취인 데이터
       const recipientData = {
         name: formData.recipientName,
         accountNo: formData.recipientAccountNO.replace(/-/g, ""),
@@ -284,52 +362,36 @@ export default function TypePage() {
         country: selectedCountry,
       };
 
-      // 선택된 계좌번호(senderAccountNO)를 기반으로 accountId를 찾습니다.
-      const selectedAccount = connectedAccounts.find(
-        (acc) => acc.accountNo === formData.senderAccountNO
+      // 수취 통화 코드 값 저장
+      dispatch(setReceiveCurrency(formData.receiveCurrency));
+
+      // 송금 정보(금액, 시작일, 계좌 아이디) 저장
+      dispatch(
+        setSendInfo({
+          ...submissionData,
+          accountId: selectedAccountId, // 송금 계좌 아이디 저장
+          accountNo: formData.senderAccountNO, // 송금 계좌번호
+          sendCurrency: "KRW",
+        })
       );
 
-      // 수취 통화 코드 값 저장
-      dispatch(setReceivedCurrency(formData.receiveCurrency));
-      // 송금 정보(금액, 시작일) 저장
-      dispatch(setSendInfo(submissionData));
       // 수취인 정보 저장
       dispatch(setRecipientInfo(recipientData));
 
-      // API 요청 형식에 맞게 데이터 구조화
-      const requestData = {
-        accountNo: formData.senderAccountNO,
-        recipientInfo: {
-          ...recipientData,
-          receiveCurrency: formData.receiveCurrency,
+      console.log("[송금하기 버튼 클릭 시 Redux로 보낸 데이터]", {
+        receiveCurrency: formData.receiveCurrency,
+        sendInfo: {
+          ...submissionData,
+          accountId: selectedAccountId,
+          accountNo: formData.senderAccountNO,
+          sendCurrency: "KRW",
         },
-        recurId: null,
-        startDate: submissionData.startDate,
-        sendCurrency: "KRW", // 송금 통화는 원화(KRW)로 고정
-        targetAmount: submissionData.targetAmount,
-      };
+        recipientInfo: recipientData,
+      });
 
-      console.log("전송 준비 데이터:", { ...requestData });
-
-      try {
-        const accessToken = sessionStorage.getItem("accessToken");
-        const res = await credittoApi.post(
-          `/api/remittance/once`,
-          requestData,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        console.log("전송 반응:", res.data);
-        // 성공 후 페이지 이동 또는 다른 처리
-        setIsDrawerOpen(false);
-      } catch (error) {
-        console.error("송금 요청 실패:", error);
-        alert("송금 요청 중 오류가 발생했습니다.");
-        setIsDrawerOpen(false);
-      }
+      // 계좌 번호 페이지로 이동
+      const mode = "send";
+      router.push(`/account/create/pw?mode=${mode}`);
     } else {
       console.log(t("oneOff.page.fillAllFields"));
     }
@@ -442,18 +504,25 @@ export default function TypePage() {
                 {t("oneOff.page.recipientPhone")}
               </label>
               <div className="flex w-full gap-2">
+                {/* 전화번호 코드 */}
                 <select
                   name="phoneCc"
                   value={formData.phoneCc}
                   onChange={handleChange}
                   className="w-1/3 px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black focus:outline-none"
                 >
-                  <option value="+82">한국 (+82)</option>
-                  <option value="+1">미국 (+1)</option>
-                  <option value="+81">일본 (+81)</option>
-                  <option value="+60">말레이시아 (+60)</option>
-                  <option value="+66">태국 (+66)</option>
+                  {Object.entries(COUNTRYTOCODE).map(([country, label]) => {
+                    const parts = label.split(" "); // ["🇺🇸", "+1"]
+                    const code = parts[1] || ""; // "+1"
+                    return (
+                      <option key={country} value={code}>
+                        {label}
+                      </option>
+                    );
+                  })}
                 </select>
+
+                {/* 전화 번호 */}
                 <input
                   name="phoneNo"
                   type="tel"
@@ -592,32 +661,32 @@ export default function TypePage() {
             </DrawerDescription>
             <div className="mt-4 space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-500">보내는 계좌</span>
+                <span className="text-[#86909C]">보내는 계좌</span>
                 <span className="font-medium">{formData.senderAccountNO}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">받는 분</span>
+                <span className="text-[#86909C]">받는 분</span>
                 <span className="font-medium">{formData.recipientName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">받는 분 계좌</span>
+                <span className="text-[#86909C]">받는 분 계좌</span>
                 <span className="font-medium">
                   {recipientBankInfo.bankName} {formData.recipientAccountNO}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">송금 날짜</span>
+                <span className="text-[#86909C]">송금 날짜</span>
                 <span className="font-medium">{formData.startDate}</span>
               </div>
               <hr className="my-2" />
               <div className="flex justify-between">
-                <span className="text-gray-500">송금 금액</span>
+                <span className="text-[#86909C]">송금 금액</span>
                 <span className="font-medium">
                   {formData.targetAmount} {formData.receiveCurrency}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">원화 환산 금액</span>
+                <span className="text-[#86909C]">원화 환산 금액</span>
                 <span className="font-medium">
                   {new Intl.NumberFormat("ko-KR").format(
                     totalKrwAmount.toFixed(0)
@@ -626,7 +695,7 @@ export default function TypePage() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">예상 수수료</span>
+                <span className="text-[#86909C]">예상 수수료</span>
                 <span className="font-medium">
                   {new Intl.NumberFormat().format(fee.toFixed(2))} {formData.receiveCurrency}
                   <span className="text-gray-500 ml-1">
@@ -647,6 +716,7 @@ export default function TypePage() {
               </div>
             </div>
           </DrawerHeader>
+
           <DrawerFooter>
             <Button onClick={handleFinalSubmit}>송금하기</Button>
             <DrawerClose asChild>

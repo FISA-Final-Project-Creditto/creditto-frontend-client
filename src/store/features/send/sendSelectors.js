@@ -42,3 +42,39 @@ export const selectBankData = createSelector([selectSendState], (send) => ({
   recipientBankCode: send.recipientBankCode,
   recipientAccountNo: send.recipientAccountNo,
 }));
+
+// ----- 일회성 송금 ------
+// 송금 기본 정보 Selector
+export const selectSendInfo = createSelector([selectSendState], (send) => ({
+  accountId: send.accountId,
+  targetAmount: send.targetAmount,
+  startDate: send.startDate,
+  accountNo: send.accountNo,
+  sendCurrency: send.sendCurrency,
+}));
+
+// 수취인 정보 Selector
+export const selectRecipientInfo = createSelector(
+  [selectSendState],
+  (send) => ({
+    name: send.recipientInfo.name,
+    accountNo: send.recipientInfo.accountNo,
+    phoneCc: send.recipientInfo.phoneCc,
+    phoneNo: send.recipientInfo.phoneNo,
+    bankName: send.recipientInfo.bankName,
+    bankCode: send.recipientInfo.bankCode,
+    country: send.recipientInfo.country,
+  })
+);
+
+// accountId만 따로 필요할 때
+export const selectAccountId = createSelector(
+  [selectSendState],
+  (send) => send.accountId
+);
+
+// 받은 통화(receivedCurrency)만 필요할 때
+export const selectReceiveCurrency = createSelector(
+  [selectSendState],
+  (send) => send.receiveCurrency
+);

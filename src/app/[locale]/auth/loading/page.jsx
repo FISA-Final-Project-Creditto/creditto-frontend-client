@@ -14,9 +14,9 @@ export default function LoadingPage() {
   }, [router]);
 
   return (
-    <main className="flex justify-center items-center min-h-dvh bg-white pt-[100px]">
+    <main className="flex justify-center items-center min-h-dvh bg-white">
       <div className="w-full max-w-[440px] mx-auto flex flex-col">
-        <div className="flex-1 mt-5">
+        <div className="flex flex-col items-center">
           <p className="text-2xl font-semibold leading-relaxed text-[#000000]">
             {t("title")}
           </p>
@@ -24,7 +24,7 @@ export default function LoadingPage() {
             {t("description")}
           </div>
 
-          {/* 🔹 Lottie 컨테이너 크기 고정 */}
+          {/* Lottie 컨테이너 크기 고정 */}
           <div className="w-[200px] h-[200px] mt-6">
             <DotLottieReact
               src="https://lottie.host/5e3d00b3-79ca-4abd-9808-99013190e330/8EXayNOkme.lottie"

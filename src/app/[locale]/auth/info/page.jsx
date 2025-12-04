@@ -6,7 +6,10 @@ import { useRouter } from "next/navigation";
 import InfoInput from "./components/InfoInput";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserData } from "@/src/store/features/signup/userSlice";
+import {
+  setUserData,
+  setPhoneData,
+} from "@/src/store/features/signup/userSlice";
 import { registerUser } from "@/src/app/api/axios";
 import { countryCodes } from "../../constants/countryCode";
 import { startSettingMode as settingModeAction } from "@/src/store/features/simplepw/simplepwSlice";
@@ -30,11 +33,22 @@ export default function InfoInputPage() {
     nationality: ocrData.nationality ?? "",
   });
 
+  // 필드별 에러 메시지 상태 (409/400 에러 UI 반영)
+  const [fieldErrors, setFieldErrors] = useState({
+    name: "",
+    phoneNumber: "",
+  });
+
   const router = useRouter();
   const dispatch = useDispatch();
   const settingMode = useSelector((state) => state.simplepw.settingMode);
   const handleChange = (field, value) => {
     let formattedValue = value;
+
+    // 이름 입력 시 자동 대문자 변환
+    if (field === "name") {
+      formattedValue = value.toUpperCase();
+    }
 
     // 생년월일 형식(yyyy-mm-dd)
     if (field === "birthDate") {
@@ -66,6 +80,18 @@ export default function InfoInputPage() {
         )}-${cleaned.slice(7)}`;
       } else if (cleaned.length > 3) {
         formattedValue = `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
+      } else {
+        formattedValue = cleaned;
+      }
+    }
+
+    // 외국인등록번호 13자리 (앞 6자리 + '-' + 뒤 7자리)
+    if (field === "registrationNumber") {
+      let cleaned = value.replace(/\D/g, ""); // 숫자만 남김
+      cleaned = cleaned.slice(0, 13); // 최대 13자리
+
+      if (cleaned.length > 6) {
+        formattedValue = `${cleaned.slice(0, 6)}-${cleaned.slice(6)}`;
       } else {
         formattedValue = cleaned;
       }
@@ -113,6 +139,19 @@ export default function InfoInputPage() {
         );
 
         router.push("/auth/pw");
+      } else if (res.code === 409) {
+        // 중복된 전화번호가 있을 때 전화번호 필드에 에러 표시
+        setFieldErrors((prev) => ({
+          ...prev,
+          phoneNumber:
+            t("duplicatePhoneNumber") || "이미 등록된 전화번호입니다.",
+        }));
+      } else if (res.code === 400) {
+        // 이름 형식(공백 포함)이 올바르지 않을 때 이름 필드에 에러 표시
+        setFieldErrors((prev) => ({
+          ...prev,
+          name: t("invalidNameFormat") || "이름에 공백을 포함할 수 없습니다.",
+        }));
       }
     } catch (error) {
       console.error(t("failedToRegisterUser"), error);
@@ -148,6 +187,10 @@ export default function InfoInputPage() {
           value={formData.name}
           onChange={(e) => handleChange("name", e.target.value)}
         />
+        {/* 이름 에러 메시지 UI 반영 */}
+        {fieldErrors.name && (
+          <p className="mt-1 px-6 text-xs text-red-500">{fieldErrors.name}</p>
+        )}
 
         {/* 생년월일 */}
         <InfoInput
@@ -172,6 +215,12 @@ export default function InfoInputPage() {
           value={formData.phoneNumber}
           onChange={(e) => handleChange("phoneNumber", e.target.value)}
         />
+        {/* 전화번호 에러 메시지 UI 반영 */}
+        {fieldErrors.phoneNumber && (
+          <p className="mt-1 px-6 text-xs text-red-500">
+            {fieldErrors.phoneNumber}
+          </p>
+        )}
 
         {/* 국내체류지 */}
         {/* ✅ TODO: 추후에 카카오 API 적용 */}
