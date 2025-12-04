@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 
 export default function ConsentDetailPage() {
   const { id } = useParams(); // 동의서 ID (string)
-  const searchParams = useSearchParams();
+  const searchParam = useSearchParams();
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -24,31 +24,6 @@ export default function ConsentDetailPage() {
 
   const [scrolledToBottom, setScrolledToBottom] = useState(false);
   const [status, setStatus] = useState("");
-
-  const agreeConsent = async () => {
-    try {
-      const accessToken = sessionStorage.getItem("accessToken");
-
-      const res = await credittoApi.post("/api/consents/agree", {
-        params: {
-          consentCode: term.consentcode,
-        },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      const { code, message, data } = res.data;
-      if (code === 201 && data.consentStatus === "AGREE") {
-        console.log(message);
-        setStatus(data.consentStatus); // 동의서 상태를 "AGREE"로 업데이트
-
-        return true;
-      }
-    } catch (error) {
-      console.error("특정 동의서 실패: ", error);
-    }
-  };
 
   const handleScroll = (e) => {
     const target = e.currentTarget;
@@ -65,9 +40,9 @@ export default function ConsentDetailPage() {
     dispatch(setConsentChecked({ id: currentId, checked: true }));
 
     // bulk 모드인지 확인
-    const isBulk = searchParams.get("bulk") === "1";
-    const idsParam = searchParams.get("ids");
-    const idxParam = searchParams.get("idx");
+    const isBulk = searchParam.get("bulk") === "1";
+    const idsParam = searchParam.get("ids");
+    const idxParam = searchParam.get("idx");
 
     if (isBulk && idsParam) {
       const ids = idsParam.split(",").filter(Boolean);
@@ -135,7 +110,7 @@ export default function ConsentDetailPage() {
           {/* 닫기 버튼 */}
           <button
             onClick={() => {
-              const isBulk = searchParams.get("bulk") === "1";
+              const isBulk = searchParam.get("bulk") === "1";
               if (isBulk) {
                 // bulk 모드에서는 리스트로 보내는 편이 UX 좋음
                 router.replace("/credit/consent");
