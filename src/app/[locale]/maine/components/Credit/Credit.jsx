@@ -9,6 +9,9 @@ export default function Credit({ accountState ,historyScore}) {
   const goToCreditFirst = () => router.push("/credit/first");
   const maxScore = 950;
   const [creditInfo, setCreditInfo] = useState();
+  const [storedScore, setStoredScore] = useState(null);
+  const [storedHistory, setStoredHistory] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
   const scorePercentage = creditInfo ? (creditInfo / maxScore) * 100 : 0;
 
   const getScoreDiff = (history) => {
@@ -19,8 +22,10 @@ export default function Credit({ accountState ,historyScore}) {
   };
 
   const renderCredit = () => {
+    // 클라이언트 마운트 후에만 sessionStorage 접근
+    if (!isMounted) return "...";
+    
     // 먼저 sessionStorage에 저장된 점수 확인 (새로고침 후에도 유지)
-    const storedScore = sessionStorage.getItem("creditScoreValue");
     if (storedScore && Number(storedScore) >= 0) {
       return Number(storedScore);
     }
@@ -44,6 +49,13 @@ export default function Credit({ accountState ,historyScore}) {
     // TODO: 등급 로직 필요 시 구현 (현재는 임시로 점수 반환)
     return creditInfo;
   };
+  useEffect(() => {
+    // 클라이언트 마운트 시 sessionStorage에서 저장된 점수 로드
+    setStoredScore(sessionStorage.getItem("creditScoreValue"));
+    setStoredHistory(sessionStorage.getItem("creditScoreHistory"));
+    setIsMounted(true);
+  }, []);
+
   useEffect(() => {
     const fetchCreditScore = async () => {
       try {
@@ -106,9 +118,7 @@ export default function Credit({ accountState ,historyScore}) {
           {(!accountState || accountState.accountCount === 0) ? (
             (() => {
               // sessionStorage에 저장된 점수가 있으면 그 이력 사용
-              const storedScore = sessionStorage.getItem("creditScoreValue");
               if (storedScore && Number(storedScore) >= 0) {
-                const storedHistory = sessionStorage.getItem("creditScoreHistory");
                 const parsedHistory = storedHistory ? JSON.parse(storedHistory) : null;
                 const diff = getScoreDiff(parsedHistory);
                 const sign = diff > 0 ? "+" : "";
