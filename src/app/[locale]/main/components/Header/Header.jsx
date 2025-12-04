@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import { usePathname, useRouter } from "next/navigation";
+import SettingsSidebar from './SettingsSidebar';
 
 // 선택 언어 리스트
 const languages = [
@@ -19,6 +20,7 @@ const languages = [
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLanguageChange = (newLocale) => {
     // 언어(locale) 부분만 교체
@@ -74,7 +76,8 @@ export default function Header() {
             <Settings className="w-5 h-5 text-[#4E5969]" />
           </button>
         </div>
-      </div>
-    </header>
+      </header>
+      <SettingsSidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
+    </>
   );
 }

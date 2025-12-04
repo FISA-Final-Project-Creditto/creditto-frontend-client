@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import BottomBar from "../components/BottomBar";
 import Step from "./components/Step";
 import { useTranslations } from "next-intl";
+import AppHeader from "@/src/common/AppHeader/AppHeader";
 
 const INITIAL_CHECKS = {
   term1: false,
@@ -43,7 +44,7 @@ export default function AuthStepPage() {
   };
 
   return (
-    <main className="min-h-dvh bg-white flex flex-col items-start pt-[100px] pb-[calc(68px+24px+env(safe-area-inset-bottom))]">
+    <main className="min-h-dvh bg-white flex flex-col items-start pt-[100px] px-8 pb-[calc(68px+24px+env(safe-area-inset-bottom))]">
       {/* 인증서 발급 안내 */}
       <h1 className="text-[1.375rem] font-semibold text-[#000] mb-[35px]">
         {t("title")}

@@ -159,7 +159,7 @@ export default function InfoInputPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col px-8">
       <header>
         <AppHeader title={t("title")} showHamburger={false} />
       </header>
