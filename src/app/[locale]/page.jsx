@@ -35,7 +35,7 @@ export default function SplashPage({ hasSerial }) {
 
       <div className="relative z-10">
         <div
-          className="w-full h-[90px] cursor-pointer flex justify-center items-center text-gray9000 underline text-lg"
+          className="w-full h-[90px] cursor-pointer flex justify-center items-center text-gray-900 underline text-lg"
           onClick={(e) => {
             e.stopPropagation();
             router.push("/select-lang?next=/signup/permission");
@@ -45,7 +45,7 @@ export default function SplashPage({ hasSerial }) {
         </div>
 
         <div
-          className="cursor-pointer w-full absolute h-[90px] bg-[#190668] text-white text-[26px] font-medium flex justify-center items-center"
+          className="cursor-pointer w-full absolute h-[90px] bg-[#1A3668] text-white text-[26px] font-medium flex justify-center items-center"
           onClick={handleLogin}
         >
           {t("logIn")}

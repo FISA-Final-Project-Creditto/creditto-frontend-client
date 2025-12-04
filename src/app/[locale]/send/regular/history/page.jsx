@@ -38,6 +38,8 @@ export default function HistoryPage() {
         if (code === 200) {
           console.log("모든 계좌 조회 성공: ", data);
           setAllAccounts(data);
+
+          return true;
         }
       } catch (error) {
         console.error("모든 계좌 조회 중 오류 발생: ", error);
@@ -63,6 +65,8 @@ export default function HistoryPage() {
 
           setHistories(data); // 현재 페이지 표시용 정기 송금 설정 목록 저장
           dispatch(setDetailData(data)); // 상세 페이지에서 사용할 정기 송금 설정 목록 Redux 저장
+        } else {
+          return false;
         }
       } catch (error) {
         console.log("사용자 정기송금 설정 내역 조회 실패: ", error);
@@ -71,8 +75,14 @@ export default function HistoryPage() {
       }
     };
 
-    fetchAllAccounts();
-    fetchRemittanceHistory();
+    // 계좌가 있으면 내역 조회
+    if (fetchAllAccounts()) {
+      fetchRemittanceHistory();
+    } else {
+      // 계좌가 없으면 메인페이지로 이동
+      alert("연동된 계좌가 없습니다");
+      router.push("/main");
+    }
   }, []);
 
   // histories가 배열인지 계산

@@ -1,22 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { credittoApi } from "@/src/app/api/axios";
-import { useDispatch, useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
-import HistoryCard from "../../regular/history/components/HistoryCard";
+import HistoryCard from "./components/Historcard";
 
 export default function HistoryPage() {
   const [histories, setHistories] = useState([]); // 해외 송금 내역 목록
   const [selectedAccount, setSelectedAccount] = useState(""); // 선택된 계좌 번호 상태
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const t = useTranslations("send");
-
-  const router = useRouter();
-  const dispatch = useDispatch();
 
   // 계좌 가져오기
   const [allAccounts, setAllAccounts] = useState([]);
@@ -51,10 +46,10 @@ export default function HistoryPage() {
     const fetchOnceHistory = async () => {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
-        const userId = sessionStorage.getItem("userId");
+
         setIsLoading(true);
 
-        const res = await credittoApi.get(`/api/remittance/${userId}`, {
+        const res = await credittoApi.get("/api/remittance", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -66,7 +61,6 @@ export default function HistoryPage() {
           console.log("일회성 송금 설정 내역 조회 성공: ", data);
 
           setHistories(data); // 현재 페이지 표시용 정기 송금 설정 목록 저장
-          //   dispatch(setDetailData(data)); // 상세 페이지에서 사용할 정기 송금 설정 목록 Redux 저장
         }
       } catch (error) {
         console.log("사용자 일회성 송금 내역 조회 실패: ", error);
@@ -99,7 +93,7 @@ export default function HistoryPage() {
       {/* 상단바 영역 */}
       <header>
         <AppHeader
-          title={t("regular.history.title")}
+          title="일회성 송금 내역"
           showBack={true}
           showHamburger={false}
         />
@@ -108,7 +102,7 @@ export default function HistoryPage() {
       {/* 페이지 제목 및 계좌 선택 영역 */}
       <section className="flex flex-col gap-4 px-8">
         <h1 className="text-left mt-[3.438rem] text-[1.563rem] text-[#1A3668] font-bold">
-          {t("regular.history.registered")}
+          일회성 송금 내역
         </h1>
 
         <div className="flex items-center justify-between mb-[2.813rem]">
@@ -167,26 +161,7 @@ export default function HistoryPage() {
           selectedAccount !== "" &&
           filteredHistories.length > 0 &&
           filteredHistories.map((history) => (
-            <HistoryCard
-              key={history.regRemId}
-              history={history}
-              onClick={() =>
-                router.push(
-                  `/send/regular/history/recurring/${history.regRemId}` +
-                    `?recipientName=${encodeURIComponent(
-                      history.recipientName
-                    )}` +
-                    `&accountNo=${encodeURIComponent(history.accountNo)}`
-                )
-              }
-              onDeleteSuccess={(deleteId) => {
-                setHistories((prev) =>
-                  Array.isArray(prev)
-                    ? prev.filter((item) => item.regRemId !== deleteId)
-                    : []
-                );
-              }}
-            />
+            <HistoryCard key={history.remittanceId} history={history} />
           ))}
       </main>
     </div>
