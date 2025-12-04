@@ -73,7 +73,7 @@ export default function CompletePage() {
           show={true}
           showHamburger={false}
           showBack={true}
-          onBackClick={() => router.push("/send")}
+          onBackClick={() => router.replace("/send")}
         />
       </header>
       <div className="px-5">
