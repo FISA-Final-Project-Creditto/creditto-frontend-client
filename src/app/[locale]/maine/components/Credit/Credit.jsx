@@ -1,26 +1,48 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { credittoApi } from "@/src/app/api/axios";
 
-export default function Credit({ accountState }) {
-  const creditScore = 750;
-  const maxScore = 900;
+export default function Credit({ accountState ,historyScore}) {
+  const router = useRouter();
+  const goToCreditFirst = () => router.push("/credit/first");
+  const maxScore = 950;
   const [creditInfo, setCreditInfo] = useState();
   const scorePercentage = creditInfo ? (creditInfo / maxScore) * 100 : 0;
 
-  const renderCredit = () => {
-    if (accountState.accountCount === 0) {
-      return "조회하기";
-    }
-    // API 로딩 중이거나 점수가 없을 때 '...' 표시
-    return creditInfo || "0";
+  const getScoreDiff = (history) => {
+    if (!history || history.length < 2) return 0;
+    const last = Number(history[history.length - 1]?.avg_score ?? 0);
+    const prev = Number(history[history.length - 2]?.avg_score ?? 0);
+    return last - prev;
   };
-  const renderTier = () => {
-    if (accountState.accountCount === 0) {
-      return "신규";
+
+  const renderCredit = () => {
+    // 먼저 sessionStorage에 저장된 점수 확인 (새로고침 후에도 유지)
+    const storedScore = sessionStorage.getItem("creditScoreValue");
+    if (storedScore && Number(storedScore) >= 0) {
+      return Number(storedScore);
     }
-    return creditInfo || "신규";
+    
+    // sessionStorage에 점수가 없으면
+    if (!accountState || accountState.accountCount === 0)
+      return (
+        <button type="button" onClick={goToCreditFirst}>
+          조회하기
+        </button>
+      );
+    
+    // accountCount > 0이고 API 호출 결과 확인
+    if (creditInfo == null) return "...";
+    return creditInfo;
+  };
+
+  const renderTier = () => {
+    if (!accountState || accountState.accountCount === 0) return "신규";
+    if (creditInfo == null) return "신규";
+    // TODO: 등급 로직 필요 시 구현 (현재는 임시로 점수 반환)
+    return creditInfo;
   };
   useEffect(() => {
     const fetchCreditScore = async () => {
@@ -81,8 +103,28 @@ export default function Credit({ accountState }) {
           ></div>
         </div>
         <p className="text-xs opacity-75 mt-2">
-          지난달 대비 {creditInfo >= 0 ? `+${creditInfo}` : creditInfo}점{" "}
-          {creditInfo >= 0 ? "상승" : "하락"}
+          {(!accountState || accountState.accountCount === 0) ? (
+            (() => {
+              // sessionStorage에 저장된 점수가 있으면 그 이력 사용
+              const storedScore = sessionStorage.getItem("creditScoreValue");
+              if (storedScore && Number(storedScore) >= 0) {
+                const storedHistory = sessionStorage.getItem("creditScoreHistory");
+                const parsedHistory = storedHistory ? JSON.parse(storedHistory) : null;
+                const diff = getScoreDiff(parsedHistory);
+                const sign = diff > 0 ? "+" : "";
+                const label = diff > 0 ? "상승" : diff < 0 ? "하락" : "변동없음";
+                return `지난달 대비 ${diff !== 0 ? `${sign}${diff}점` : "0점"} ${label}`;
+              }
+              return <button type="button" onClick={goToCreditFirst}>조회하기</button>;
+            })()
+          ) : (
+            (() => {
+              const diff = getScoreDiff(historyScore);
+              const sign = diff > 0 ? "+" : "";
+              const label = diff > 0 ? "상승" : diff < 0 ? "하락" : "변동없음";
+              return `지난달 대비 ${diff !== 0 ? `${sign}${diff}점` : "0점"} ${label}`;
+            })()
+          )}
         </p>
       </div>
     </div>

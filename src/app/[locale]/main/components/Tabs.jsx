@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CreditCard as CreditCardIcon, Home, MapPin } from "lucide-react";
 import Credit from "../../maine/components/Credit/Credit";
 import { CreditCard } from "@/components/ui/credit-card"
@@ -7,12 +7,42 @@ import CreditChart from "../../maine/components/Chart/CreditChart";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import NaverMap from "./FunctionButton/NaverMap/Navermap";
+import { credittoApi } from "@/src/app/api/axios";
 
 export default function RoundedIconTabs({accountState}) {
   const [activeTab, setActiveTab] = useState("home");
   const router = useRouter();
   const t = useTranslations("main.tabs");
 
+  
+  const [historyScore, setHistoryScore] = useState();
+  useEffect(() => {
+    const fetchCreditScore = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const userId = sessionStorage.getItem("userId");
+
+        if (!accessToken) return;
+
+        const res = await credittoApi.get(
+          `/api/credit-score/history/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        setHistoryScore(res.data.history);
+        console.log("계좌 히스토리 : ", res.data.history)
+        sessionStorage.setItem("historyScore", res.data.history);
+        // setHistoryScore(r);
+      } catch (error) {
+        console.error("신용점수 조회 실패:", error);
+      }
+    };
+    fetchCreditScore();
+  }, []);
   const tabs = [
     { id: "home", label: t("home"), icon: Home },
     { id: "QR", label: t("simplePayment"), icon: CreditCardIcon },
@@ -50,8 +80,8 @@ export default function RoundedIconTabs({accountState}) {
       <div className="flex items-center justify-center mt-4">
         {activeTab === "home" && (
           <div className=" px-4 w-full flex justify-center flex-col items-center ">
-            <Credit accountState={accountState} />
-            <CreditChart/>
+            <Credit accountState={accountState} historyScore={historyScore} />
+            <CreditChart historyScore={historyScore}/>
           </div>
         )}
         {activeTab === "QR" && (
