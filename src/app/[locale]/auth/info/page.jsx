@@ -33,6 +33,12 @@ export default function InfoInputPage() {
     nationality: ocrData.nationality ?? "",
   });
 
+  // 필드별 에러 메시지 상태 (409/400 에러 UI 반영)
+  const [fieldErrors, setFieldErrors] = useState({
+    name: "",
+    phoneNumber: "",
+  });
+
   const router = useRouter();
   const dispatch = useDispatch();
   const settingMode = useSelector((state) => state.simplepw.settingMode);
@@ -133,6 +139,19 @@ export default function InfoInputPage() {
         );
 
         router.push("/auth/pw");
+      } else if (res.code === 409) {
+        // 중복된 전화번호가 있을 때 전화번호 필드에 에러 표시
+        setFieldErrors((prev) => ({
+          ...prev,
+          phoneNumber:
+            t("duplicatePhoneNumber") || "이미 등록된 전화번호입니다.",
+        }));
+      } else if (res.code === 400) {
+        // 이름 형식(공백 포함)이 올바르지 않을 때 이름 필드에 에러 표시
+        setFieldErrors((prev) => ({
+          ...prev,
+          name: t("invalidNameFormat") || "이름에 공백을 포함할 수 없습니다.",
+        }));
       }
     } catch (error) {
       console.error(t("failedToRegisterUser"), error);
@@ -168,6 +187,10 @@ export default function InfoInputPage() {
           value={formData.name}
           onChange={(e) => handleChange("name", e.target.value)}
         />
+        {/* 이름 에러 메시지 UI 반영 */}
+        {fieldErrors.name && (
+          <p className="mt-1 px-6 text-xs text-red-500">{fieldErrors.name}</p>
+        )}
 
         {/* 생년월일 */}
         <InfoInput
@@ -192,6 +215,12 @@ export default function InfoInputPage() {
           value={formData.phoneNumber}
           onChange={(e) => handleChange("phoneNumber", e.target.value)}
         />
+        {/* 전화번호 에러 메시지 UI 반영 */}
+        {fieldErrors.phoneNumber && (
+          <p className="mt-1 px-6 text-xs text-red-500">
+            {fieldErrors.phoneNumber}
+          </p>
+        )}
 
         {/* 국내체류지 */}
         {/* ✅ TODO: 추후에 카카오 API 적용 */}
