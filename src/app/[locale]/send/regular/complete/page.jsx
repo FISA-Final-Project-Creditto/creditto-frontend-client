@@ -8,6 +8,8 @@ import Term from "../components/Term";
 import { useRouter } from "next/navigation";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useTranslations } from "next-intl";
+import { useEffect } from "react";
+import { credittoApi } from "@/src/app/api/axios";
 
 export default function CompletePage() {
   const router = useRouter();
@@ -32,9 +34,9 @@ export default function CompletePage() {
           {/* 우리은행 벌 캐릭터 */}
           <center>
             <Image
-              src="/wooriBee.png"
+              src="/creditto.png"
               alt="Woori Bee"
-              width={125}
+              width={180}
               height={200}
             />
           </center>
