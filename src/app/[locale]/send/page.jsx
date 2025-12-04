@@ -3,11 +3,34 @@
 import CardCarousel from "./components/CardCarousel";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useDispatch } from "react-redux";
+import { setConsentChecked } from "@/src/store/features/consent/consentSlice";
+import { clearModeData } from "@/src/store/features/send/sendModeSlice";
 
 export default function SendMainPage() {
   const t = useTranslations("send.common");
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // 약관 ID 리스트 아이디 초기화
+    const consentIds = [4, 5, 6];
+
+    // 각 약관의 체크 상태를 false로 초기화
+    consentIds.forEach((id) => {
+      dispatch(
+        setConsentChecked({
+          id: String(id),
+          checked: false, // 체크 해제
+        })
+      );
+    });
+
+    // 송금 모드 관련 Redux 상태 초기화 (예: sendModeSlice)
+    dispatch(clearModeData());
+  }, [dispatch]); // 컴포넌트 최초 렌더링 시 1회 실행
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* 헤더 */}
