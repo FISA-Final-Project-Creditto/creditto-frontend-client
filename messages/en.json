@@ -1,0 +1,536 @@
+{
+  "greeting": "Hello!",
+  "signUp": "Sign up",
+  "logIn": "Sign in",
+  "login": {
+    "alert": {
+      "alreadyLoggedIn": "You are already logged in. Redirecting to the main page.",
+      "authSuccess": "Authentication successful."
+    },
+    "auth": {
+      "title": "Identity Verification",
+      "instructionPart1": "For identity verification,",
+      "instructionPart2": "please enter your information"
+    },
+    "name": {
+      "label": "Name",
+      "placeholder": "Enter your name"
+    },
+    "phone": {
+      "label": "Phone Number",
+      "placeholder": "010-0000-0000"
+    },
+    "button": {
+      "login": "Login"
+    },
+    "bottomSheet": {
+      "title": "Mobile Phone Verification Terms and Conditions",
+      "next": "Next",
+      "agreeAll": "Agree to all mobile phone verification terms",
+      "terms1": "Agree to Terms of Service (Required)",
+      "terms2": "Agree to Collection and Use of Personal Information (Required)",
+      "terms3": "Agree to Processing of Unique Identification Information (Required)",
+      "terms4": "Agree to Use of Identity Verification Service (Optional)",
+      "agreeAndContinue": "Agree and Continue"
+    }
+  },
+  "main": {
+    "loginRequired": "Login required.",
+    "functionButton": {
+      "loan": "Loan",
+      "creditScore": "Credit Score"
+    },
+    "loanButton": {
+      "title": "Loan Recommendation",
+      "subtitle": "The perfect loan for you"
+    },
+    "mainCarousel": {
+      "creditScoreLink": "Credit Score",
+      "credittoScore": "Creditto Score",
+      "accountConnectionLink": "Link Account"
+    },
+    "goExchangeButton": {
+      "title": "Exchange Rate Graph",
+      "subtitle": "Various exchange rates for the US, China, and Japan at once!"
+    },
+    "moneyExchange": {
+      "title": "Exchange"
+    },
+    "realTimeExchange": {
+      "exchangeRateAPI": "Exchange rate API integration scheduled"
+    },
+    "tabs": {
+      "home": "Home",
+      "simplePayment": "e-wallet",
+      "location": "Location",
+      "name": "Name",
+      "naverMapAPI": "Naver Map API integration scheduled"
+    }
+  },
+  "maine": {
+    "greeting": "Hello",
+    "userName": "Yongjun Jeong",
+    "monthlyUsage": "Monthly Usage",
+    "thisMonth": "This month",
+    "usageCount": "transactions",
+    "send": "Send",
+    "loan": "Loan",
+    "invest": "Invest",
+    "recommendedProducts": "Recommended Products",
+    "seeMore": "See More",
+    "mediumInterestCreditLoan": "Mid-interest Credit Loan",
+    "loanInterestRate": "Annual 4.5% ~ 8.9%",
+    "savingsProduct": "Savings Product",
+    "savingsInterestRate": "Annual 4.2% interest",
+    "exchangeRate": "Exchange Rate",
+    "refresh": "Refresh",
+    "usdTrend": "USD Trend",
+    "money": {
+      "loading": "Loading balance...",
+      "noAccount": "No linked accounts.",
+      "cantLoad": "Could not load balance.",
+      "balance": "Balance"
+    },
+    "creditChart": {
+      "score": "Score",
+      "month": "{month}"
+    },
+    "credit": {
+      "credittoScore": "Creditto Score",
+      "maxScore": "Max {maxScore}",
+      "grade": "Grade",
+      "excellent": "Excellent",
+      "creditRating": "Credit Rating",
+      "comparison": "+20 points up from last month"
+    },
+    "sendButton": {
+      "label": "Send Money Abroad"
+    }
+  },
+  "send": {
+    "common": {
+      "remittance": "Regular Remittance",
+      "next": "Next",
+      "name": "Name",
+      "country": "Country",
+      "address": "Address",
+      "phoneNumber": "Phone Number",
+      "accountNumber": "Account Number",
+      "day": "",
+      "dayOfWeek": {
+        "MONDAY": "Monday",
+        "TUESDAY": "Tuesday",
+        "WEDNESDAY": "Wednesday",
+        "THURSDAY": "Thursday",
+        "FRIDAY": "Friday"
+      },
+      "status": {
+        "ACTIVE": "Active",
+        "DELAYED": "Delayed",
+        "PAUSED": "Paused",
+        "CANCELLED": "Cancelled"
+      },
+      "selectAccount": "Select an account",
+      "noLinkedAccount": "No linked accounts.",
+      "pageTitle": "Send & Track remittances",
+      "pageSubtitle": "How would you like to\nsend money?",
+      "pageDescription": "Manage your remittances from start to finish",
+      "confirm": "Confirm",
+      "yes": "Yes",
+      "no": "No",
+      "notice": "Notice",
+      "noticeContent": "When sending money via SWIFT, if the information you entered is incorrect, the overseas remittance may not be processed normally. In this case, the mistake is on the customer's side, and the error will be handled according to the terms and conditions."
+    },
+    "main": {
+      "regularTitle": "Recurring Remittances",
+      "regularSubtitle": "Weekly · Monthly",
+      "regularDescription": "Set it once for automatic payments on your chosen date",
+      "oneOffTitle": "One-time Remittance",
+      "oneOffSubtitle": "Remittance on Demand",
+      "oneOffDescription": "Send money instantly,\nno waiting required",
+      "noLinkedAccountAlert": "No linked accounts.\nPlease link an account first.",
+      "newTransfer": "New Remittance",
+      "newTransferSubtitle": "Select the date and amount",
+      "historyTitle": "Manage Remittances",
+      "historySubtitle": "See remittance history and details",
+      "sendNow": "Send Now",
+      "sendNowSubtitle": "Send instantly without waiting",
+      "historyOneOffTitle": "View History",
+      "historyOneOffSubtitle": "See all your past remittance records"
+    },
+    "chooseCountry": {
+      "title": "Please select a country for remittance",
+      "subtitle": "Please select the currency of the country",
+      "usa": "USA USD",
+      "dollar": "Dollar",
+      "china": "China CNY",
+      "yuan": "Yuan",
+      "japan": "Japan JPY",
+      "yen": "Yen",
+      "select": "Select",
+      "selectBank": "Select Bank"
+    },
+    "regular": {
+      "result": {
+        "title": "Scheduled Overseas Remittance",
+        "subtitle": "Application Result",
+        "account": "Withdrawal Account",
+        "receiveCurrency": "Receiving Currency Code",
+        "sendCurrency": "Sending Currency Code",
+        "amount": "Foreign Currency Amount",
+        "cycle": "Remittance Cycle",
+        "monthly": "Monthly",
+        "weekly": "Weekly",
+        "startDate": "Remittance Start Date",
+        "senderInfo": "Sender Information",
+        "recipientInfo": "Recipient Information",
+        "bankName": "Recipient Bank Name",
+        "bankCode": "Recipient Bank Code"
+      },
+      "loading": {
+        "title": "We are checking your application details"
+      },
+      "information": {
+        "title": "Please enter the basic information for remittance",
+        "type": "Remittance Type",
+        "account": "Withdrawal Account",
+        "sendCurrency": "Sending Currency Code",
+        "receiveCurrency": "Receiving Currency Code",
+        "receiveCurrencyPlaceholder": "Enter receiving currency code (USD, CNY, JPY)",
+        "amount": "Foreign Currency Amount ({currency})",
+        "amountPlaceholder": "Enter the amount to send",
+        "cycle": "Remittance Cycle",
+        "cyclePlaceholder": "Select remittance cycle (Monthly / Weekly)",
+        "monthly": "Monthly",
+        "weekly": "Weekly",
+        "cycleDetail": "Remittance Cycle Detail",
+        "cycleDetailPlaceholder": "Select the detailed time for the remittance cycle",
+        "weekdayWarning": "Woori Bank only allows remittance on weekdays. Please note this for your use.",
+        "monthEndWarning": "If the selected date does not exist in a particular month, it will be automatically executed on the last day of that month.",
+        "startDate": "Remittance Start Date",
+        "remitterTitle": "Sender",
+        "remitterSubtitle": "Please enter your stay information",
+        "fullName": "Full Name",
+        "englishNamePlaceholder": "Enter in English",
+        "nationality": "Nationality",
+        "address": "Address",
+        "addressPlaceholder": "Enter the sender's residential address",
+        "detailAddress": "Detailed Address",
+        "detailAddressPlaceholder": "Enter address",
+        "recipientTitle": "Recipient",
+        "recipientSubtitle": "Please enter the recipient's information",
+        "recipientPhonePlaceholder": "Enter phone number",
+        "recipientAddressPlaceholder": "Enter address",
+        "bankInfoTitle": "Enter Overseas Bank Information",
+        "bankInfoSubtitle": "Please enter the information of the overseas bank you wish to deposit to",
+        "bankName": "Bank Name",
+        "bankNamePlaceholder": "Select a bank name",
+        "noCurrencyWarning": "Please select a currency code first",
+        "bankCode": "Bank Code",
+        "accountNumberPlaceholder": "Enter account number",
+        "modalTitle": "Scheduled Overseas Remittance",
+        "modalMessage": "Would you like to apply for the scheduled overseas remittance service?\nIf you click 'Yes', the preferential exchange rate calculated earlier will be applied."
+      },
+      "history": {
+        "title": "Scheduled Remittance History",
+        "registered": "Registered Scheduled Remittance",
+        "loading": "Loading scheduled remittance history...",
+        "selectAccountPrompt": "Select an account to view history",
+        "noHistory": "No scheduled remittance history",
+        "noHistorySubtitle": "Please select another account or register a new remittance",
+        "noLinkedAccount": "No linked accounts. Please link an account before using.",
+        "detailTitle": "Overseas Remittance History",
+        "editFailed": "Failed to edit. Please try again.",
+        "editError": "An error occurred during editing.",
+        "loadingDetail": "Loading scheduled remittance setting information...",
+        "save": "Save",
+        "cancel": "Cancel",
+        "editSuccess": "Scheduled remittance setting has been modified.",
+        "more": "More",
+        "viewDetails": "View Details",
+        "cancelRemittance": "Cancel",
+        "to": "To. {name}",
+        "cancelModalTitle": "Cancel Scheduled Overseas Remittance",
+        "cancelModalMessage": "Are you sure you want to cancel the remittance?\nIt cannot be recovered after cancellation, so please choose carefully.",
+        "noRemittanceHistory": "No remittance history yet.",
+        "exchangeRate": "Exchange Rate {rate} KRW",
+        "recurringTitle": "Scheduled Overseas Remittance History",
+        "recipient": "Recipient",
+        "recipientAccount": "Recipient Account Number",
+        "completed": "6-month scheduled remittance completed",
+        "creditScoreUp": "Credit Score +50",
+        "recurringDetailTitle": "Remittance Details",
+        "remittanceAmount": "Remittance Amount",
+        "fee": "Fee",
+        "status": "Remittance Status"
+      },
+      "term": {
+        "title": "Terms and Conditions Page"
+      }
+    },
+    "oneOff": {
+      "choose": {
+        "bankJPMorgan": "JPMorgan Chase",
+        "bankBOA": "Bank of America",
+        "bankWellsFargo": "Wells Fargo",
+        "bankBOC": "Bank of Communications",
+        "bankICBC": "Industrial and Commercial Bank of China",
+        "bankABC": "Agricultural Bank of China",
+        "bankMUFG": "MUFG Bank",
+        "bankSMBC": "Sumitomo Mitsui Banking Corporation",
+        "bankMizuho": "Mizuho Bank",
+        "countryUSA": "USA",
+        "countryChina": "China",
+        "countryJapan": "Japan"
+      },
+      "form": {
+        "account": "Withdrawal Account",
+        "accountPlaceholder": "Select an account",
+        "receiveCurrency": "Receiving Currency Code",
+        "amount": "Foreign Currency Amount",
+        "amountPlaceholder": "Enter the amount to send",
+        "startDate": "Remittance Start Date",
+        "startDatePlaceholder": "Please select a date to start the remittance"
+      },
+      "page": {
+        "requestFailed": "Remittance request failed:",
+        "requestError": "An error occurred during the remittance request.",
+        "fillAllFields": "All input fields must be filled.",
+        "title": "Who are you sending to?",
+        "recipientAccount": "Enter Account Number",
+        "recipientName": "Recipient Name (English)",
+        "recipientNamePlaceholder": "Enter the recipient's English name",
+        "recipientPhone": "Recipient Phone Number",
+        "countryCodeKorea": "Korea (+82)",
+        "countryCodeUSA": "USA (+1)",
+        "countryCodeChina": "China (+86)",
+        "countryCodeJapan": "Japan (+81)",
+        "phonePlaceholder": "Enter phone number",
+        "date": "Enter Remittance Date"
+      }
+    },
+    "components": {
+      "creditPointBanner": {
+        "expectedCredit": "Expected Credit Score",
+        "point": "points"
+      },
+      "complete": {
+        "title": "Application Complete",
+        "currentScore": "Current Application Score: ",
+        "months12": "For 12 months of regular remittance",
+        "months18": "For 18 months of regular remittance",
+        "months24": "For 24 months of regular remittance",
+        "complete": "Complete"
+      },
+      "addressModal": {
+        "title": "Search Address"
+      }
+    }
+  },
+  "account": {
+    "connection": {
+      "title": "Link Account",
+      "wonClick": "WON Click ",
+      "withOneClick": "with one click",
+      "description": "You can link your account, {name}.",
+      "wooriLogo": "Woori Bank Logo",
+      "complete": "Complete"
+    },
+    "create": {
+      "title": "Create Account",
+      "nameLabel": "Account Name",
+      "namePlaceholder": "Enter account name",
+      "typeLabel": "Account Type",
+      "typePlaceholder": "Select account type",
+      "deposit": "Deposit/Withdrawal Account",
+      "savings": "Savings Account",
+      "loan": "Loan Account",
+      "investment": "Investment Account",
+      "instruction1": "Please enter the information",
+      "instruction2": "to create an account",
+      "button": "Create Account"
+    },
+    "myAccount": {
+      "title": "My Account",
+      "historyTitle": "Account History Inquiry",
+      "currency": "KRW",
+      "searchPlaceholder": "Search transaction history",
+      "all": "All",
+      "deposit": "Deposit",
+      "withdrawal": "Withdrawal",
+      "noHistory": "No transaction history.",
+      "wooriBank": "Woori Bank Deposits/Savings",
+      "wooriLogo": "Woori Bank Logo",
+      "noLinkedAccount": "No linked accounts.",
+      "goToCreate": "Go to create an account"
+    },
+    "success": {
+      "title": "Account created successfully!",
+      "description": "Now, start your life with Creditto.",
+      "toMain": "To the main screen"
+    },
+    "import": {
+      "noAccessToken": "Access Token is missing.",
+      "saveSuccess": "Account information saved successfully:",
+      "fetchFail": "Failed to fetch account information:"
+    }
+  },
+  "signup": {
+    "agree": {
+      "title": "Agree to Terms",
+      "agreeAll": "Agree to All Terms",
+      "terms1": "(Required) Creditto Terms of Service",
+      "terms2": "(Required) Agreement to Collect and Use Personal Information",
+      "terms3": "(Required) Agreement to Entrust Personal Information",
+      "terms4": "(Optional) Agreement to Receive Promotional Information",
+      "next": "Next"
+    },
+    "loading": {
+      "title": "We are verifying your information",
+      "description": "Please wait a moment"
+    },
+    "permission": {
+      "cameraGranted": "Camera permission granted",
+      "cameraDenied": "Camera permission denied/error",
+      "geolocationNotSupported": "Geolocation not supported",
+      "locationAllowed": "Location allowed: {lat}, {lon}",
+      "locationDenied": "Location denied/error: {code}",
+      "title": "Access Rights",
+      "description1": "Please check the app access rights to use the service",
+      "description2": "",
+      "optional": "Optional Rights",
+      "camera": "Camera",
+      "cameraDescription": "Used for ID card shooting, QR code recognition, photo transfer,\nvideo counseling, etc.",
+      "location": "Location",
+      "locationDescription": "Used to find nearby branches and ATMs",
+      "microphone": "Microphone",
+      "microphoneDescription": "Used for voice recognition during video counseling",
+      "next": "Next"
+    },
+    "phone": {
+      "nameLabel": "Please tell us your name",
+      "birthdayLabel": "Please tell us your birthday",
+      "phoneLabel": "Please enter your phone number",
+      "name": "Name",
+      "birthdate": "Date of Birth",
+      "birthdatePlaceholder": "YYYY-MM-DD",
+      "phoneNumber": "Phone Number",
+      "phonePlaceholder": "010-0000-0000",
+      "authTitle": "Identity Verification"
+    },
+    "sms": {
+      "timer": "3:00",
+      "success": "Authentication successful",
+      "title": "SMS Verification",
+      "description": "Please enter the verification code",
+      "label": "Verification Code",
+      "placeholder": "000000",
+      "requestCode": "Request",
+      "reRequestCode": "Request Again",
+      "verify": "Verify"
+    },
+    "success": {
+      "title": "Sign up complete",
+      "description": "To use Creditto's services,\nyou need to issue a certificate",
+      "doItLater": "I'll do it later",
+      "issueCertificate": "Issue Certificate"
+    }
+  },
+  "auth": {
+    "info": {
+      "title": "ID Card Information Entry",
+      "previewImage": "Preview Image",
+      "name": "Name",
+      "birthdate": "Date of Birth",
+      "alienRegistrationNumber": "Alien Registration Number",
+      "phoneNumber": "Phone Number",
+      "address": "Address",
+      "areaOfResidence": "Area of Residence",
+      "setSimplePassword": "Set Simple Password",
+      "userRegistrationSuccess": "User registration successful: ",
+      "userId": "userId: ",
+      "failedToRegisterUser": "Failed to register user:"
+    },
+    "infoInput": {
+      "namePlaceholder": "Please enter your name in capital letters",
+      "birthdatePlaceholder": "Please enter your date of birth (8 digits)",
+      "alienRegistrationNumberPlaceholder": "Please enter your alien registration number",
+      "addressPlaceholder": "Please enter the address on your alien registration card",
+      "areaOfResidencePlaceholder": "Please enter your area of residence"
+    },
+    "loading": {
+      "title": "We are verifying your information",
+      "description": "Please wait a moment"
+    },
+    "ocrBottomSheet": {
+      "title": "I will create a Creditto certificate"
+    },
+    "identification": {
+      "title": "Please prepare your ID card (Alien Registration Card)",
+      "description": "ID card photo is required for non-face-to-face registration",
+      "idCardExample": "ID card example",
+      "importAlienRegistrationCard": "Import Alien Registration Card"
+    },
+    "ocrStep": {
+      "title": "Certificate issuance proceeds in the following order",
+      "step1Title": "Non-face-to-face Real Name Verification",
+      "step1Subtitle": "Please prepare your alien registration card",
+      "step2Title": "Set Simple Password",
+      "step2Subtitle": "Set a 6-digit simple password.",
+      "issueCertificate": "Issue Certificate",
+      "dialogDescription": "Once created, you can use it for n years",
+      "terms1": "[Required] Identity Verification Service Terms and Conditions",
+      "terms2": "[Required] Creditto Electronic Certification Service Terms",
+      "terms3": "[Required] Agreement to Collect and Use Personal Information (Creditto Certificate)",
+      "terms4": "[Required] Agreement to Process Unique Identification Information",
+      "issueLater": "Issue Later"
+    },
+    "scan": {
+      "frontendError": "Frontend requestOCR error (full error object):",
+      "notAlienRegistrationCard": "This is not an alien registration card image.",
+      "uploadValidImage": "Please upload a valid alien registration card image.",
+      "handleSelectFileError": "handleSelectFile error:",
+      "analysisFailed": "Analysis failed.",
+      "tryAgain": "Please try again later.",
+      "retakePhoto": "Retake Photo",
+      "confirm": "Confirm",
+      "infoCorrect": "Is the information below correct?",
+      "alienRegistrationNumber": "Alien Registration Number",
+      "name": "Name",
+      "gender": "Gender",
+      "countryRegion": "Country / Region",
+      "issueDate": "Issue Date",
+      "visaType": "Visa Type",
+      "issuingAuthority": "Issuing Authority"
+    },
+    "scanPreview": {
+      "preview": "preview",
+      "analyzing": "Analyzing..."
+    },
+    "uploadBox": {
+      "supportedFormats": "Supported formats: JPG · JPEG · PNG"
+    },
+    "password": {
+      "title1": "Set a simple password\nfor certificate login",
+      "title2": "",
+      "enter6DigitPin": "Enter a 6-digit simple password",
+      "enter6DigitPinToUse": "Enter the 6-digit simple password to use",
+      "enterAgainForConfirmation": "Please enter again for confirmation.",
+      "passwordsDoNotMatch": "Passwords do not match. Please set again.",
+      "certificateNotFound": "Certificate information not found.",
+      "certificateIssueError": "An error occurred during certificate issuance. Please try again.",
+      "passwordIncorrectOrError": "Password is incorrect or an error occurred."
+    },
+    "securePinKeyboard": {
+      "clearAll": "Clear All",
+      "delete": "Delete",
+      "enterLabel": "Enter {label}"
+    },
+    "authSuccess": {
+      "title": "Certificate has been issued",
+      "description": "Now you can use all services",
+      "idCardExample": "ID card example",
+      "start": "Start"
+    }
+  }
+}

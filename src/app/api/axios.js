@@ -52,27 +52,30 @@ credittoApi.interceptors.request.use((config) => {
   return config;
 });
 
-
 // 기존 코드와의 호환성을 위해 기본 인스턴스를 default로 export 합니다.
 // 다른 파일에서 import api from '...' 형태로 계속 사용할 수 있습니다.
 export default api;
 
-
-
+const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // 유저 등록
 export const registerUser = async (userData) => {
   try {
-    const response = await api.post("/api/user/register", userData);
+    const response = await api.post(`${baseURL}/api/user/register`, userData);
     console.log("유저등록 API 성공 응답값:", response.data);
     return response.data;
-  } catch (error) {}
+  } catch (error) {
+    return error;
+  }
 };
 
 // 인증서 발급 API
 export const issueCertificate = async (requestBody) => {
   try {
-    const response = await api.post("/api/certificate/issue", requestBody);
+    const response = await api.post(
+      `${baseURL}/api/certificate/issue`,
+      requestBody
+    );
     console.log("인증서 발급 API 성공 응답값:", response.data);
     return response.data;
   } catch (error) {}

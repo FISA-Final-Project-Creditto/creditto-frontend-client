@@ -1,45 +1,54 @@
 "use client";
-import * as React from "react"
-import { motion } from "framer-motion"
-import { Eye, EyeOff } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { useSelector } from "react-redux";
+import * as React from "react";
+import { motion } from "framer-motion";
+import { Eye, EyeOff } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const PERSPECTIVE = 400
-const CARD_ANIMATION_DURATION = 0.5
-const INITIAL_DELAY = 0.2
+const PERSPECTIVE = 400;
+const CARD_ANIMATION_DURATION = 0.5;
+const INITIAL_DELAY = 0.2;
 
 const springTransition = {
   type: "spring",
   stiffness: 100,
   damping: 30,
-}
+};
 
 const fadeInVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
-}
+};
 
 const CreditCard = React.forwardRef(
-  ({ className, cardNumber, cardHolder, expiryDate, variant = "default", ...props }, ref) => {
-    const [isVisible, setIsVisible] = React.useState(false)
-    const account = sessionStorage.getItem("account")
+  (
+    {
+      className,
+      cardNumber,
+      cardHolder,
+      expiryDate,
+      variant = "default",
+      accountState, // Tabs.jsx에서 accountState를 Props로 사용하기 위해 따로 빼줌
+      ...props
+    },
+    ref
+  ) => {
+    const [isVisible, setIsVisible] = React.useState(false);
+    const accountsString = sessionStorage.getItem("accounts");
 
     const getMaskedNumber = () => {
-
-
-      if(!account){
-        return `계좌연결 후 사용 가능`
+      if (!accountsString) {
+        return `계좌연결 후 사용 가능`;
+      } else {
+        const accounts = JSON.parse(accountsString);
+        // 첫 번째 계좌의 계좌번호를 표시합니다.
+        return accounts[0]?.accountNo || "계좌 정보 없음";
       }
-      else{
-        return `${account}`
-      }
-    }
+    };
 
     const variants = {
       default: "bg-lime-300 text-blue-900",
       dark: "bg-slate-800 text-white",
-    }
+    };
 
     return (
       <motion.div
@@ -50,7 +59,8 @@ const CreditCard = React.forwardRef(
         transition={{ duration: CARD_ANIMATION_DURATION }}
         style={{ perspective: PERSPECTIVE }}
         className={cn("relative touch-none", className)}
-        {...props}>
+        {...props}
+      >
         <motion.div
           className={cn(
             "relative h-48 w-80 overflow-hidden rounded-xl p-6 shadow-xl",
@@ -58,13 +68,18 @@ const CreditCard = React.forwardRef(
           )}
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: CARD_ANIMATION_DURATION }}>
+          transition={{ duration: CARD_ANIMATION_DURATION }}
+        >
           <div className="flex items-center justify-between">
             <motion.div
               className="text-2xl font-bold"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: INITIAL_DELAY, duration: CARD_ANIMATION_DURATION }}>
+              transition={{
+                delay: INITIAL_DELAY,
+                duration: CARD_ANIMATION_DURATION,
+              }}
+            >
               VISA
             </motion.div>
 
@@ -77,8 +92,13 @@ const CreditCard = React.forwardRef(
               animate={{ scale: 1 }}
               transition={{ delay: 0.4, ...springTransition }}
               onClick={() => setIsVisible(!isVisible)}
-              aria-label={isVisible ? "Hide card details" : "Show card details"}>
-              {isVisible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              aria-label={isVisible ? "Hide card details" : "Show card details"}
+            >
+              {isVisible ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
             </motion.button>
           </div>
 
@@ -86,7 +106,8 @@ const CreditCard = React.forwardRef(
             className="mt-2 text-xl font-medium tracking-wider"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}>
+            transition={{ delay: 0.6 }}
+          >
             {isVisible ? cardNumber : getMaskedNumber(cardNumber)}
           </motion.div>
 
@@ -94,7 +115,8 @@ const CreditCard = React.forwardRef(
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: CARD_ANIMATION_DURATION }}>
+              transition={{ delay: 0.8, duration: CARD_ANIMATION_DURATION }}
+            >
               <div className="text-xs opacity-80">Card Holder</div>
               <div className="font-semibold">{cardHolder}</div>
             </motion.div>
@@ -102,16 +124,19 @@ const CreditCard = React.forwardRef(
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1, duration: CARD_ANIMATION_DURATION }}>
+              transition={{ delay: 1, duration: CARD_ANIMATION_DURATION }}
+            >
               <div className="text-xs opacity-80">Expires</div>
-              <div className="font-semibold">{isVisible ? expiryDate : "**/**"}</div>
+              <div className="font-semibold">
+                {isVisible ? expiryDate : "**/**"}
+              </div>
             </motion.div>
           </div>
         </motion.div>
       </motion.div>
     );
   }
-)
-CreditCard.displayName = "CreditCard"
+);
+CreditCard.displayName = "CreditCard";
 
-export { CreditCard }
+export { CreditCard };

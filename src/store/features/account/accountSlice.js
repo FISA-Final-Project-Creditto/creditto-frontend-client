@@ -4,7 +4,16 @@ const initialState = {
   accounts: null,
   status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
   error: null,
-  balance : 0,
+  balance: 0,
+
+  // ----- 계좌 잔액 합산 조회용 필드 -----
+  accountCount: null,
+  totalBalance: 0,
+
+  // ----- 계좌 생성용 필드 -----
+  accountName: null,
+  accountType: null,
+  password: null,
 };
 
 export const accountSlice = createSlice({
@@ -15,9 +24,40 @@ export const accountSlice = createSlice({
       state.accounts = action.payload;
       state.status = "succeeded";
     },
+
+    // 계좌 잔액 합산 조회용 reducer
+    setAccountsBalance: (state, action) => {
+      state.accountCount = action.payload.accountCount;
+      state.totalBalance = action.payload.balance;
+    },
+
+    // 계좌 생성용 reducer
+    // 부분 저장하기 위해 아래와 같이 작성
+    setCreateAccount: (state, action) => {
+      if (action.payload.accountName !== undefined) {
+        state.accountName = action.payload.accountName;
+      }
+      if (action.payload.accountType !== undefined) {
+        state.accountType = action.payload.accountType;
+      }
+      if (action.payload.password !== undefined) {
+        state.password = action.payload.password;
+      }
+    },
+
+    clearCreateAccount: (state, action) => {
+      state.accountName = null;
+      state.accountType = null;
+      state.password = null;
+    },
   },
 });
 
-export const { setAccounts } = accountSlice.actions;
+export const {
+  setAccounts,
+  setAccountsBalance,
+  setCreateAccount,
+  clearCreateAccount,
+} = accountSlice.actions;
 
 export default accountSlice.reducer;
