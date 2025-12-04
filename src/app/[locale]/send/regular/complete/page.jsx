@@ -8,10 +8,62 @@ import Term from "../components/Term";
 import { useRouter } from "next/navigation";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import { credittoApi } from "@/src/app/api/axios";
 
 export default function CompletePage() {
   const router = useRouter();
   const t = useTranslations("send");
+
+  const [creditScore, setCreditScore] = useState(0); // 신용점수
+
+  // 브라우저 뒤로가기
+  useEffect(() => {
+    const handlePopState = (event) => {
+      router.replace("/send");
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [router]);
+
+  useEffect(() => {
+    // 최신 신용점수 조회
+    const fetchRecentScore = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const userId = sessionStorage.getItem("userId");
+
+        if (!accessToken || !userId) {
+          console.error("인증 정보가 없어 신용점수를 조회할 수 없습니다.");
+          return;
+        }
+
+        const res = await credittoApi.post(
+          `/api/credit-score/${userId}`,
+          null, // POST 요청 본문이 없는 경우 null로 전달
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        const data = res.data;
+
+        if (data) {
+          setCreditScore(data.credit_score); // 최신 신용점수 업데이트
+        }
+      } catch (error) {
+        console.error("최신 신용점수 조회 중 오류 발생: ", error);
+      }
+    };
+
+    fetchRecentScore();
+  }, []);
 
   return (
     <div className="min-h-dvh flex flex-col bg-white">
@@ -21,6 +73,7 @@ export default function CompletePage() {
           show={true}
           showHamburger={false}
           showBack={true}
+          onBackClick={() => router.replace("/send")}
         />
       </header>
       <div className="px-5">
@@ -32,16 +85,16 @@ export default function CompletePage() {
           {/* 우리은행 벌 캐릭터 */}
           <center>
             <Image
-              src="/wooriBee.png"
-              alt="Woori Bee"
-              width={125}
+              src="/creditto.png"
+              alt="크레디토 캐릭터"
+              width={180}
               height={200}
             />
           </center>
 
           <p className="text-left text-xl font-bold text-black">
             {t("components.complete.currentScore")}{" "}
-            <span className="font-bold text-[#1A3668]">757</span>
+            <span className="font-bold text-[#1A3668]">{creditScore}</span>
             {t("components.creditPointBanner.point")}
           </p>
 
