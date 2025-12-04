@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 
 export default function ConsentDetailPage() {
   const { id } = useParams(); // 동의서 ID (string)
-  const searchParams = useSearchParams();
+  const searchParam = useSearchParams();
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -24,31 +24,6 @@ export default function ConsentDetailPage() {
 
   const [scrolledToBottom, setScrolledToBottom] = useState(false);
   const [status, setStatus] = useState("");
-
-  const agreeConsent = async () => {
-    try {
-      const accessToken = sessionStorage.getItem("accessToken");
-
-      const res = await credittoApi.post("/api/consents/agree", {
-        params: {
-          consentCode: term.consentcode,
-        },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      const { code, message, data } = res.data;
-      if (code === 201 && data.consentStatus === "AGREE") {
-        console.log(message);
-        setStatus(data.consentStatus); // 동의서 상태를 "AGREE"로 업데이트
-
-        return true;
-      }
-    } catch (error) {
-      console.error("특정 동의서 실패: ", error);
-    }
-  };
 
   const handleScroll = (e) => {
     const target = e.currentTarget;
@@ -65,9 +40,9 @@ export default function ConsentDetailPage() {
     dispatch(setConsentChecked({ id: currentId, checked: true }));
 
     // bulk 모드인지 확인
-    const isBulk = searchParams.get("bulk") === "1";
-    const idsParam = searchParams.get("ids");
-    const idxParam = searchParams.get("idx");
+    const isBulk = searchParam.get("bulk") === "1";
+    const idsParam = searchParam.get("ids");
+    const idxParam = searchParam.get("idx");
 
     if (isBulk && idsParam) {
       const ids = idsParam.split(",").filter(Boolean);
@@ -82,7 +57,7 @@ export default function ConsentDetailPage() {
         );
       } else {
         // 마지막 동의서까지 완료 → 동의 리스트 페이지로 이동
-        router.push("/credit/consent");
+        router.replace("/credit/consent");
       }
     } else {
       // 이전 페이지로 돌아가기
@@ -135,10 +110,10 @@ export default function ConsentDetailPage() {
           {/* 닫기 버튼 */}
           <button
             onClick={() => {
-              const isBulk = searchParams.get("bulk") === "1";
+              const isBulk = searchParam.get("bulk") === "1";
               if (isBulk) {
                 // bulk 모드에서는 리스트로 보내는 편이 UX 좋음
-                router.push("/credit/consent");
+                router.replace("/credit/consent");
               } else {
                 router.back();
               }
@@ -161,11 +136,11 @@ export default function ConsentDetailPage() {
 
         {/* 스크롤 바 */}
         {!scrolledToBottom && (
-          <div className="pointer-events-none absolute bottom-24 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent" />
+          <div className="pointer-events-none absolute bottom-24 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent" />
         )}
 
         {/* 고정 하단 버튼 */}
-        <div className="sticky bottom-0 bg-[card] px-6 py-4">
+        <div className="sticky bottom-0 bg-white px-6 py-4">
           <Button
             onClick={handleAgree}
             className="w-full rounded-xl py-6 text-base font-semibold bg-[#1A3668]"

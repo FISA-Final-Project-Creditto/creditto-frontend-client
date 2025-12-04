@@ -1,14 +1,28 @@
 "use client";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Emoji from "../components/Emoji";
 import BottomSheet from "@/src/common/UI/BottomSheet/BottomSheet";
 import { credittoApi } from "@/src/app/api/axios";
+import { useDispatch } from "react-redux";
+import { setConsentChecked } from "@/src/store/features/consent/consentSlice";
 
 export default function CreditFirst() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // 약관 ID 리스트 아이디 초기화
+    const consentIds = [1, 2, 3];
+
+    // 각 약관의 체크 상태를 false로 초기화
+    consentIds.forEach((id) => {
+      dispatch(setConsentChecked({ id: String(id), checked: false }));
+    });
+  }, [dispatch]);
+
   return (
     <main className="h-dvh flex justify-center items-center bg-[#e5e5e5]">
       <div className="w-full max-w-[440px] min-h-dvh mx-auto justify-start flex flex-col bg-white">
@@ -17,6 +31,7 @@ export default function CreditFirst() {
           showHamburger={false}
           showBack={true}
           show={true}
+          onBackClick={() => router.replace("/main")} // 메인페이지로 이동하는 건 replace로
         />
         <div className="mt-8 text-2xl font-bold text-left ml-5 h-20">
           <span className="text-[#0C72BA] font-bold text-[26px]">신용평가</span>{" "}
@@ -52,20 +67,29 @@ export default function CreditFirst() {
                   return;
                 }
 
-                const res = await credittoApi.get(`/api/credit-score/${userId}`, {
-                  headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                  },
-                });
+                const res = await credittoApi.get(
+                  `/api/credit-score/${userId}`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${accessToken}`,
+                    },
+                  }
+                );
 
                 // 저장: 전체 응답과 점수 값 별도 보관
                 sessionStorage.setItem("creditScore", JSON.stringify(res.data));
                 if (res.data?.credit_score !== undefined) {
-                  sessionStorage.setItem("creditScoreValue", String(res.data.credit_score));
+                  sessionStorage.setItem(
+                    "creditScoreValue",
+                    String(res.data.credit_score)
+                  );
                 }
                 // 이력 정보도 저장 (변화율 표시용)
                 if (res.data?.history) {
-                  sessionStorage.setItem("creditScoreHistory", JSON.stringify(res.data.history));
+                  sessionStorage.setItem(
+                    "creditScoreHistory",
+                    JSON.stringify(res.data.history)
+                  );
                 }
 
                 router.push("/main");

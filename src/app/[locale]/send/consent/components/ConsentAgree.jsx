@@ -10,6 +10,7 @@ import { clearModeData } from "@/src/store/features/send/sendModeSlice";
 export default function ConsentAgree({
   title = "약관 동의",
   consents = [], // 약관 동의서 리스트
+  onBackClick,
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -55,7 +56,7 @@ export default function ConsentAgree({
     const idsParam = ids.join(",");
 
     // 첫 번째 약관 페이지로 이동 + 쿼리스트링으로 시퀀스 정보 전달
-    router.push(`/send/consent/${ids[0]}?bulk=1&ids=${idsParam}&idx=0`);
+    router.replace(`/send/consent/${ids[0]}?bulk=1&ids=${idsParam}&idx=0`);
   };
 
   // 개별 토글
@@ -125,7 +126,12 @@ export default function ConsentAgree({
 
   return (
     <>
-      <AppHeader title={title} show={true} showHamburger={true} />
+      <AppHeader
+        title={title}
+        show={true}
+        showHamburger={true}
+        onBackClick={onBackClick}
+      />
 
       <div className="flex-1 px-8 pt-16 pb-10 text-left">
         {/* 전체 동의 */}
