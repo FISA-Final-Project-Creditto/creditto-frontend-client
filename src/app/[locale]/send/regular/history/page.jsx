@@ -52,6 +52,7 @@ export default function HistoryPage() {
       if (code === 200 && data && data.length > 0) {
         console.log("모든 계좌 조회 성공:", data);
         setAllAccounts(data);
+        setSelectedAccount(data[0].accountNo); // 첫 번째 계좌를 기본 선택
         return true; // 계좌 존재
       }
 
