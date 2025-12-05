@@ -7,7 +7,6 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import SendBtn from "../regular/components/SendBtn";
-import { credittoApi } from "@/src/app/api/axios";
 
 // 송금 유형 데이터
 const transferTypes = [
@@ -33,38 +32,6 @@ export default function CardCarousel() {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const didFetch = useRef(false); // useEffect()가 2번 실행되는 걸 방지하기 위해 선언
-
-  // 연동된 계좌가 있으면 송금 기능 사용 가능
-  useEffect(() => {
-    if (didFetch.current) return; // 두 번째 실행 차단
-    didFetch.current = true;
-
-    const fetchAccountBalance = async () => {
-      try {
-        const accessToken = sessionStorage.getItem("accessToken");
-
-        const res = await credittoApi.get("/api/accounts/me/balance", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        const { code, data } = res.data;
-
-        if (code === 200) {
-          if (data.accountcount === 0) {
-            alert("연동된 계좌가 없습니다");
-            router.replace("/");
-          }
-        }
-      } catch (error) {
-        console.error("계좌 잔액 합산 조회 by UserId 오류 발생: ", error);
-      }
-    };
-
-    fetchAccountBalance();
-  }, []);
 
   return (
     <div className="flex-1 flex justify-center relative">
