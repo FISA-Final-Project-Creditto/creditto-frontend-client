@@ -86,7 +86,7 @@ export default function CompletePage() {
         const userId = sessionStorage.getItem("userId");
 
         if (!accessToken || !userId) return;
-        if (!hasCreditHistory || creditScore == null) return;
+        if (!hasCreditHistory || creditScore === null) return;
 
         const res = await credittoApi.post(
           `/api/credit-score/prediction`,
