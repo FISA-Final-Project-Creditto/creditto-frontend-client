@@ -53,7 +53,7 @@ export default function CardCarousel() {
         const { code, data } = res.data;
 
         if (code === 200) {
-          if (data.accountcount !== 0) {
+          if (data.accountcount === 0) {
             alert("연동된 계좌가 없습니다");
             router.replace("/");
           }
