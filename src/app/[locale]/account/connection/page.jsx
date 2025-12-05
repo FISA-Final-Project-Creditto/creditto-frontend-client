@@ -42,7 +42,7 @@ export default function AccountConnectionPage() {
         </div>
         <div>{t("description", { name })}</div>
       </div>
-      <div className="w-full  min-h-[440px] justify-center items-center flex">
+      <div className="w-full min-h-[440px] justify-center items-center flex flex-1">
         <Image
           src="/icon/woori.png"
           alt={t("wooriLogo")}
@@ -52,7 +52,7 @@ export default function AccountConnectionPage() {
       </div>
       <footer>
         <BottomBar
-          label={t("complete")}
+          label="다음"
           onClick={() => router.push("/account/my_account")}
           isActive={true}
         />
