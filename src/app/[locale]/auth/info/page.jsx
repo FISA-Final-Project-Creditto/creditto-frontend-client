@@ -139,7 +139,7 @@ export default function InfoInputPage() {
         );
 
         router.push("/auth/pw");
-      } else if (res.code === 409) {
+      } else if (res.code === 40010) {
         // 중복된 전화번호가 있을 때 전화번호 필드에 에러 표시
         setFieldErrors((prev) => ({
           ...prev,

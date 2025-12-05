@@ -11,7 +11,7 @@ export default function AccountConnectionPage() {
   const t = useTranslations("account.connection");
   const router = useRouter();
   // Redux 스토어에서 계좌 목록을 가져옵니다.
-  const name = sessionStorage.getItem("userName") // TODO: get user name from store
+  const name = sessionStorage.getItem("userName"); // TODO: get user name from store
 
   useEffect(() => {
     const accountsString = sessionStorage.getItem("accounts");

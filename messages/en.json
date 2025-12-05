@@ -367,7 +367,7 @@
     "success": {
       "title": "Account created successfully!",
       "description": "Now, start your life with Creditto.",
-      "toMain": "To the main screen"
+      "toMyAccount": "Check my account"
     },
     "import": {
       "noAccessToken": "Access Token is missing.",
