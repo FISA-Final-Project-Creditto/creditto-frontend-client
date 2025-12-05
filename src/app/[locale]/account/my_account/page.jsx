@@ -19,6 +19,7 @@ export default function MyAccountPage() {
         show={true}
         showBack={true}
         showHamburger={false}
+        onBackClick={() => router.replace("/main")}
       />
 
       {/* 콘텐츠 영역 */}
