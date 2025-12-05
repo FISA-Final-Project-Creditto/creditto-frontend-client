@@ -6,7 +6,7 @@ import { ChevronDown } from "lucide-react";
 import HistoryCard from "./components/HistoryCard";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { credittoApi } from "@/src/app/api/axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setDetailData } from "@/src/store/features/sendHistory/sendHistorySlice";
 import { useTranslations } from "next-intl";
 
