@@ -1,14 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { useSearchParams } from "next/navigation";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { credittoApi } from "@/src/app/api/axios";
 import RecurringHistory from "../components/RecurringHistory";
 import RemRecordList from "../../components/RemRecordList";
 import { useTranslations } from "next-intl";
-import BottomSheet from "@/src/common/UI/BottomSheet/BottomSheet";
 
 // 정기적으로 송금 내역을 보여주는 페이지
 export default function RecurringPage({ params: paramsPromise }) {

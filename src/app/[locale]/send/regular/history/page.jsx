@@ -6,7 +6,7 @@ import { ChevronDown } from "lucide-react";
 import HistoryCard from "./components/HistoryCard";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { credittoApi } from "@/src/app/api/axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setDetailData } from "@/src/store/features/sendHistory/sendHistorySlice";
 import { useTranslations } from "next-intl";
 
@@ -52,6 +52,7 @@ export default function HistoryPage() {
       if (code === 200 && data && data.length > 0) {
         console.log("모든 계좌 조회 성공:", data);
         setAllAccounts(data);
+        setSelectedAccount(data[0].accountNo); // 첫 번째 계좌를 기본 선택
         return true; // 계좌 존재
       }
 
