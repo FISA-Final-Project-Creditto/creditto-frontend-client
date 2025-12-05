@@ -1,5 +1,5 @@
 "use client";
-import AppHeader from "@/src/common/AppHeader/AppHeader";
+import AppHeader from "@/src/common/AppHeader/AppHeader"; // NOTE: This is unused
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Emoji from "../components/Emoji";
@@ -7,6 +7,12 @@ import BottomSheet from "@/src/common/UI/BottomSheet/BottomSheet";
 import { credittoApi } from "@/src/app/api/axios";
 import { useDispatch } from "react-redux";
 import { setConsentChecked } from "@/src/store/features/consent/consentSlice";
+
+const STATUS = {
+  LOADING: "loading",
+  IDLE: "idle",
+  PROMPT: "prompt",
+};
 
 export default function CreditFirst() {
   const router = useRouter();
@@ -76,20 +82,11 @@ export default function CreditFirst() {
                   }
                 );
 
-                // 저장: 전체 응답과 점수 값 별도 보관
-                sessionStorage.setItem("creditScore", JSON.stringify(res.data));
-                if (res.data?.credit_score !== undefined) {
-                  sessionStorage.setItem(
-                    "creditScoreValue",
-                    String(res.data.credit_score)
-                  );
-                }
-                // 이력 정보도 저장 (변화율 표시용)
-                if (res.data?.history) {
-                  sessionStorage.setItem(
-                    "creditScoreHistory",
-                    JSON.stringify(res.data.history)
-                  );
+                // API 조회 성공 시, 점수를 localStorage에 저장합니다.
+                const newScore = res.data?.credit_score;
+                if (newScore !== undefined) {
+                  const userScoreKey = `creditScore_${userId}`;
+                  localStorage.setItem(userScoreKey, String(newScore));
                 }
 
                 router.push("/main");
