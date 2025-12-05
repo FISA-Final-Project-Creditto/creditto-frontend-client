@@ -40,9 +40,9 @@ export default function AccountSuccessPage() {
 
         <footer>
           <BottomBar
-            label={t("toMain")}
+            label={t("toMyAccount")}
             onClick={() => {
-              router.push("/account/my_account?refresh=true");
+              router.replace("/account/my_account?refresh=true");
             }}
             isActive={true}
           />
