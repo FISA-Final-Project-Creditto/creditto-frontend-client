@@ -15,6 +15,12 @@ import { countryCodes } from "../../constants/countryCode";
 import { startSettingMode as settingModeAction } from "@/src/store/features/simplepw/simplepwSlice";
 import { useTranslations } from "next-intl";
 
+// API 에러코드를 상수로 선언
+export const API_ERROR_CODES = {
+  DUPLICATE_PHONE_NUMBER: 40010,
+  INVALID_NAME_FORMAT: 400,
+};
+
 export default function InfoInputPage() {
   const t = useTranslations("auth.info");
 
@@ -139,7 +145,7 @@ export default function InfoInputPage() {
         );
 
         router.push("/auth/pw");
-      } else if (res.code === 40010) {
+      } else if (res.code === DUPLICATE_PHONE_NUMBER) {
         // 중복된 전화번호가 있을 때 전화번호 필드에 에러 표시
         setFieldErrors((prev) => ({
           ...prev,
