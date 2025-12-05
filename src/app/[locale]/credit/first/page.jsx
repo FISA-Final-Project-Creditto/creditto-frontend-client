@@ -1,5 +1,4 @@
 "use client";
-import AppHeader from "@/src/common/AppHeader/AppHeader"; // NOTE: This is unused
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Emoji from "../components/Emoji";
@@ -7,12 +6,6 @@ import BottomSheet from "@/src/common/UI/BottomSheet/BottomSheet";
 import { credittoApi } from "@/src/app/api/axios";
 import { useDispatch } from "react-redux";
 import { setConsentChecked } from "@/src/store/features/consent/consentSlice";
-
-const STATUS = {
-  LOADING: "loading",
-  IDLE: "idle",
-  PROMPT: "prompt",
-};
 
 export default function CreditFirst() {
   const router = useRouter();

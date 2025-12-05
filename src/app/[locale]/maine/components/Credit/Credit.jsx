@@ -4,9 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { credittoApi } from "@/src/app/api/axios";
 
-// STATUS 상수를 컴포넌트 외부에 정의하여 재사용성을 높입니다.
-
-
 export default function Credit({ historyScore }) {
   const userId = sessionStorage.getItem("userId");
   const router = useRouter();
@@ -43,13 +40,12 @@ export default function Credit({ historyScore }) {
   };
 
   // 점수 변동 텍스트를 생성하는 로직을 변수로 추출
-  const scoreDiffText = (() => {
+  const scoreDiffText = React.useMemo(() => {
     const diff = getScoreDiff(historyScore);
-
     const sign = diff > 0 ? "+" : "";
     const label = diff > 0 ? "상승" : diff < 0 ? "하락" : "변동없음";
     return `지난달 대비 ${sign}${diff}점 ${label}`;
-  })();
+  }, [historyScore]);
 
   return (
     <div className="w-full mt-5 bg-gradient-to-br from-[#1A3668] via-[#1A3668] to-[#1A3668]/80 rounded-3xl p-6 text-primary-foreground shadow-lg ">
@@ -79,10 +75,13 @@ export default function Credit({ historyScore }) {
 
       {/* Progress bar 및 점수 변동 정보 */}
       <div className="">
-        {score !== null && <>
+        {score !== null && (
+          <>
             <div className="flex justify-between items-center mb-2">
               <span className="text-xs opacity-80">신용도 평가</span>
-              <span className="text-xs font-medium">{Math.round(scorePercentage)}%</span>
+              <span className="text-xs font-medium">
+                {Math.round(scorePercentage)}%
+              </span>
             </div>
             <div className="w-full bg-white/20 rounded-full h-2.5">
               <div
@@ -94,7 +93,8 @@ export default function Credit({ historyScore }) {
             {scoreDiffText && (
               <p className="text-xs opacity-75 mt-2">{scoreDiffText}</p>
             )}
-        </>}
+          </>
+        )}
       </div>
     </div>
   );
