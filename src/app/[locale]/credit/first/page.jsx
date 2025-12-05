@@ -6,6 +6,7 @@ import BottomSheet from "@/src/common/UI/BottomSheet/BottomSheet";
 import { credittoApi } from "@/src/app/api/axios";
 import { useDispatch } from "react-redux";
 import { setConsentChecked } from "@/src/store/features/consent/consentSlice";
+import AppHeader from "@/src/common/AppHeader/AppHeader";
 
 export default function CreditFirst() {
   const router = useRouter();

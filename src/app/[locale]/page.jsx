@@ -32,7 +32,7 @@ export default function SplashPage({ hasSerial }) {
   return (
     <div className="flex flex-col h-screen">
       <div className="relative flex-grow">
-        <Image src="/접속로딩1.svg" alt="logo" fill style={{ objectFit: "contain" }} />
+        <Image src="/접속로딩1.svg" alt="logo" fill style={{ objectFit: "contain" }} loading="eager"/>
       </div>
 
       <div className="flex-shrink-0">
