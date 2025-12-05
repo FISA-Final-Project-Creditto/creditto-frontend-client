@@ -3,16 +3,45 @@
 import CardCarousel from "./components/CardCarousel";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useDispatch } from "react-redux";
 import { setConsentChecked } from "@/src/store/features/consent/consentSlice";
 import { clearModeData } from "@/src/store/features/send/sendModeSlice";
+import { credittoApi } from "../../api/axios";
 
 export default function SendMainPage() {
   const t = useTranslations("send.common");
   const dispatch = useDispatch();
   const router = useRouter();
+  const didFetch = useRef(false); // useEffect()가 2번 실행되는 걸 방지하기 위해 선언
+
+  // 연동된 계좌가 있으면 송금 기능 사용 가능
+  useEffect(() => {
+    if (didFetch.current) return; // 두 번째 실행 차단
+    didFetch.current = true;
+
+    const fetchAccountBalance = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+
+        const res = await credittoApi.get("/api/accounts/me/balance", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (res.data.data.accountCount === 0) {
+          alert("연동된 계좌가 없습니다");
+          router.replace("/"); // 여기서 /main 으로 보내고 싶으면 "/main"으로 바꾸면 됨
+        }
+      } catch (error) {
+        console.error("계좌 잔액 합산 조회 by UserId 오류 발생: ", error);
+      }
+    };
+
+    fetchAccountBalance();
+  }, []);
 
   useEffect(() => {
     // 약관 ID 리스트 아이디 초기화
