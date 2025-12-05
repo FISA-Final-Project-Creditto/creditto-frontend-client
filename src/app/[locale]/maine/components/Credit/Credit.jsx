@@ -4,15 +4,27 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { credittoApi } from "@/src/app/api/axios";
 
-export default function Credit({ accountState ,historyScore}) {
+export default function Credit({ historyScore }) {
+  const userId = sessionStorage.getItem("userId");
   const router = useRouter();
   const goToCreditFirst = () => router.push("/credit/first");
   const maxScore = 950;
-  const [creditInfo, setCreditInfo] = useState();
-  const [storedScore, setStoredScore] = useState(null);
-  const [storedHistory, setStoredHistory] = useState(null);
-  const [isMounted, setIsMounted] = useState(false);
-  const scorePercentage = creditInfo ? (creditInfo / maxScore) * 100 : 0;
+
+  const [score, setScore] = useState(null); // 0도 유효한 점수일 수 있으므로 null로 초기화
+  const scorePercentage = score !== null ? (score / maxScore) * 100 : 0;
+
+  useEffect(() => {
+    // userId가 있을 경우 localStorage에서 캐시된 점수를 확인합니다.
+    if (userId) {
+      const cachedScore = localStorage.getItem(`creditScore_${userId}`);
+      // localStorage에 값이 존재하면(빈 문자열이 아니면) 점수 상태를 업데이트합니다. '0'도 유효한 값입니다.
+      if (cachedScore !== null) {
+        setScore(Number(cachedScore));
+      }
+    }
+    // 캐시된 점수가 없으면 status는 'loading'으로 유지되어 '조회하기' 버튼이 보입니다.
+    // TODO: 실제 API를 호출하여 점수를 가져오는 로직을 여기에 추가할 수 있습니다.
+  }, [userId]);
 
   const getScoreDiff = (history) => {
     if (!history || history.length < 2) return 0;
@@ -21,65 +33,19 @@ export default function Credit({ accountState ,historyScore}) {
     return last - prev;
   };
 
-  const renderCredit = () => {
-    // 클라이언트 마운트 후에만 sessionStorage 접근
-    if (!isMounted) return "...";
-    
-    // 먼저 sessionStorage에 저장된 점수 확인 (새로고침 후에도 유지)
-    if (storedScore && Number(storedScore) >= 0) {
-      return Number(storedScore);
-    }
-    
-    // sessionStorage에 점수가 없으면
-    if (!accountState || accountState.accountCount === 0)
-      return (
-        <button type="button" onClick={goToCreditFirst}>
-          조회하기
-        </button>
-      );
-    
-    // accountCount > 0이고 API 호출 결과 확인
-    if (creditInfo == null) return "...";
-    return creditInfo;
-  };
-
   const renderTier = () => {
-    if (!accountState || accountState.accountCount === 0) return "신규";
-    if (creditInfo == null) return "신규";
-    // TODO: 등급 로직 필요 시 구현 (현재는 임시로 점수 반환)
-    return creditInfo;
+    // TODO: 점수에 따른 등급 로직 구현 필요
+    if (score === null) return "신규";
+    return score; // 현재는 임시로 점수 표시
   };
-  useEffect(() => {
-    // 클라이언트 마운트 시 sessionStorage에서 저장된 점수 로드
-    setStoredScore(sessionStorage.getItem("creditScoreValue"));
-    setStoredHistory(sessionStorage.getItem("creditScoreHistory"));
-    setIsMounted(true);
-  }, []);
 
-  useEffect(() => {
-    const fetchCreditScore = async () => {
-      try {
-        // console.log(accountState.accountCount)
-        const accessToken = sessionStorage.getItem("accessToken");
-        const userId = sessionStorage.getItem("userId");
-
-        if (!accessToken) return;
-
-        const res = await credittoApi.get(`/api/credit-score/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        setCreditInfo(res.data.credit_score);
-        // setHistoryScore(r);
-        console.log("신용점수 크레디토 : ", res.data);
-      } catch (error) {
-        console.error("신용점수 조회 실패:", error);
-      }
-    };
-    fetchCreditScore();
-  }, [accountState.accountCount]);
+  // 점수 변동 텍스트를 생성하는 로직을 변수로 추출
+  const scoreDiffText = React.useMemo(() => {
+    const diff = getScoreDiff(historyScore);
+    const sign = diff > 0 ? "+" : "";
+    const label = diff > 0 ? "상승" : diff < 0 ? "하락" : "변동없음";
+    return `지난달 대비 ${sign}${diff}점 ${label}`;
+  }, [historyScore]);
 
   return (
     <div className="w-full mt-5 bg-gradient-to-br from-[#1A3668] via-[#1A3668] to-[#1A3668]/80 rounded-3xl p-6 text-primary-foreground shadow-lg ">
@@ -87,8 +53,15 @@ export default function Credit({ accountState ,historyScore}) {
         <div>
           <p className="text-xs font-medium opacity-80 mb-1">Creditto 점수</p>
           <h3 className="text-3xl font-bold">
-            {renderCredit()}{" "}
-            {accountState && accountState.accountCount > 0 && "점"}
+            {score === null ? (
+              <button type="button" onClick={goToCreditFirst}>
+                조회하기
+              </button>
+            ) : (
+              <>
+                {score} <span className="text-2xl">점</span>
+              </>
+            )}
           </h3>
           <p className="text-xs opacity-70 mt-1">최고 {maxScore}점</p>
         </div>
@@ -100,42 +73,28 @@ export default function Credit({ accountState ,historyScore}) {
         </div>
       </div>
 
-      {/* Progress bar */}
+      {/* Progress bar 및 점수 변동 정보 */}
       <div className="">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-xs opacity-80">신용도 평가</span>
-          <span className="text-xs font-medium">
-            {Math.round(scorePercentage)}%
-          </span>
-        </div>
-        <div className="w-full bg-white/20 rounded-full h-2.5">
-          <div
-            className="h-full bg-white rounded-full transition-all duration-500"
-            style={{ width: `${scorePercentage}%` }}
-          ></div>
-        </div>
-        <p className="text-xs opacity-75 mt-2">
-          {(!accountState || accountState.accountCount === 0) ? (
-            (() => {
-              // sessionStorage에 저장된 점수가 있으면 그 이력 사용
-              if (storedScore && Number(storedScore) >= 0) {
-                const parsedHistory = storedHistory ? JSON.parse(storedHistory) : null;
-                const diff = getScoreDiff(parsedHistory);
-                const sign = diff > 0 ? "+" : "";
-                const label = diff > 0 ? "상승" : diff < 0 ? "하락" : "변동없음";
-                return `지난달 대비 ${diff !== 0 ? `${sign}${diff}점` : "0점"} ${label}`;
-              }
-              return <button type="button" onClick={goToCreditFirst}>조회하기</button>;
-            })()
-          ) : (
-            (() => {
-              const diff = getScoreDiff(historyScore);
-              const sign = diff > 0 ? "+" : "";
-              const label = diff > 0 ? "상승" : diff < 0 ? "하락" : "변동없음";
-              return `지난달 대비 ${diff !== 0 ? `${sign}${diff}점` : "0점"} ${label}`;
-            })()
-          )}
-        </p>
+        {score !== null && (
+          <>
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-xs opacity-80">신용도 평가</span>
+              <span className="text-xs font-medium">
+                {Math.round(scorePercentage)}%
+              </span>
+            </div>
+            <div className="w-full bg-white/20 rounded-full h-2.5">
+              <div
+                className="h-full bg-white rounded-full transition-all duration-500"
+                style={{ width: `${scorePercentage}%` }}
+              />
+            </div>
+
+            {scoreDiffText && (
+              <p className="text-xs opacity-75 mt-2">{scoreDiffText}</p>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
