@@ -1,3 +1,4 @@
+import { CheckCircleIcon } from "lucide-react";
 import Image from "next/image";
 
 export default function CertificateCard({ name, expiryDate }) {
@@ -14,9 +15,8 @@ export default function CertificateCard({ name, expiryDate }) {
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-indigo-600/20 rounded-full blur-3xl translate-y-24 -translate-x-24" />
 
         {/* 내용 */}
-
-        {/* 이름, 만료일 */}
-        <div className="flex items-start justify-between pb-12">
+        <div className="flex items-start justify-between">
+          {/* 이름, 만료일 */}
           <div>
             {/* 송금인 이름 */}
             <h3 className="text-2xl font-bold text-white text-left tracking-wide">
@@ -25,14 +25,24 @@ export default function CertificateCard({ name, expiryDate }) {
             {/* 만료일(현재 생성일로부터 1년 후) */}
             <p className="text-sm text-[#C9CDD4] mt-1">{expiryDate} 만료</p>
           </div>
+          {/* 로고 */}
+
           <Image
-            src="/logo/logo.png"
-            alt="logo"
-            width={100}
-            height={100}
+            src="/logo/whiteLogo.png"
+            alt="whiteLogo"
+            width={62}
+            height={35}
             className="object-contain"
             loading="eager"
           />
+        </div>
+
+        <div className="flex items-center gap-2 mt-10">
+          <CheckCircleIcon className="text-[#C9CDD4]" />
+          <p className="text-xs text-[#C9CDD4] text-left">
+            전자서명에 따른 <br />
+            안전한 인증서
+          </p>
         </div>
 
         {/* Glass effect overlay */}
