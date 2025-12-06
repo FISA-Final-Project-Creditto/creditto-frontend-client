@@ -16,6 +16,22 @@ import { useTranslations } from "next-intl";
 export default function CreditChart({historyScore}) {
   const t = useTranslations("maine");
 
+  // Y축 범위 동적으로 계산 (데이터 최소/최대 ± 5%)
+  const getYAxisDomain = () => {
+    if (!historyScore || historyScore.length === 0) {
+      return [0, 950];
+    }
+    const scores = historyScore.map(item => Number(item.avg_score ?? 0));
+    const min = Math.min(...scores);
+    const max = Math.max(...scores);
+    const range = max - min;
+    const margin = Math.max(range * 0.1, 10); // 최소 10점 마진
+    
+    return [
+      Math.max(0, Math.floor(min - margin)),
+      Math.min(950, Math.ceil(max + margin))
+    ];
+  };
 
   // 말풍선 모양의 커스텀 툴팁 컴포넌트
  const CustomTooltip = ({ active, payload, label }) => {
@@ -58,6 +74,13 @@ export default function CreditChart({historyScore}) {
               stroke="rgba(255,255,255,0.6)"
               style={{ fontSize: "10px" }}
               tickFormatter={(v) => `${v}월`}
+            />
+            <YAxis
+              stroke="rgba(255,255,255,0.6)"
+              style={{ fontSize: "10px" }}
+              domain={getYAxisDomain()}
+              type="number"
+              hide={true}
             />
 
             <Tooltip
