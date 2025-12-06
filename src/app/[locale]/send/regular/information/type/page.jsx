@@ -250,9 +250,7 @@ export default function TypePage() {
                   <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
                     {t("regular.information.account")}
                   </label>
-                  {formData.accountNo === "" ? (
-                    " "
-                  ) : (
+                  {formData.accountNo && (
                     <p className="text-[0.875rem] text-[#4E5969] text-left">
                       {`잔액: ${new Intl.NumberFormat("ko-KR").format(
                         Number(balance)
