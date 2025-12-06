@@ -18,7 +18,7 @@ export default function LoadingPage() {
     <main className="flex justify-center items-center py-20 bg-white">
       <div className="w-full max-w-[440px] mx-auto flex flex-col">
         <div className="flex flex-col items-center">
-          <div className="w-full p-8 border">
+          <div className="w-full p-8">
             <p className="text-2xl font-semibold leading-relaxed text-black text-left">
               {t("title")}
             </p>
