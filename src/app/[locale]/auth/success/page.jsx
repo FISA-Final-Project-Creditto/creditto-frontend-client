@@ -9,19 +9,21 @@ export default function SuccessPage() {
   const t = useTranslations("auth.authSuccess");
   const router = useRouter();
   return (
-    <main className="px-8 flex flex-col justify-center items-center min-h-dvh">
-      <h1 className="text-[1.375rem] font-semibold text-[#000] mb-[35px] leading-tight text-center">
+    <main className="px-8 flex flex-col justify-center items-ceanter min-h-dvh">
+      <h1 className="text-[1.375rem] font-semibold text-[#000] mb-[5px] leading-tight text-center">
         {t("title")}
       </h1>
 
-      <h2 className="text-[#4E5969] mb-[35px] text-center">{t("description")}</h2>
+      <h2 className="text-[#4E5969] mb-[35px] text-center">
+        {t("description")}
+      </h2>
 
       {/* 이미지 */}
       <Image
-        src="/issuance.png"
+        src="/creditto.png"
         alt={t("idCardExample")}
-        width={300}
-        height={200}
+        width={150}
+        height={150}
         className="mx-auto"
       />
 
@@ -32,6 +34,6 @@ export default function SuccessPage() {
         }}
         isActive={true}
       />
-</main>
-    );
+    </main>
+  );
 }
