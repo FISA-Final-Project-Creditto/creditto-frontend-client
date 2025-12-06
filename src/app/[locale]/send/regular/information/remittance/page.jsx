@@ -41,17 +41,13 @@ export default function RemittancePage() {
 
   useEffect(() => {
     // 주소 입력 창에서 설정한 주소를 가져오기
-    const getAddress = () => {
-      const address = searchParams.get("address") || "";
-      if (!address) return;
-
+    const address = searchParams.get("address");
+    if (address) {
       setFormData((prev) => ({
         ...prev,
         address: decodeURIComponent(address),
       }));
-    };
-
-    getAddress();
+    }
   }, [searchParams.get("address")]);
 
   // 폼 유효성 검사

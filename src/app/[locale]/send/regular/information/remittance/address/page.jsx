@@ -9,19 +9,15 @@ export default function AddressSearchPage() {
   const router = useRouter();
   const t = useTranslations("send.components.addressModal");
 
+  // 주소 문자열 조합 함수
   const handleComplete = (data) => {
     let fullAddress = data.address;
-    let extraAddress = "";
 
     if (data.addressType === "R") {
-      if (data.bname !== "") {
-        extraAddress += data.bname;
+      const extraParts = [data.bname, data.buildingName].filter(Boolean);
+      if (extraParts.length > 0) {
+        fullAddress += ` (${extraParts.join(", ")})`;
       }
-      if (data.buildingName !== "") {
-        extraAddress +=
-          extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
-      }
-      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
 
     // 주소를 쿼리 매개변수로 사용하여 이전 페이지로 돌아가기
