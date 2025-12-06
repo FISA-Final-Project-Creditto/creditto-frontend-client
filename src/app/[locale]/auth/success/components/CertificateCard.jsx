@@ -18,7 +18,7 @@ export default function CertificateCard({ name, expiryDate }) {
         <div className="flex items-start justify-between">
           {/* 이름, 만료일 */}
           <div>
-            {/* 송금인 이름 */}
+            {/* 사용자 이름 */}
             <h3 className="text-2xl font-bold text-white text-left tracking-wide">
               {name}
             </h3>
@@ -29,7 +29,7 @@ export default function CertificateCard({ name, expiryDate }) {
 
           <Image
             src="/logo/whiteLogo.png"
-            alt="whiteLogo"
+            alt="Creditto 흰색 로고"
             width={62}
             height={35}
             className="object-contain"
@@ -45,7 +45,6 @@ export default function CertificateCard({ name, expiryDate }) {
           </p>
         </div>
 
-        {/* Glass effect overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
       </div>
     </div>

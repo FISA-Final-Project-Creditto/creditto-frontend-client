@@ -1,13 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import BottomBar from "../ocr/components/BottomBar";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import CertificateCard from "./components/CertifcateCard";
+import CertificateCard from "./components/CertificateCard";
 import { useSelector } from "react-redux";
-import { selectClientData } from "@/src/store/features/send/sendSelectors";
-import { useEffect } from "react";
 
 // 1년 뒤 계산(2월 29일 → 2월 28일로 설정)
 const addOneYearSafely = (date) => {
