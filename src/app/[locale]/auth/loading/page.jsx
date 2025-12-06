@@ -9,19 +9,22 @@ export default function LoadingPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const t = setTimeout(() => router.push("/auth/success"), 5000);
+    const t = setTimeout(() => router.push("/auth/success"), 3000);
     return () => clearTimeout(t);
   }, [router]);
 
   return (
-    <main className="flex justify-center items-center min-h-dvh bg-white">
+    // min-h-dvh는 나중에 설정
+    <main className="flex justify-center items-center py-20 bg-white">
       <div className="w-full max-w-[440px] mx-auto flex flex-col">
         <div className="flex flex-col items-center">
-          <p className="text-2xl font-semibold leading-relaxed text-[#000000]">
-            {t("title")}
-          </p>
-          <div className="text-lg font-normal text-[#4E5969] mb-[2.5rem]">
-            {t("description")}
+          <div className="w-full p-8 border">
+            <p className="text-2xl font-semibold leading-relaxed text-black text-left">
+              {t("title")}
+            </p>
+            <div className="text-lg font-normal text-[#4E5969] mb-[2.5rem] text-left">
+              {t("description")}
+            </div>
           </div>
 
           {/* Lottie 컨테이너 크기 고정 */}
