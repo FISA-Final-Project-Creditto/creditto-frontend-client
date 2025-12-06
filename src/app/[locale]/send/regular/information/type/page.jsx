@@ -42,6 +42,7 @@ export default function TypePage() {
   const sendCurrency = "KRW"; // 송금 통화
 
   const [allAccounts, setAllAccounts] = useState([]); // 계좌 목록
+  const [balance, setBalance] = useState(0); // 선택한 계좌의 잔액
 
   // 송금 유형 정보값 상태 관리
   const [formData, setFormData] = useState({
@@ -70,6 +71,8 @@ export default function TypePage() {
       const selectedAccount = allAccounts.find(
         (account) => account.accountNo === value
       );
+
+      if (selectedAccount) setBalance(selectedAccount.balance); // 선택한 계좌의 잔액 상태 업데이트
 
       setFormData((prevData) => ({
         ...prevData,
@@ -243,9 +246,18 @@ export default function TypePage() {
             >
               {/* 송금 계좌 */}
               <div className="flex flex-col items-start">
-                <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                  {t("regular.information.account")}
-                </label>
+                <div className="w-full flex justify-between">
+                  <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
+                    {t("regular.information.account")}
+                  </label>
+                  {formData.accountNo && (
+                    <p className="text-[0.875rem] text-[#4E5969] text-left">
+                      {`잔액: ${new Intl.NumberFormat("ko-KR").format(
+                        Number(balance)
+                      )}원`}
+                    </p>
+                  )}
+                </div>
                 <div className="relative w-full">
                   <select
                     name="accountNo"
@@ -289,7 +301,6 @@ export default function TypePage() {
                   />
                 </div>
               </div>
-
               {/* 수취 통화 코드 */}
               <div className="flex flex-col items-start">
                 <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
@@ -309,7 +320,6 @@ export default function TypePage() {
                   />
                 </div>
               </div>
-
               {/* 외화 거래 금액 */}
               <section className="flex flex-col gap-2">
                 <div className="flex flex-col items-start">
@@ -327,6 +337,28 @@ export default function TypePage() {
                     className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
                   />
                 </div>
+                {/* ✅ TODO: 나중에 필요하다고 하면 구현 */}
+                {/* {formData.accountNo &&
+                  Number(formData.sendAmount) > 0 &&
+                  Number(balance) < Number(formData.sendAmount) &&
+                  (() => {
+                    const balanceNum = Number(
+                      String(balance).replace(/,/g, "")
+                    );
+                    const sendAmountNum = Number(
+                      String(formData.sendAmount).replace(/,/g, "")
+                    );
+
+                    return (
+                      formData.accountNo &&
+                      sendAmountNum > 0 &&
+                      balanceNum < sendAmountNum && (
+                        <p className="text-red-500 text-sm mt-1">
+                          잔액이 부족합니다.
+                        </p>
+                      )
+                    );
+                  })()} */}
 
                 {/* 우대율 */}
                 {preferentialRate > 0 && (
@@ -335,7 +367,6 @@ export default function TypePage() {
                   </p>
                 )}
               </section>
-
               {/* 송금 주기 */}
               <div className="flex flex-col items-start">
                 <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
@@ -365,7 +396,6 @@ export default function TypePage() {
                   <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86909C] pointer-events-none" />
                 </div>
               </div>
-
               {/* 송금 주기 상세 */}
               <div className="flex flex-col items-start">
                 <label className="block text-sm font-semibold text-[#4E5969] mb-[6px]">
@@ -415,7 +445,6 @@ export default function TypePage() {
                     </p>
                   )}
               </div>
-
               {/* 송금 시작일 */}
               <div className="flex flex-col items-start">
                 <label className="block text-sm font-semibold text-[#4E5969] mb-[6px]">
