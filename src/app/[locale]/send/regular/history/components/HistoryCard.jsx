@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CN, JP, US } from "country-flag-icons/react/3x2";
+import { MY, JP, US, TH } from "country-flag-icons/react/3x2";
 import { FileText, MoreVertical, Trash2 } from "lucide-react";
 import Modal from "../../components/Modal";
 import {
@@ -18,7 +18,8 @@ import { useTranslations } from "next-intl";
 const CurrencyFlag = {
   JPY: JP,
   USD: US,
-  CNY: CN,
+  MYR: MY,
+  THB: TH,
 };
 
 export default function HistoryCard({

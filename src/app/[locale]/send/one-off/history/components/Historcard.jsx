@@ -6,7 +6,6 @@ import { CN, JP, US, MA, TH } from "country-flag-icons/react/3x2";
 const CurrencyFlag = {
   JPY: JP,
   USD: US,
-  CNY: CN,
   THB: TH,
   MYR: MA,
 };
