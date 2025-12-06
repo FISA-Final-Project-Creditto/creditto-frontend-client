@@ -20,7 +20,7 @@ export default function LoadingPage() {
     <main className="flex items-center justify-center bg-white py-20">
       <div className="w-full max-w-[440px]">
         {/* 제목 영역 */}
-        <div className="w-full p-8 border">
+        <div className="w-full p-8">
           <h1 className="text-2xl font-semibold leading-relaxed text-black text-left">
             고객님의 정보를 확인하고 있어요
           </h1>
