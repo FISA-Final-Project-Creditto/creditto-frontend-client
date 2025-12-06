@@ -339,6 +339,28 @@ export default function TypePage() {
                     className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
                   />
                 </div>
+                {/* ✅ TODO: 나중에 필요하다고 하면 구현 */}
+                {/* {formData.accountNo &&
+                  Number(formData.sendAmount) > 0 &&
+                  Number(balance) < Number(formData.sendAmount) &&
+                  (() => {
+                    const balanceNum = Number(
+                      String(balance).replace(/,/g, "")
+                    );
+                    const sendAmountNum = Number(
+                      String(formData.sendAmount).replace(/,/g, "")
+                    );
+
+                    return (
+                      formData.accountNo &&
+                      sendAmountNum > 0 &&
+                      balanceNum < sendAmountNum && (
+                        <p className="text-red-500 text-sm mt-1">
+                          잔액이 부족합니다.
+                        </p>
+                      )
+                    );
+                  })()} */}
 
                 {/* 우대율 */}
                 {preferentialRate > 0 && (
