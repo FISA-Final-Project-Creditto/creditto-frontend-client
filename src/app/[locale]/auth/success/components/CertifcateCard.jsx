@@ -20,7 +20,7 @@ export default function CertificateCard({ name, expiryDate }) {
           <div>
             {/* 송금인 이름 */}
             <h3 className="text-2xl font-bold text-white text-left tracking-wide">
-              이지은
+              {name}
             </h3>
             {/* 만료일(현재 생성일로부터 1년 후) */}
             <p className="text-sm text-[#C9CDD4] mt-1">{expiryDate} 만료</p>
