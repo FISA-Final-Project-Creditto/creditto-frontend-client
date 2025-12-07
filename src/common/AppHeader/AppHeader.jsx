@@ -1,6 +1,7 @@
 "use client";
 import Hambuger from "@/src/app/[locale]/main/components/Hambuger";
 import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function AppHeader({
@@ -8,13 +9,23 @@ export default function AppHeader({
   showBack = true,
   show = true,
   showHamburger = true,
+  onBackClick, // 특정 뒤로가기로 이동하고 싶을 때 실행하는 함수
 
   // 수정 관련
   showEdit = false,
   edit,
   handleEdit,
 }) {
+  const router = useRouter();
   if (!show) return null;
+
+  const handleBack = () => {
+    if (onBackClick) {
+      onBackClick();
+    } else {
+      router.back();
+    }
+  };
 
   return (
     <header className="w-full flex items-center justify-between px-6 py-3 bg-white ">
@@ -22,9 +33,7 @@ export default function AppHeader({
         {showBack && (
           <ChevronLeft
             className="w-15 h-15 cursor-pointer"
-            onClick={() => {
-              history.back();
-            }}
+            onClick={handleBack}
           />
         )}
       </div>

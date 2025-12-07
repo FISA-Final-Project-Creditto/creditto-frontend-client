@@ -316,7 +316,7 @@
       },
       "complete": {
         "title": "신청이 완료되었습니다",
-        "currentScore": "현재 신청도 접수 : ",
+        "currentScore": "현재 신용도 점수 : ",
         "months12": "12개월 정기 송금시",
         "months18": "18개월 정기 송금시",
         "months24": "24개월 정기 송금시",
@@ -367,7 +367,7 @@
     "success": {
       "title": "계좌가 생성되었어요 !",
       "description": "이제 Creditto의 생활을 시작해 보세요",
-      "toMain": "메인 화면으로"
+      "toMyAccount": "내 계좌 확인하기"
     },
     "import": {
       "noAccessToken": "Access Token이 없습니다.",

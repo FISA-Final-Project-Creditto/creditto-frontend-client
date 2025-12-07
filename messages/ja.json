@@ -367,7 +367,7 @@
     "success": {
       "title": "口座が開設されました！",
       "description": "さあ、Credittoのある生活を始めましょう。",
-      "toMain": "メイン画面へ"
+      "toMyAccount": "マイアカウントを確認する"
     },
     "import": {
       "noAccessToken": "アクセストークンがありません。",

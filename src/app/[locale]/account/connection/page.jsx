@@ -11,7 +11,7 @@ export default function AccountConnectionPage() {
   const t = useTranslations("account.connection");
   const router = useRouter();
   // Redux 스토어에서 계좌 목록을 가져옵니다.
-  const name = "정용준"; // TODO: get user name from store
+  const name = sessionStorage.getItem("userName"); // TODO: get user name from store
 
   useEffect(() => {
     const accountsString = sessionStorage.getItem("accounts");
@@ -42,7 +42,7 @@ export default function AccountConnectionPage() {
         </div>
         <div>{t("description", { name })}</div>
       </div>
-      <div className="w-full  min-h-[440px] justify-center items-center flex">
+      <div className="w-full min-h-[440px] justify-center items-center flex flex-1">
         <Image
           src="/icon/woori.png"
           alt={t("wooriLogo")}
@@ -52,7 +52,7 @@ export default function AccountConnectionPage() {
       </div>
       <footer>
         <BottomBar
-          label={t("complete")}
+          label="다음"
           onClick={() => router.push("/account/my_account")}
           isActive={true}
         />

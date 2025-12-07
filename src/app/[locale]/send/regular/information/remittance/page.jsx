@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import StepProgressBar from "../../../components/StepProgressbar";
 import BottomBar from "../../../components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-import AddressModal from "./components/AddressModal";
 import { setClientData } from "@/src/store/features/send/sendSlice";
 import { useTranslations } from "next-intl";
 
@@ -20,10 +19,12 @@ const currencyToNationality = {
 
 export default function RemittancePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const dispatch = useDispatch();
   const t = useTranslations("send");
 
-  const receiveCurrency = useSelector((state) => state.send.receiveCurrency); // 수취 통화 코드
+  const receiveCurrency = useSelector((state) => state.send.receiveCurrency);
+  const clientName = useSelector((state) => state.send.name);
   console.log("수취 통화 코드: ", receiveCurrency);
 
   // 국적
@@ -33,11 +34,21 @@ export default function RemittancePage() {
 
   // 송금인 정보값 상태 관리
   const [formData, setFormData] = useState({
-    clientName: "", // 송금인 이름
+    clientName: clientName || "", // 송금인 이름
     address: "", // 송금인 주소
     detailAddr: "", // 상세 주소
   });
-  const [isPostcodeOpen, setIsPostcodeOpen] = useState(false); // 우편 번호 모달 오픈 여부
+
+  useEffect(() => {
+    // 주소 입력 창에서 설정한 주소를 가져오기
+    const address = searchParams.get("address");
+    if (address) {
+      setFormData((prev) => ({
+        ...prev,
+        address: decodeURIComponent(address),
+      }));
+    }
+  }, [searchParams.get("address")]);
 
   // 폼 유효성 검사
   const isFormValid =
@@ -54,13 +65,12 @@ export default function RemittancePage() {
     }));
   };
 
-  // 주소 변경 핸들러: 모달에서 넘어온 address를 그대로 상태에 넣기
-  const handleCompletePostcode = (fullAddress) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      address: fullAddress,
-    }));
-    setIsPostcodeOpen(false);
+  // 주소 입력칸 클릭 시 주소창으로 이동
+  const handleAddressClick = () => {
+    dispatch(setClientData({ name: formData.clientName }));
+
+    // 카카오 주소창으로 이동
+    router.push("/send/regular/information/remittance/address");
   };
 
   // 송금인 정보 저장 후 페이지 이동
@@ -157,7 +167,7 @@ export default function RemittancePage() {
                   {t("regular.information.address")}
                 </label>
                 <div
-                  onClick={() => setIsPostcodeOpen(true)}
+                  onClick={handleAddressClick}
                   className="w-full cursor-pointer"
                 >
                   <input
@@ -193,12 +203,6 @@ export default function RemittancePage() {
           {/* 하단 버튼 */}
         </section>
       </div>
-
-      <AddressModal
-        open={isPostcodeOpen}
-        onOpenChange={setIsPostcodeOpen}
-        onComplete={handleCompletePostcode}
-      />
 
       <BottomBar
         label={t("common.next")}

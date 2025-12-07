@@ -11,7 +11,7 @@ export default function LoadingPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       router.push("/send/regular/complete");
-    }, 5000);
+    }, 3000);
     return () => clearTimeout(timer);
   }, [router]);
 

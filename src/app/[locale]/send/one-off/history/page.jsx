@@ -32,6 +32,7 @@ export default function HistoryPage() {
         if (code === 200) {
           console.log("모든 계좌 조회 성공: ", data);
           setAllAccounts(data); // 계좌 목록 저장
+          setSelectedAccount(data[0].accountNo);
         }
       } catch (error) {
         console.error("모든 계좌 조회 중 오류 발생: ", error);

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import ConsentAgree from "./components/ConsentAgree";
 
 export default function ConsentPage() {
@@ -19,7 +20,18 @@ export default function ConsentPage() {
     { id: 3, label: "거래내역 기반 신용평가 모델 활용 동의서", required: true },
   ];
 
+  const router = useRouter();
+
+  const handleBack = () => {
+    router.push("/credit/first");
+  };
+
   return (
-    <ConsentAgree title="약관 동의" consents={consents} nextPath={nextPath} />
+    <ConsentAgree
+      title="약관 동의"
+      consents={consents}
+      nextPath={nextPath}
+      onBackClick={handleBack}
+    />
   );
 }

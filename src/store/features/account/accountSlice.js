@@ -50,6 +50,11 @@ export const accountSlice = createSlice({
       state.accountType = null;
       state.password = null;
     },
+
+    // 계좌 목록 상태를 초기화하여 다시 불러오도록 함
+    resetAccountStatus: (state) => {
+      state.status = "idle";
+    },
   },
 });
 
@@ -58,6 +63,7 @@ export const {
   setAccountsBalance,
   setCreateAccount,
   clearCreateAccount,
+  resetAccountStatus,
 } = accountSlice.actions;
 
 export default accountSlice.reducer;

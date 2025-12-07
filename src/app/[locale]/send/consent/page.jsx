@@ -66,5 +66,16 @@ export default function ConsentPage() {
     { id: 6, label: "해외송금 제한 국가 관련 확인 동의서", required: true },
   ];
 
-  return <ConsentAgree title="약관 동의" consents={consents} />;
+  // 송금 메인페이지로 이동
+  const handleBack = () => {
+    router.push("/send");
+  };
+
+  return (
+    <ConsentAgree
+      title="약관 동의"
+      consents={consents}
+      onBackClick={handleBack}
+    />
+  );
 }

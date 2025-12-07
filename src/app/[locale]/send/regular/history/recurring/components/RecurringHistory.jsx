@@ -3,8 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 
-// 송금 거래 내역 상세 조회 (Presentational Component)
+// 송금 거래 내역 상세 조회
 export default function RecurringHistory({ record, onClose }) {
+  const t = useTranslations("send.common");
   // ,(쉼표)를 3자리로 끊어서 설정
   const formatNumber = (num) => {
     if (num === null || num === undefined) return "";

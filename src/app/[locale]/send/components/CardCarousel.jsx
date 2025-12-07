@@ -3,12 +3,9 @@
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import { Globe, Repeat } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import SendBtn from "../regular/components/SendBtn";
-import { credittoApi } from "@/src/app/api/axios";
+import SendBtn from "./SendBtn";
 
 // 송금 유형 데이터
 const transferTypes = [
@@ -35,34 +32,13 @@ export default function CardCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
+  // framer-motion을 첫 렌더 후 활성화 → FCP 개선
+  const [enableMotion, setEnableMotion] = useState(false);
   useEffect(() => {
-    // 계좌 잔액 합산 조회 by UserId
-    const fetchAccountBalance = async () => {
-      try {
-        const accessToken = sessionStorage.getItem("accessToken");
-
-        const res = await credittoApi.get("/api/accounts/me/balance", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        const { code, data } = res.data;
-        if (code === 200) {
-          // 송금 화면 이용 가능
-          console.log("연동된 계좌 있음");
-        } else {
-          // 메인페이지로 이동
-          alert("연동된 계좌가 없습니다");
-          router.replace("/");
-        }
-      } catch (error) {
-        console.error("계좌 잔액 합산 조회 by UserId 오류 발생: ", error);
-      }
-    };
-
-    fetchAccountBalance();
+    setEnableMotion(true);
   }, []);
+
+  const Wrapper = enableMotion ? motion.div : "div";
 
   return (
     <div className="flex-1 flex justify-center relative">
@@ -71,35 +47,29 @@ export default function CardCarousel() {
           const isActive = index === activeIndex;
 
           return (
-            <motion.div
+            <Wrapper
               key={type.id}
               className={clsx(
                 "absolute w-full max-w-[300px] h-[400px] rounded-3xl shadow-2xl cursor-pointer [transform-style:preserve-3d]",
-                "absolute w-full max-w-[300px] h-[400px] rounded-3xl shadow-2xl cursor-pointer [transform-style:preserve-3d]",
                 isActive ? "shadow-blue-200" : "shadow-none"
               )}
-              initial={{ x: 100, opacity: 0 }}
-              animate={{
-                x: isActive ? 0 : activeIndex === 0 ? 40 : -40,
-                scale: isActive ? 1 : 0.85,
-                opacity: isActive ? 1 : 0.4,
-                zIndex: isActive ? 10 : 0,
-                rotateY: isActive
-                  ? isFlipped
-                    ? 180
-                    : 0
-                  : activeIndex === 0
-                  ? -10
-                  : 10,
-                rotateY: isActive
-                  ? isFlipped
-                    ? 180
-                    : 0
-                  : activeIndex === 0
-                  ? -10
-                  : 10,
-              }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              {...(enableMotion && {
+                initial: { x: 100, opacity: 0 },
+                animate: {
+                  x: isActive ? 0 : activeIndex === 0 ? 40 : -40,
+                  scale: isActive ? 1 : 0.85,
+                  opacity: isActive ? 1 : 0.4,
+                  zIndex: isActive ? 10 : 0,
+                  rotateY: isActive
+                    ? isFlipped
+                      ? 180
+                      : 0
+                    : activeIndex === 0
+                    ? -10
+                    : 10,
+                },
+                transition: { type: "spring", stiffness: 300, damping: 30 },
+              })}
               onClick={() => {
                 if (index === activeIndex) {
                   setIsFlipped((prev) => !prev);
@@ -108,50 +78,28 @@ export default function CardCarousel() {
                   setIsFlipped(false);
                 }
               }}
-              drag={isActive && !isFlipped ? "x" : false}
-              dragElastic={0}
-              dragMomentum={false}
-              onDragEnd={(e, info) => {
-                if (
-                  info.offset.x < -50 &&
-                  activeIndex < transferTypes.length - 1
-                ) {
-                  setActiveIndex((prev) => prev + 1);
-                  setIsFlipped(false);
-                  setIsFlipped(false);
-                } else if (info.offset.x > 50 && activeIndex > 0) {
-                  setActiveIndex((prev) => prev - 1);
-                  setIsFlipped(false);
-                  setIsFlipped(false);
-                }
-              }}
+              {...(enableMotion && {
+                drag: isActive && !isFlipped ? "x" : false,
+                dragElastic: 0,
+                dragMomentum: false,
+                onDragEnd: (e, info) => {
+                  if (
+                    info.offset.x < -50 &&
+                    activeIndex < transferTypes.length - 1
+                  ) {
+                    setActiveIndex((prev) => prev + 1);
+                    setIsFlipped(false);
+                  } else if (info.offset.x > 50 && activeIndex > 0) {
+                    setActiveIndex((prev) => prev - 1);
+                    setIsFlipped(false);
+                  }
+                },
+              })}
             >
-              {/* 카드 앞면 */}
+              {/* 앞면 */}
               <div
                 className={clsx(
-                  "absolute w-full h-full rounded-3xl p-8 translate-z-0",
-                  type.color
-                )}
-              >
-                <div>
-                  <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-12 backdrop-blur-sm">
-                    <type.icon className="w-6 h-6 text-white" />
-                  </div>
-                  <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-medium mb-3 backdrop-blur-sm">
-                    {type.subtitle}
-                  </span>
-                  <h3 className="text-2xl font-bold text-white mb-2">
-                    {type.title}
-                  </h3>
-                  <p className="text-white/80 whitespace-pre-line leading-relaxed">
-                    {type.description}
-                  </p>
-                </div>
-              </div>
-              {/* 카드 앞면 */}
-              <div
-                className={clsx(
-                  "absolute w-full h-full rounded-3xl p-8 translate-z-0",
+                  "absolute w-full h-full rounded-3xl p-8 translate-z-0 [backface-visibility:hidden]",
                   type.color
                 )}
               >
@@ -171,27 +119,26 @@ export default function CardCarousel() {
                 </div>
               </div>
 
-              {/* 카드 뒷면 */}
+              {/* 뒷면 */}
               <div
                 className={clsx(
-                  "absolute w-full h-full rounded-3xl p-8 flex flex-col justify-center text-white [transform:rotateY(180deg)_translateZ(0)] backface-hidden",
+                  "absolute w-full h-full rounded-3xl p-8 flex flex-col justify-center text-white [transform:rotateY(180deg)_translateZ(0)] [backface-visibility:hidden]",
                   type.color
                 )}
               >
                 <div
-                  className={clsx(
+                  className={
                     isFlipped ? "opacity-100 visible" : "opacity-0 invisible"
-                  )}
+                  }
                 >
-                  {/* 정기 송금 */}
                   {type.id === "regular" && (
                     <div className="flex flex-col gap-2 mt-2 w-full">
                       <SendBtn
                         title="새로운 송금 등록"
                         subtitle={"원하는 날짜와\n금액을 설정해요"}
                         icon="plus"
-                        onClick={
-                          () => router.push("/send/consent?type=regular") // 약관 동의 페이지로 이동
+                        onClick={() =>
+                          router.push("/send/consent?type=regular")
                         }
                       />
                       <SendBtn
@@ -202,7 +149,7 @@ export default function CardCarousel() {
                       />
                     </div>
                   )}
-                  {/* 일회성 송금 */}
+
                   {type.id === "one-off" && (
                     <div className="flex flex-col gap-2 mt-2 w-full">
                       <SendBtn
@@ -217,15 +164,13 @@ export default function CardCarousel() {
                         title="송금 내역 조회"
                         subtitle={"지금까지 보낸\n기록을 모아봐요"}
                         icon="file"
-                        onClick={() => {
-                          router.push("/send/one-off/history");
-                        }}
+                        onClick={() => router.push("/send/one-off/history")}
                       />
                     </div>
                   )}
                 </div>
               </div>
-            </motion.div>
+            </Wrapper>
           );
         })}
       </div>

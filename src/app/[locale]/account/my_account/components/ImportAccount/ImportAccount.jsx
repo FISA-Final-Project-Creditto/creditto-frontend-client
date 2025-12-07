@@ -1,6 +1,6 @@
 "use client";
 import api, { credittoApi } from "@/src/app/api/axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAccounts } from "@/src/store/features/account/accountSlice";
@@ -13,6 +13,7 @@ export default function ImportAccount() {
   const t = useTranslations("account.myAccount");
   const t2 = useTranslations("account.import");
   const router = useRouter();
+  const searchParams = useSearchParams();
   const dispatch = useDispatch();
   const { accounts, status } = useSelector((state) => state.account);
 
@@ -47,11 +48,42 @@ export default function ImportAccount() {
       }
     };
 
-    // 계좌 정보가 아직 없을 때만 API 호출
-    if (status === "idle") {
+    // 계좌 정보가 아직 없을 때 또는 refresh 파라미터가 있을 때 API 호출
+    const shouldRefresh = searchParams.get("refresh") === "true";
+    if (status === "idle" || shouldRefresh) {
       fetchAccounts();
     }
-  }, [dispatch, status, t2]);
+  }, [dispatch, status, t2, searchParams]);
+
+  // 페이지 포커스 시마다 계좌 목록을 새로고침
+  useEffect(() => {
+    const handleFocus = async () => {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        if (!accessToken) return;
+
+        const response = await credittoApi.get("/api/accounts/me", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.data && response.data.data) {
+          dispatch(setAccounts(response.data.data));
+          sessionStorage.setItem(
+            "accounts",
+            JSON.stringify(response.data.data)
+          );
+        }
+      } catch (error) {
+        console.error(t2("fetchFail"), error);
+      }
+    };
+
+    // 브라우저 탭이 다시 포커스될 때 계좌 목록 갱신
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+  }, [dispatch, t2]);
   const handleAccount = () => {
     // 비밀번호 확인을 요청하고, 성공 시 '/account/create'로 이동하도록 설정
     dispatch(requireVerification("/account/create"));
@@ -97,16 +129,10 @@ export default function ImportAccount() {
           ))
         ) : (
           <div className="text-center text-gray-500 py-8">
-            <div className=" w-full h-full bg-blue-300 ">
+            <div className=" w-full h-full ">
               <p>{t("noLinkedAccount")}</p>
             </div>
-            <footer>
-              <BottomBar
-                label={t("goToCreate")}
-                onClick={handleAccount}
-                isActive={true}
-              />
-            </footer>
+           
           </div>
         )}
       </div>

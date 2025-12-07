@@ -1,13 +1,28 @@
 "use client";
-import AppHeader from "@/src/common/AppHeader/AppHeader";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Emoji from "../components/Emoji";
 import BottomSheet from "@/src/common/UI/BottomSheet/BottomSheet";
+import { credittoApi } from "@/src/app/api/axios";
+import { useDispatch } from "react-redux";
+import { setConsentChecked } from "@/src/store/features/consent/consentSlice";
+import AppHeader from "@/src/common/AppHeader/AppHeader";
 
 export default function CreditFirst() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // 약관 ID 리스트 아이디 초기화
+    const consentIds = [1, 2, 3];
+
+    // 각 약관의 체크 상태를 false로 초기화
+    consentIds.forEach((id) => {
+      dispatch(setConsentChecked({ id: String(id), checked: false }));
+    });
+  }, [dispatch]);
+
   return (
     <main className="h-dvh flex justify-center items-center bg-[#e5e5e5]">
       <div className="w-full max-w-[440px] min-h-dvh mx-auto justify-start flex flex-col bg-white">
@@ -16,6 +31,7 @@ export default function CreditFirst() {
           showHamburger={false}
           showBack={true}
           show={true}
+          onBackClick={() => router.replace("/main")} // 메인페이지로 이동하는 건 replace로
         />
         <div className="mt-8 text-2xl font-bold text-left ml-5 h-20">
           <span className="text-[#0C72BA] font-bold text-[26px]">신용평가</span>{" "}
@@ -40,11 +56,38 @@ export default function CreditFirst() {
 
         <div className="w-full flex flex-col justify-center mt-auto mb-14 px-4">
           <div
-            className="w-full h-20 cursor-pointer flex justify-center items-center text-[#86909C] underline text-lg "
-            onClick={(e) => {
-              // 이벤트 버블링
+            className="w-full h-20 cursor-pointer flex justify-center items-center text-[#86909C] underline text-lg"
+            onClick={async (e) => {
               e.stopPropagation();
-              router.push("/signup/permission");
+              try {
+                const accessToken = sessionStorage.getItem("accessToken");
+                const userId = sessionStorage.getItem("userId");
+                if (!accessToken || !userId) {
+                  router.push("/signup/permission");
+                  return;
+                }
+
+                const res = await credittoApi.get(
+                  `/api/credit-score/${userId}`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${accessToken}`,
+                    },
+                  }
+                );
+
+                // API 조회 성공 시, 점수를 localStorage에 저장합니다.
+                const newScore = res.data?.credit_score;
+                if (newScore !== undefined) {
+                  const userScoreKey = `creditScore_${userId}`;
+                  localStorage.setItem(userScoreKey, String(newScore));
+                }
+
+                router.push("/main");
+              } catch (error) {
+                // 실패 시 권한/설정 페이지로 이동
+                router.push("/signup/permission");
+              }
             }}
           >
             연동없이 바로 조회하기

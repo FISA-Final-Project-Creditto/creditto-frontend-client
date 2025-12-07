@@ -162,6 +162,7 @@ export default function SecurePage({ length = 6 }) {
           sessionStorage.setItem("accessToken", response.data.access_token);
           sessionStorage.setItem("refreshToken", response.data.refresh_token);
           sessionStorage.setItem("userId", response.data.user_id);
+          sessionStorage.setItem("userName" , response.data.userName);
         }
 
         // 저장된 목적지(redirectPath)로 이동. 없으면 기본값으로 /main
