@@ -5,16 +5,10 @@ import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { setConsentChecked } from "@/src/store/features/consent/consentSlice";
 import { clearModeData } from "@/src/store/features/send/sendModeSlice";
 import { useTranslations } from "next-intl";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-
-// 클라이언트 전용 카드 캐러셀
-const CardCarousel = dynamic(() => import("./CardCarousel"), {
-  ssr: false,
-  loading: () => <div className="w-full h-[400px] rounded-3xl bg-slate-100" />,
-});
+import CardCarousel from "./CardCarousel";
 
 export default function SendMainClient() {
   const router = useRouter();
