@@ -2,16 +2,14 @@
 
 import { ArrowRight, FileText, Plus, Settings } from "lucide-react";
 
-// 아이콘 매핑
 const iconMap = {
   plus: Plus,
   file: FileText,
   setting: Settings,
 };
 
-// 컴포넌트
 export default function SendBtn({ title, subtitle, icon, onClick }) {
-  const IconComponent = iconMap[icon]; // icon 문자열 → 실제 컴포넌트
+  const IconComponent = iconMap[icon];
 
   return (
     <button
@@ -22,13 +20,15 @@ export default function SendBtn({ title, subtitle, icon, onClick }) {
       <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mr-4 transition-colors group-hover:bg-white/20 shrink-0">
         {IconComponent && <IconComponent className="w-5 h-5 text-white" />}
       </div>
+
       <div className="flex-1">
         <h3 className="font-semibold text-white text-lg">{title}</h3>
         <p className="text-white/70 text-sm mt-0.5 whitespace-pre-line">
           {subtitle}
         </p>
       </div>
-      <ArrowRight className="w-5 h-5 text-white/50 transition-colors group-hover:text-white ml-2 shrink-0" />
+
+      <ArrowRight className="w-5 h-5 text-white/50 group-hover:text-white transition-colors ml-2 shrink-0" />
     </button>
   );
 }
