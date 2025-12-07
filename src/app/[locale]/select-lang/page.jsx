@@ -14,7 +14,7 @@ export default function LanguageSelection() {
   const languages = [
     { code: "ko", name: "한국어", flag: "🇰🇷", englishName: "Korean" },
     { code: "en", name: "English", flag: "🇺🇸", englishName: "English" },
-    { code: "jp", name: "日本語", flag: "🇯🇵", englishName: "Japanese" },
+    { code: "ja", name: "日本語", flag: "🇯🇵", englishName: "Japanese" },
   ];
 
   // 언어 선택 함수
@@ -28,7 +28,7 @@ export default function LanguageSelection() {
 
     // URL 쿼리에서 'next' 파라미터 값을 가져옵니다. 없으면 '/main'을 기본값으로 사용합니다.
     const nextPath = searchParams.get("next") || "/main";
-    
+
     // 선택된 언어와 다음 경로를 조합하여 최종 URL로 이동합니다.
     router.push(`/${selectedLanguage}${nextPath}`);
   };
