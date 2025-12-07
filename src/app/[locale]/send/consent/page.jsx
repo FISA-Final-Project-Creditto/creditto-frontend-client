@@ -18,7 +18,6 @@ export default function ConsentPage() {
   }); // 연동 계좌
 
   useEffect(() => {
-    // 다른 팀원의 구현으로 주석 처리!!
     // 계좌 잔액 합산 조회 by UserId
     const fetchAccountBalance = async () => {
       try {

@@ -6,7 +6,6 @@ import RoundedIconTabs from "./components/Tabs";
 import FunctionButton from "./components/FunctionButton/FunctionButton";
 import Money from "../maine/components/Money/Money";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
 import { credittoApi } from "../../api/axios";
 import { useTranslations } from "next-intl";
 
