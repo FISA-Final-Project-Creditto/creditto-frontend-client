@@ -45,7 +45,6 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-
 body {
   text-align: center;
   display: flex;
@@ -55,9 +54,9 @@ body {
   margin: 0px auto;
   box-shadow: rgb(0, 0, 0, 0.16) 0px 8px 36px;
   box-sizing: border-box;
-  font-family: "Pretendard", system-ui, sans-serif;
+  /* font-family: "Pretendard", system-ui, sans-serif; */
+  font-family: var(--font-pretendard);
   font-weight: 400; /* Regular 추가 */
-
 }
 
 @keyframes fade-in-up {
@@ -74,11 +73,12 @@ body {
 .animate-fade-in-up {
   animation: fade-in-up 0.35s ease-out;
 }
-@font-face {
+/* @font-face {
   font-family: "Pretendard";
   src: url("/fonts/Pretendard-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -86,6 +86,7 @@ body {
   src: url("/fonts/Pretendard-SemiBold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -93,6 +94,7 @@ body {
   src: url("/fonts/Pretendard-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -100,7 +102,8 @@ body {
   src: url("/fonts/Pretendard-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
-}
+  font-display: swap;
+} */
 
 :root {
   --radius: 0.625rem;
