@@ -7,21 +7,21 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-export default function SplashScreen({ hasSerial }) {
+export default function SplashScreen() {
   const router = useRouter();
   const dispatch = useDispatch();
   const t = useTranslations();
 
-  const [isClient, setIsClient] = useState(false);
+  //   const [isClient, setIsClient] = useState(false);
 
   // hydration 이후에만 클라이언트로 인식됨
-  useEffect(() => {
-    const setClient = () => {
-      setIsClient(true);
-    };
+  //   useEffect(() => {
+  //     const setClient = () => {
+  //       setIsClient(true);
+  //     };
 
-    setClient();
-  }, []);
+  //     setClient();
+  //   }, []);
 
   useEffect(() => {
     if (!isClient) return; // sessionStorage는 클라이언트 환경에서만 접근
@@ -30,18 +30,12 @@ export default function SplashScreen({ hasSerial }) {
     if (accessToken) {
       router.replace("/main"); // 뒤로가기 시 다시 로그인 페이지로 오지 않도록 replace 사용
     }
-  }, [isClient, router]);
+  }, [router]);
 
   const handleLogin = () => {
-    if (!isClient) return;
+    // if (!isClient) return;
 
-    if (!hasSerial) {
-      router.push("/select-lang?next=/login");
-    } else {
-      // 비밀번호 확인을 요청하고, 성공 시 '/main'으로 이동하도록 설정
-      dispatch(requireVerification("/main"));
-      router.push("/select-lang?next=/auth/pw");
-    }
+    router.push("/select-lang?next=/login");
   };
 
   return (
