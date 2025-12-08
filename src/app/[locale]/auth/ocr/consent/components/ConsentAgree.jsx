@@ -123,7 +123,7 @@ export default function ConsentAgree({
 
   return (
     <>
-      <AppHeader title={title} show={true} showHamburger={true} />
+      <AppHeader title={title} show={true} showHamburger={false} />
 
       <div className="flex-1 px-8 pt-16 pb-10 text-left">
         {/* 전체 동의 */}

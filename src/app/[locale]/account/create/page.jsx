@@ -80,7 +80,7 @@ export default function AccountCreatePage() {
       <AppHeader
         title={t("title")}
         show={true}
-        showHamburger={true}
+        showHamburger={false}
         showBack={true}
       />
       <div className="flex flex-col flex-1">

@@ -211,7 +211,12 @@ export default function SecurePage({ length = 4 }) {
 
   return (
     <>
-      <AppHeader title="계좌 비밀번호 입력" show={true} showBack={true} />
+      <AppHeader
+        title="계좌 비밀번호 입력"
+        show={true}
+        showBack={true}
+        showHamburger={false}
+      />
       <section
         className="min-h-dvh flex flex-col pt-[6.25rem] bg-white"
         onContextMenu={(e) => e.preventDefault()}
