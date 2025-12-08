@@ -204,9 +204,7 @@ export default function TypePage() {
       totalKrwAmountWithFee >
         selectedAccountDetails.balance - calculatedFee * appliedExchangeRate // 원화 수수료까지 고려
     ) {
-      setAmountError(
-        tOneOffPage("alert_insufficient_balance")
-      );
+      setAmountError(tOneOffPage("alert_insufficient_balance"));
 
       if (exchangeRate > 0) {
         // 보낼 수 있는 최대 외화 금액(수수료 제외)을 계산합니다.
@@ -382,7 +380,8 @@ export default function TypePage() {
       // 수취인 정보 저장
       dispatch(setRecipientInfo(recipientData));
 
-      console.log("[송금하기 버튼 클릭 시 Redux로 보낸 데이터]", { // 이 부분도 나중에 국제화 필요
+      console.log("[송금하기 버튼 클릭 시 Redux로 보낸 데이터]", {
+        // 이 부분도 나중에 국제화 필요
         receiveCurrency: formData.receiveCurrency,
         sendInfo: {
           ...submissionData,
@@ -586,18 +585,18 @@ export default function TypePage() {
               {formData.targetAmount && (
                 <div className="mt-2 w-full text-sm text-gray-500 space-y-1 border-t pt-2">
                   <div className="flex justify-between">
-                    <span>기준 환율:</span>
+                    <span>{tOneOffPage("base_exchange_rate")}:</span>
                     <span>
                       1 {formData.receiveCurrency} = {exchangeRate?.toFixed(2)}{" "}
                       {tOneOffPage("krw_unit")}
                     </span>
                   </div>
                   <div className="flex justify-between text-blue-600">
-                    <span>우대율:</span>
+                    <span>{tOneOffPage("preferential_rate")}:</span>
                     <span>{(personalFee * 100).toFixed(1)}%</span>
                   </div>
                   <div className="flex justify-between font-semibold text-black">
-                    <span>적용 환율:</span>
+                    <span>{tOneOffPage("applied_exchange_rate")}:</span>
                     <span>
                       1 {formData.receiveCurrency} ={" "}
                       {appliedExchangeRate?.toFixed(2)}{" "}
@@ -623,7 +622,9 @@ export default function TypePage() {
                     </span>
                   </div>
                   <div className="flex justify-between font-semibold">
-                    <span>{tOneOffPage("confirm_drawer_actual_receive_amount")}:</span>
+                    <span>
+                      {tOneOffPage("confirm_drawer_actual_receive_amount")}:
+                    </span>
                     <span>
                       {new Intl.NumberFormat().format(
                         actualReceivedAmount.toFixed(2)
@@ -640,7 +641,9 @@ export default function TypePage() {
                       isBalanceInsufficient ? "text-red-500" : "text-gray-600"
                     }`}
                   >
-                    <span>{tOneOffPage("confirm_drawer_total_withdrawal_amount")}</span>
+                    <span>
+                      {tOneOffPage("confirm_drawer_total_withdrawal_amount")}
+                    </span>
                     <span className="font-semibold">
                       {new Intl.NumberFormat("ko-KR").format(
                         totalKrwAmount.toFixed(0)
@@ -670,32 +673,44 @@ export default function TypePage() {
             </DrawerDescription>
             <div className="mt-4 space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-[#86909C]">{tOneOffPage("confirm_drawer_sender_account")}</span>
+                <span className="text-[#86909C]">
+                  {tOneOffPage("confirm_drawer_sender_account")}
+                </span>
                 <span className="font-medium">{formData.senderAccountNO}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#86909C]">{tOneOffPage("confirm_drawer_recipient_name")}</span>
+                <span className="text-[#86909C]">
+                  {tOneOffPage("confirm_drawer_recipient_name")}
+                </span>
                 <span className="font-medium">{formData.recipientName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#86909C]">{tOneOffPage("confirm_drawer_recipient_account")}</span>
+                <span className="text-[#86909C]">
+                  {tOneOffPage("confirm_drawer_recipient_account")}
+                </span>
                 <span className="font-medium">
                   {recipientBankInfo.bankName} {formData.recipientAccountNO}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#86909C]">{tOneOffPage("confirm_drawer_send_date")}</span>
+                <span className="text-[#86909C]">
+                  {tOneOffPage("confirm_drawer_send_date")}
+                </span>
                 <span className="font-medium">{formData.startDate}</span>
               </div>
               <hr className="my-2" />
               <div className="flex justify-between">
-                <span className="text-[#86909C]">{tOneOffPage("confirm_drawer_send_amount")}</span>
+                <span className="text-[#86909C]">
+                  {tOneOffPage("confirm_drawer_send_amount")}
+                </span>
                 <span className="font-medium">
                   {formData.targetAmount} {formData.receiveCurrency}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#86909C]">{tOneOffPage("confirm_drawer_krw_amount")}</span>
+                <span className="text-[#86909C]">
+                  {tOneOffPage("confirm_drawer_krw_amount")}
+                </span>
                 <span className="font-medium">
                   {new Intl.NumberFormat("ko-KR").format(
                     totalKrwAmount.toFixed(0)
@@ -704,7 +719,9 @@ export default function TypePage() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#86909C]">{tOneOffPage("confirm_drawer_expected_fee")}</span>
+                <span className="text-[#86909C]">
+                  {tOneOffPage("confirm_drawer_expected_fee")}
+                </span>
                 <span className="font-medium">
                   {new Intl.NumberFormat().format(fee.toFixed(2))}{" "}
                   {formData.receiveCurrency}
@@ -716,7 +733,9 @@ export default function TypePage() {
                 </span>
               </div>
               <div className="flex justify-between font-semibold">
-                <span className="text-gray-800">{tOneOffPage("confirm_drawer_actual_receive_amount")}</span>
+                <span className="text-gray-800">
+                  {tOneOffPage("confirm_drawer_actual_receive_amount")}
+                </span>
                 <span className="text-lg text-black">
                   {new Intl.NumberFormat().format(
                     actualReceivedAmount.toFixed(2)
@@ -728,9 +747,13 @@ export default function TypePage() {
           </DrawerHeader>
 
           <DrawerFooter>
-            <Button onClick={handleFinalSubmit}>{tOneOffPage("confirm_drawer_submit_button")}</Button>
+            <Button onClick={handleFinalSubmit}>
+              {tOneOffPage("confirm_drawer_submit_button")}
+            </Button>
             <DrawerClose asChild>
-              <Button variant="outline">{tOneOffPage("confirm_drawer_cancel_button")}</Button>
+              <Button variant="outline">
+                {tOneOffPage("confirm_drawer_cancel_button")}
+              </Button>
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>

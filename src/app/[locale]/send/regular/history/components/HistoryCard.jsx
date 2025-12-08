@@ -148,7 +148,11 @@ export default function HistoryCard({
             {t("regular.history.to", { name: history.recipientName })}
           </div>
           <div className="text-sm text-[#86909C] font-semibold">
-            {history.recipientBankName}
+            {t("regular.history.recipientBankName", {
+              recipientBankName: t(
+                `regular.history.bankNames.${history.recipientBankName}`
+              ),
+            })}
           </div>
         </div>
 
