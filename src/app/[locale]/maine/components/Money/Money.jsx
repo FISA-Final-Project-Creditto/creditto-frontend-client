@@ -36,7 +36,7 @@ export default function Money({ accountState, isLoading }) {
     if (isBalanceVisible) {
       return formattedBalance;
     } else {
-      return "●●●●●";
+      return t("money.masked_balance");
     }
   };
 

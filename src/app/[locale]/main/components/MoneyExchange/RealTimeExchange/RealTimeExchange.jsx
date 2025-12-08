@@ -1,11 +1,13 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function RealTimeExchange() {
   const [usd, setUsd] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const t = useTranslations("main.realTimeExchange");
 
   useEffect(() => {
     const today = new Date();
@@ -21,21 +23,21 @@ export default function RealTimeExchange() {
         setUsd(usdData);
         setIsLoading(false);
 
-        console.log("환율 조회 데이터: ", data);
+        console.log(t("log_success"), data);
       })
       .catch((error) => {
-        console.error("환율 데이터 조회 실패:", error);
+        console.error(t("log_fail"), error);
         setIsLoading(false);
       });
-  }, []);
+  }, [t]);
 
   return (
     <div className="w-[90%] h-[46px] bg-white rounded-xl text-left flex items-center justify-between px-4 shadow-sm">
       <div className="flex items-center gap-2">
         <span className="text-2xl">🇺🇸</span>
-        <span className="text-gray-600 font-medium">
-          실시간 환율 ({usd?.cur_nm || "USD"})
-        </span>
+        <span className="text-gray-600 font-medium text-sm">{`${t(
+          "title"
+        )}(USD)`}</span>
       </div>
       <div className="font-bold text-gray-800">
         <span>
@@ -47,7 +49,7 @@ export default function RealTimeExchange() {
               )
             : "..."}
         </span>
-        <span className="text-gray-500 font-normal ml-1">원</span>
+        <span className="text-gray-500 font-normal ml-1">{t("krw")}</span>
       </div>
     </div>
   );

@@ -9,18 +9,19 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { usePathname, useRouter } from "next/navigation";
 import SettingsSidebar from "./SettingsSidebar";
-
-// 선택 언어 리스트
-const languages = [
-  { code: "ko", flag: "🇰🇷", label: "한국어" },
-  { code: "en", flag: "🇺🇸", label: "English" },
-  { code: "jp", flag: "🇯🇵", label: "日本語" },
-];
+import { useTranslations } from "next-intl";
 
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const t = useTranslations("main.header");
+
+  const languages = [
+    { code: "ko", flag: "🇰🇷", label: t("korean") },
+    { code: "en", flag: "🇺🇸", label: t("english") },
+    { code: "ja", flag: "🇯🇵", label: t("japanese") },
+  ];
 
   const handleLanguageChange = (newLocale) => {
     // 언어(locale) 부분만 교체

@@ -23,7 +23,7 @@ export default function MainPage() {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
         if (!accessToken) {
-          alert("로그인이 필요합니다.");
+          alert(t("loginRequired"));
           router.replace("/");
           return;
         }

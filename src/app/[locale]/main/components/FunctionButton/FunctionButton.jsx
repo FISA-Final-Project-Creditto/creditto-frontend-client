@@ -55,12 +55,12 @@ export default function FunctionButton() {
         link.remove();
         window.URL.revokeObjectURL(url);
       } catch (err) {
-        console.log("PDF 다운로드 오류:", err);
+        console.log(t("pdf_download_error"), err);
       }
     };
 
     fetchPDF();
-  }, [lang, userId]);
+  }, [lang, userId, t]);
 
   return (
     <div className="w-full flex flex-row mb-4">
@@ -70,29 +70,29 @@ export default function FunctionButton() {
         onClick={() => router.push("/credit/first")}
       >
         <Earth className="w-6 h-6 text-primary" />
-        <span className="text-xs font-medium">해외 신용정보</span>
+        <span className="text-xs font-medium">{t("foreign_credit_info")}</span>
       </button>
 
       {/* Language Select */}
       <Select
         className="w-full flex justify-center flex-row border border-border rounded-br-2xl p-2 flex flex-col items-start gap-2 hover:bg-muted transition mb-4"
-        aria-label="신용분석 리포트 언어 선택"
+        aria-label={t("report_language_select_aria_label")}
         onSelectionChange={(key) => setLang(String(key))}
       >
         <SelectTrigger>
           <div className="flex items-center gap-2">
             <FileChartColumnIcon className="w-6 h-6 text-primary" />
-            <SelectValue placeholder="신용분석" />
+            <SelectValue placeholder={t("credit_analysis_placeholder")} />
           </div>
         </SelectTrigger>
 
         <SelectPopover>
           <SelectListBox>
             <SelectItem id="ko" value="ko">
-              <span className="text-xs font-medium">한국어</span>
+              <span className="text-xs font-medium">{t("korean")}</span>
             </SelectItem>
             <SelectItem id="en" value="en">
-              <span className="text-xs font-medium">영어</span>
+              <span className="text-xs font-medium">{t("english")}</span>
             </SelectItem>
           </SelectListBox>
         </SelectPopover>

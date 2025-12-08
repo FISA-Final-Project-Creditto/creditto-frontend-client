@@ -34,11 +34,11 @@ export default function RoundedIconTabs({accountState}) {
         );
 
         setHistoryScore(res.data.history);
-        console.log("계좌 히스토리 : ", res.data.history)
+        console.log(t("account_history_log"), res.data.history)
         sessionStorage.setItem("historyScore", res.data.history);
         // setHistoryScore(r);
       } catch (error) {
-        console.error("신용점수 조회 실패:", error);
+        console.error(t("credit_score_inquiry_failed"), error);
       }
     };
     fetchCreditScore();
