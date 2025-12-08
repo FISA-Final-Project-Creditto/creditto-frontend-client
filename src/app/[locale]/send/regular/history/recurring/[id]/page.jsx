@@ -132,7 +132,7 @@ export default function RecurringPage({ params: paramsPromise }) {
       {/* 정기 송금 내역 */}
       <section className="flex flex-col gap-4 px-8">
         <h1 className="text-left mt-[40px] text-[1.563rem] text-[#1A3668] font-bold">
-          해외 정기 송금 내역
+          {t("recurring.page_title")}
         </h1>
       </section>
 

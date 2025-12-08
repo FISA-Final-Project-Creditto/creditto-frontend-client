@@ -13,6 +13,7 @@ export default function RemRecordList({
   sixMonthEndsMap = {}, // 6개월 완주 인덱스 정보 { [index]: cycleOrder }
 }) {
   const [recurringHistory, setRecurringHistory] = useState(null);
+  const t = useTranslations("send.regular.history");
 
   // 날짜 포맷터: "2025-11-25" → "11.25"
   const formatDate = (dateStr) => {
@@ -35,7 +36,9 @@ export default function RemRecordList({
   };
 
   if (!records.length) {
-    return <p className="text-sm text-[#86909C]">아직 송금 내역이 없습니다.</p>;
+    return (
+      <p className="text-sm text-[#86909C]">{t("no_remittance_history")}</p>
+    );
   }
 
   return (
@@ -57,7 +60,10 @@ export default function RemRecordList({
             {showYearDivider && (
               <div className="flex items-center gap-2">
                 <div className="flex-1 border-t border-[#C9CDD4]" />
-                <span className="text-sm text-[#86909C]">{currentYear}년</span>
+                <span className="text-sm text-[#86909C]">
+                  {currentYear}
+                  {t("year_unit")}
+                </span>
                 <div className="flex-1 border-t border-[#C9CDD4]" />
               </div>
             )}
@@ -79,10 +85,12 @@ export default function RemRecordList({
               <div className="flex items-center gap-5">
                 <div className="flex flex-col items-end">
                   <span className="text-lg font-semibold text-black">
-                    {formatAmount(record.sendAmount)} KRW
+                    {formatAmount(record.sendAmount)} {t("krw_currency")}
                   </span>
                   <span className="text-sm text-[#86909C]">
-                    환율 {formatAmount(record.exchangeRate)}원
+                    {t("exchange_rate_label")}{" "}
+                    {formatAmount(record.exchangeRate)}
+                    {t("won_unit")}
                   </span>
                 </div>
                 <ChevronRight />
@@ -96,13 +104,15 @@ export default function RemRecordList({
                   <div className="flex-1 border-t border-[#E5E6EB]" />
                   <div className="flex flex-col items-center gap-1 text-center">
                     <span className="text-xs text-[#86909C]">
-                      6개월 정기 송금 {cycleOrder}회 완료
+                      {t("6month_cycle_completed_pt1")}
+                      {cycleOrder}
+                      {t("6month_cycle_completed_pt2")}
                     </span>
                     <span
                       className="text-xs font-semibold"
                       style={{ color: "#2EA62E" }}
                     >
-                      신용 점수를 높이는 데 도움이 됩니다
+                      {t("credit_score_benefit")}
                     </span>
                   </div>
                   <div className="flex-1 border-t border-[#E5E6EB]" />

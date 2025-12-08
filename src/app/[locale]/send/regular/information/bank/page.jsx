@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import StepProgressBar from "../../../components/StepProgressbar";
@@ -23,29 +23,29 @@ export default function BankPage() {
   const dispatch = useDispatch();
   const t = useTranslations("send");
 
-  // 국가별 은행 목록
-  const BANK_OPTIONS = {
+  // useMemo를 사용하여 BANK_OPTIONS를 t 함수를 이용해 재구성
+  const BANK_OPTIONS = useMemo(() => ({
     USD: [
-      { name: "JP모건 체이스", code: "JPMCUS33" },
-      { name: "뱅크 오브 아메리카", code: "BOFAUS3N" },
-      { name: "웰스 파고", code: "WFBIUS6S" },
+      { name: t("oneOff.choose.bank_jpmorgan_chase"), code: "JPMCUS33" },
+      { name: t("oneOff.choose.bank_bank_of_america"), code: "BOFAUS3N" },
+      { name: t("oneOff.choose.bank_wells_fargo"), code: "WFBIUS6S" },
     ],
     JPY: [
-      { name: "미쓰비시UFJ은행", code: "BOTKJPJT" },
-      { name: "미쓰이스미토모은행", code: "SMBCJPJT" },
-      { name: "미즈호은행", code: "MHCBJPJT" },
+      { name: t("oneOff.choose.bank_mitsubishi_ufj"), code: "BOTKJPJT" },
+      { name: t("oneOff.choose.bank_sumitomo_mitsui"), code: "SMBCJPJT" },
+      { name: t("oneOff.choose.bank_mizuho"), code: "MHCBJPJT" },
     ],
     MYR: [
-      { name: "메이뱅크", code: "MBBEMYKL" },
-      { name: "CIMB", code: "BNIAIDJA" },
-      { name: "퍼블릭 뱅크", code: "PBLLMYKA" },
+      { name: t("oneOff.choose.bank_maybank"), code: "MBBEMYKL" },
+      { name: t("oneOff.choose.bank_cimb"), code: "BNIAIDJA" },
+      { name: t("oneOff.choose.bank_public"), code: "PBLLMYKA" },
     ],
     THB: [
-      { name: "방콕 은행", code: "BKKBTHB1" },
-      { name: "끄룽타이은행", code: "KRTHTHBK" },
-      { name: "시암 상업 은행", code: "SICOTHBK" },
+      { name: t("oneOff.choose.bank_bangkok"), code: "BKKBTHB1" },
+      { name: t("oneOff.choose.bank_krungthai"), code: "KRTHTHBK" },
+      { name: t("oneOff.choose.bank_siam_commercial"), code: "SICOTHBK" },
     ],
-  };
+  }), [t]);
 
   // selector로 데이터 가져오기
   const typeData = useSelector(selectTypeData);
@@ -81,7 +81,7 @@ export default function BankPage() {
       const submissionData = {
         ...formData,
       };
-      console.log("작성된 폼", submissionData);
+      console.log(t("regular.information.log_form_data"), submissionData);
 
       // Redux에 저장
       dispatch(setBankData(submissionData));
@@ -91,7 +91,7 @@ export default function BankPage() {
 
       setIsModalOpen(!isModalOpen);
     } else {
-      console.log("모든 입력 칸이 채워져야 됩니다");
+      console.log(t("regular.information.log_all_fields_required"));
     }
   };
 
@@ -119,9 +119,9 @@ export default function BankPage() {
   const handleConfirm = async () => {
     try {
       const accessToken = sessionStorage.getItem("accessToken");
-      console.log("accessToken: ", accessToken);
+      console.log(t("regular.information.log_access_token"), accessToken);
       if (!accessToken) {
-        console.error("Access Token이 없습니다.");
+        console.error(t("regular.information.error_no_access_token"));
         return;
       }
       const res = await credittoApi.post(
@@ -144,7 +144,7 @@ export default function BankPage() {
         router.push("/send/regular/result");
       }
     } catch (error) {
-      console.log("정기 해외 송금 신청 실패: ", error.response);
+      console.log(t("regular.information.error_scheduled_remittance_fail"), error.response);
     }
   };
 

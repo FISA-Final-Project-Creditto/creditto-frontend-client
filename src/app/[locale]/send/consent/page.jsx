@@ -6,11 +6,13 @@ import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { setModeData } from "@/src/store/features/send/sendModeSlice";
 import { credittoApi } from "@/src/app/api/axios";
+import { useTranslations } from "next-intl";
 
 export default function ConsentPage() {
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const t = useTranslations("send.consent");
 
   const [accountState, setAccountState] = useState({
     accountCount: null, // 연동된 계좌 수
@@ -30,13 +32,13 @@ export default function ConsentPage() {
         const { code, data } = res.data;
         if (code === 200) {
           setAccountState(data); // 응답값을 setAccountState에 상태 저장
-          console.log("연동된 계좌 있음", data);
+          console.log(t("log_linked_account_exist"), data);
           return true;
         } else {
           return false;
         }
       } catch (error) {
-        console.error("계좌 잔액 합산 조회 by UserId 오류 발생: ", error);
+        console.error(t("log_balance_inquiry_error"), error);
       }
     };
 
@@ -49,20 +51,20 @@ export default function ConsentPage() {
       }
       // 없으면 메인페이지로 이동
     } else {
-      alert("연동된 계좌가 없습니다.");
+      alert(t("alert_no_linked_account"));
       router.replace("/");
     }
-  }, []); // searchParams가 변경될 때마다 이 효과를 다시 실행
+  }, [dispatch, router, searchParams, t]);
 
   // 약관 동의서
   const consents = [
-    { id: 4, label: "해외송금 거래정보 수집·이용 동의서", required: true },
+    { id: 4, label: t("consent1"), required: true },
     {
       id: 5,
-      label: "해외송금 고객확인 및 자금세탁방지 동의서",
+      label: t("consent2"),
       required: true,
     },
-    { id: 6, label: "해외송금 제한 국가 관련 확인 동의서", required: true },
+    { id: 6, label: t("consent3"), required: true },
   ];
 
   // 송금 메인페이지로 이동
@@ -72,7 +74,7 @@ export default function ConsentPage() {
 
   return (
     <ConsentAgree
-      title="약관 동의"
+      title={t("title")}
       consents={consents}
       onBackClick={handleBack}
     />

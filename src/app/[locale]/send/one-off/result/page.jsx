@@ -16,7 +16,7 @@ import {
 
 export default function ResultPage() {
   const router = useRouter();
-  const t = useTranslations("send");
+  const t = useTranslations("send.oneOff.result");
 
   // selector로 데이터 가져오기
   const sendInfo = useSelector(selectSendInfo);
@@ -27,7 +27,7 @@ export default function ResultPage() {
     <main className="min-h-dvh flex flex-col bg-white">
       <header>
         <AppHeader
-          title="일회성 송금"
+          title={t("title")}
           show={true}
           showHamburger={false}
           showBack={true}
@@ -36,9 +36,9 @@ export default function ResultPage() {
       <div className="px-5">
         <section className="flex flex-col gap-[2.188rem]">
           <h1 className="text-left mt-[3.438rem] text-[1.563rem] font-bold mb-[2.188rem]">
-            <span className="text-[#2E5796]">해외 일회성 송금</span>
+            <span className="text-[#2E5796]">{t("page_title_pt1")}</span>
             <br />
-            신청결과
+            {t("page_title_pt2")}
           </h1>
         </section>
         {/* 신청 내역 */}
@@ -46,15 +46,15 @@ export default function ResultPage() {
           {/* 송금인 정보 */}
           <div>
             <h3 className="text-left font-bold text-[#4E5969] text-lg mb-[0.938rem]">
-              송금인 정보
+              {t("sender_info")}
             </h3>
             <div className="space-y-3.75">
-              <InfoRow label="송금인 계좌번호" value={sendInfo.accountNo} />
+              <InfoRow label={t("sender_account_no")} value={sendInfo.accountNo} />
               <InfoRow
-                label="외화 거래 금액"
+                label={t("foreign_currency_amount")}
                 value={`${sendInfo.targetAmount} ${sendInfo.sendCurrency}`}
               />
-              <InfoRow label="송금 시작일" value={sendInfo.startDate} />
+              <InfoRow label={t("remittance_start_date")} value={sendInfo.startDate} />
             </div>
           </div>
 
@@ -63,18 +63,18 @@ export default function ResultPage() {
           {/* 수신인 정보 */}
           <div>
             <h3 className="text-left font-bold text-[#4E5969] text-lg mb-[0.938rem]">
-              수취인 정보
+              {t("recipient_info")}
             </h3>
             <div className="space-y-3.75">
-              <InfoRow label="이름" value={recipientInfo.name} />
-              <InfoRow label="국적" value={recipientInfo.country} />
-              <InfoRow label="계좌번호" value={recipientInfo.accountNo} />
+              <InfoRow label={t("name")} value={recipientInfo.name} />
+              <InfoRow label={t("nationality")} value={recipientInfo.country} />
+              <InfoRow label={t("account_no")} value={recipientInfo.accountNo} />
               <InfoRow
-                label="전화번호"
+                label={t("phone_no")}
                 value={`${recipientInfo.phoneCc} ${recipientInfo.phoneNo}`}
               />
               <InfoRow
-                label="은행"
+                label={t("bank")}
                 value={`${recipientInfo.bankName}(${recipientInfo.bankCode})`}
               />
             </div>
@@ -86,7 +86,7 @@ export default function ResultPage() {
       {/* 하단 버튼 */}
       <footer>
         <BottomBar
-          label="다음"
+          label={t("next_button")}
           onClick={() => router.replace("/send")}
           isActive={true}
         />

@@ -327,48 +327,47 @@ export default function TypePage() {
                     {t("regular.information.amount", {
                       currency: receiveCurrency,
                     })}
-                  </label>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    value={formData.sendAmount}
-                    onChange={handleAmountChange}
-                    placeholder={t("regular.information.amountPlaceholder")}
-                    className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
-                  />
-                </div>
-                {/* ✅ TODO: 나중에 필요하다고 하면 구현 */}
-                {/* {formData.accountNo &&
-                  Number(formData.sendAmount) > 0 &&
-                  Number(balance) < Number(formData.sendAmount) &&
-                  (() => {
-                    const balanceNum = Number(
-                      String(balance).replace(/,/g, "")
-                    );
-                    const sendAmountNum = Number(
-                      String(formData.sendAmount).replace(/,/g, "")
-                    );
-
-                    return (
-                      formData.accountNo &&
-                      sendAmountNum > 0 &&
-                      balanceNum < sendAmountNum && (
-                        <p className="text-red-500 text-sm mt-1">
-                          잔액이 부족합니다.
-                        </p>
-                      )
-                    );
-                  })()} */}
-
-                {/* 우대율 */}
-                {preferentialRate > 0 && (
-                  <p className="text-sm text-[#334D79] text-left font-semibold">
-                    우대율: {preferentialRate}%
-                  </p>
-                )}
-              </section>
-              {/* 송금 주기 */}
-              <div className="flex flex-col items-start">
+                                    </label>
+                                    <input
+                                      type="text"
+                                      inputMode="numeric"
+                                      value={formData.sendAmount}
+                                      onChange={handleAmountChange}
+                                      placeholder={t("regular.information.amountPlaceholder")}
+                                      className="w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black placeholder:text-[#86909C] focus:outline-none"
+                                    />
+                                  </div>
+                                  {/* ✅ TODO: 나중에 필요하다고 하면 구현 */}
+                                  {formData.accountNo &&
+                                    Number(formData.sendAmount) > 0 &&
+                                    Number(balance) < Number(formData.sendAmount) &&
+                                    (() => {
+                                      const balanceNum = Number(
+                                        String(balance).replace(/,/g, "")
+                                      );
+                                      const sendAmountNum = Number(
+                                        String(formData.sendAmount).replace(/,/g, "")
+                                      );
+                                      return (
+                                        formData.accountNo &&
+                                        sendAmountNum > 0 &&
+                                        balanceNum < sendAmountNum && (
+                                          <p className="text-red-500 text-sm mt-1">
+                                            {t("regular.information.insufficient_balance_alert")}
+                                          </p>
+                                        )
+                                      );
+                                    })()}
+                  
+                                  {/* 우대율 */}
+                                  {preferentialRate > 0 && (
+                                    <p className="text-sm text-[#334D79] text-left font-semibold">
+                                      {t("regular.information.preferential_rate_label")} {preferentialRate}%
+                                    </p>
+                                  )}
+                                </section>
+                                {/* 송금 주기 */}
+                                <div className="flex flex-col items-start">
                 <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
                   {t("regular.information.cycle")}
                 </label>

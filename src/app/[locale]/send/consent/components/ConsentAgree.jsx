@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setConsentChecked } from "@/src/store/features/consent/consentSlice";
 import { clearModeData } from "@/src/store/features/send/sendModeSlice";
+import { useTranslations } from "next-intl";
 
 export default function ConsentAgree({
   title = "약관 동의",
@@ -14,9 +15,10 @@ export default function ConsentAgree({
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
+  const t = useTranslations("send.consent");
   const consentChecked = useSelector((state) => state.consent.checked);
   const sendMode = useSelector((state) => state.sendMode.mode); // 송금 방식 가져오기
-  console.log("송금방식: ", sendMode);
+  console.log(t("log_send_mode"), sendMode);
 
   // 체크 상태: { all: false, consent1: false, consent2: false, ... }
   const [checked, setChecked] = useState(() =>
@@ -163,7 +165,7 @@ export default function ConsentAgree({
             )}
           </span>
           <h1 className="text-[20px] font-bold text-[#4E5969]">
-            약관 전체 동의
+            {t("agree_all")}
           </h1>
         </label>
 
@@ -207,10 +209,10 @@ export default function ConsentAgree({
                   }}
                 >
                   {required && (
-                    <span className="text-[#4E5969] mr-1">(필수)</span>
+                    <span className="text-[#4E5969] mr-1">{t("required")}</span>
                   )}
                   {!required && (
-                    <span className="text-[#C9CDD4] mr-1">(선택)</span>
+                    <span className="text-[#C9CDD4] mr-1">{t("optional")}</span>
                   )}
                   {label}
                 </p>
@@ -231,7 +233,7 @@ export default function ConsentAgree({
             }`}
           onClick={handleNext}
         >
-          다음
+          {t("next")}
         </button>
       </div>
     </>

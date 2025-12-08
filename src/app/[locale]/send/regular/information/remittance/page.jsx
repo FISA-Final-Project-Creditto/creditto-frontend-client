@@ -84,13 +84,13 @@ export default function RemittancePage() {
         clientCountry, // 국적은 input이 아니라서 여기서 처리
         clientAddress,
       };
-      console.log("작성된 폼", submissionData);
+      console.log(t("regular.information.log_form_data"), submissionData);
 
       dispatch(setClientData(submissionData));
 
       router.push("/send/regular/information/recipient"); // 수취인 페이지로 이동
     } else {
-      console.log("모든 입력 칸이 채워져야 됩니다");
+      console.log(t("regular.information.log_all_fields_required"));
     }
   };
 

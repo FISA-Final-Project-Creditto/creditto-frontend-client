@@ -12,6 +12,7 @@ export default function HistoryPage() {
   const [selectedAccount, setSelectedAccount] = useState(""); // 선택된 계좌 번호 상태
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const t = useTranslations("send");
+  const tOneOffHistory = useTranslations("send.oneOff.history");
 
   // 계좌 가져오기
   const [allAccounts, setAllAccounts] = useState([]);
@@ -30,17 +31,17 @@ export default function HistoryPage() {
 
         const { code, data } = res.data;
         if (code === 200) {
-          console.log("모든 계좌 조회 성공: ", data);
+          console.log(tOneOffHistory("log_all_accounts_success"), data);
           setAllAccounts(data); // 계좌 목록 저장
           setSelectedAccount(data[0].accountNo);
         }
       } catch (error) {
-        console.error("모든 계좌 조회 중 오류 발생: ", error);
+        console.error(tOneOffHistory("log_all_accounts_error"), error);
       }
     };
 
     fetchAllAccounts();
-  }, []);
+  }, [tOneOffHistory]);
 
   useEffect(() => {
     // 해외 송금 내역 조회
@@ -59,19 +60,19 @@ export default function HistoryPage() {
         const { code, data } = res.data;
 
         if (code === 200) {
-          console.log("일회성 송금 설정 내역 조회 성공: ", data);
+          console.log(tOneOffHistory("log_one_off_history_success"), data);
 
           setHistories(data); // 현재 페이지 표시용 정기 송금 설정 목록 저장
         }
       } catch (error) {
-        console.log("사용자 일회성 송금 내역 조회 실패: ", error);
+        console.log(tOneOffHistory("log_one_off_history_fail"), error);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchOnceHistory();
-  }, []);
+  }, [tOneOffHistory]);
 
   // histories가 배열인지 계산
   const safeHistories = Array.isArray(histories) ? histories : [];
@@ -94,7 +95,7 @@ export default function HistoryPage() {
       {/* 상단바 영역 */}
       <header>
         <AppHeader
-          title="일회성 송금 내역"
+          title={tOneOffHistory("title")}
           showBack={true}
           showHamburger={false}
         />
@@ -103,7 +104,7 @@ export default function HistoryPage() {
       {/* 페이지 제목 및 계좌 선택 영역 */}
       <section className="flex flex-col gap-4 px-8">
         <h1 className="text-left mt-[3.438rem] text-[1.563rem] text-[#1A3668] font-bold">
-          일회성 송금 내역
+          {tOneOffHistory("title")}
         </h1>
 
         <div className="flex items-center justify-between mb-[2.813rem]">

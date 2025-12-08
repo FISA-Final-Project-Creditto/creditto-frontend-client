@@ -127,9 +127,11 @@ export default function ChooseCountryPage() {
               <MY className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
               <div className="flex flex-col items-start justify-center">
                 <span className=" text-[18px] font-semibold text-[#1F2329]">
-                  말레이시아 MYR
+                  {t("regular.choose.country_malaysia_code")}
                 </span>
-                <span className="text-sm font-medium text-[#86909C]">링깃</span>
+                <span className="text-sm font-medium text-[#86909C]">
+                  {t("regular.choose.currency_ringgit")}
+                </span>
               </div>
             </div>
           </button>
@@ -151,9 +153,11 @@ export default function ChooseCountryPage() {
               <TH className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
               <div className="flex flex-col items-start justify-center">
                 <span className=" text-[18px] font-semibold text-[#1F2329]">
-                  태국 THB
+                  {t("regular.choose.country_thailand_code")}
                 </span>
-                <span className="text-sm font-medium text-[#86909C]">밧</span>
+                <span className="text-sm font-medium text-[#86909C]">
+                  {t("regular.choose.currency_baht")}
+                </span>
               </div>
             </div>
           </button>

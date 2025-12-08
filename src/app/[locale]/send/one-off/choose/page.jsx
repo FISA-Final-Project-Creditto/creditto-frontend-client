@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react"; // useMemo 추가
 import { motion, AnimatePresence } from "framer-motion";
 import { US, JP, MY, TH } from "country-flag-icons/react/3x2";
 import { useRouter } from "next/navigation";
@@ -14,35 +14,52 @@ import {
 } from "@/src/store/features/send/sendSlice";
 import { useTranslations } from "next-intl";
 
-const BANK_OPTIONS = {
-  USD: [
-    { name: "JP모건 체이스", code: "JPMCUS33" },
-    { name: "뱅크 오브 아메리카", code: "BOFAUS3N" },
-    { name: "웰스 파고", code: "WFBIUS6S" },
-  ],
-  JPY: [
-    { name: "미쓰비시UFJ은행", code: "BOTKJPJT" },
-    { name: "미쓰이스미토모은행", code: "SMBCJPJT" },
-    { name: "미즈호은행", code: "MHCBJPJT" },
-  ],
-  MYR: [
-    { name: "메이뱅크", code: "MBBEMYKL" },
-    { name: "CIMB", code: "BNIAIDJA" },
-    { name: "퍼블릭 뱅크", code: "PBLLMYKA" },
-  ],
-  THB: [
-    { name: "방콕 은행", code: "BKKBTHB1" },
-    { name: "끄룽타이은행", code: "KRTHTHBK" },
-    { name: "시암 상업 은행", code: "SICOTHBK" },
-  ],
-};
-
 export default function ChooseCountryPage() {
   const [selectedCountry, setSelectedCountry] = useState(""); // 기본 선택값 없음
   const [selectedBank, setSelectedBank] = useState({ name: "", code: "" });
   const dispatch = useDispatch();
   const router = useRouter();
   const t = useTranslations("send");
+
+  // useMemo를 사용하여 BANK_OPTIONS를 t 함수를 이용해 재구성
+  const BANK_OPTIONS = useMemo(() => ({
+    USD: [
+      { name: t("oneOff.choose.bank_jpmorgan_chase"), code: "JPMCUS33" },
+      { name: t("oneOff.choose.bank_bank_of_america"), code: "BOFAUS3N" },
+      { name: t("oneOff.choose.bank_wells_fargo"), code: "WFBIUS6S" },
+    ],
+    JPY: [
+      { name: t("oneOff.choose.bank_mitsubishi_ufj"), code: "BOTKJPJT" },
+      { name: t("oneOff.choose.bank_sumitomo_mitsui"), code: "SMBCJPJT" },
+      { name: t("oneOff.choose.bank_mizuho"), code: "MHCBJPJT" },
+    ],
+    MYR: [
+      { name: t("oneOff.choose.bank_maybank"), code: "MBBEMYKL" },
+      { name: t("oneOff.choose.bank_cimb"), code: "BNIAIDJA" },
+      { name: t("oneOff.choose.bank_public"), code: "PBLLMYKA" },
+    ],
+    THB: [
+      { name: t("oneOff.choose.bank_bangkok"), code: "BKKBTHB1" },
+      { name: t("oneOff.choose.bank_krungthai"), code: "KRTHTHBK" },
+      { name: t("oneOff.choose.bank_siam_commercial"), code: "SICOTHBK" },
+    ],
+  }), [t]); // t가 변경될 때마다 재계산
+
+
+  const handleSelectButtonClick = () => {
+    const currencyMap = {
+      US: "USD",
+      JP: "JPY",
+      MY: "MYR",
+      TH: "THB",
+    };
+    const currency = currencyMap[selectedCountry]; // localSelectedCountry 대신 selectedCountry 사용
+    if (currency) {
+      dispatch(setReceiveCurrency(currency));
+      dispatch(setReduxSelectedCountry(selectedCountry)); // Redux 액션 호출
+    }
+    router.push("/send/one-off");
+  };
 
   return (
     <div>
@@ -86,15 +103,15 @@ export default function ChooseCountryPage() {
             {
               code: "MY",
               currency: "MYR",
-              name: "말레이시아",
-              currencyName: "링깃",
+              name: t("oneOff.choose.country_malaysia"),
+              currencyName: t("oneOff.choose.currency_ringgit"),
               Icon: MY,
             },
             {
               code: "TH",
               currency: "THB",
-              name: "태국",
-              currencyName: "바트",
+              name: t("oneOff.choose.country_thailand"),
+              currencyName: t("oneOff.choose.currency_baht"),
               Icon: TH,
             },
           ].map(({ code, currency, name, currencyName, Icon }) => (
