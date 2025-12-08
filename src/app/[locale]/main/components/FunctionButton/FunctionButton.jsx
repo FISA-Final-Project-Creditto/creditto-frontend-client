@@ -82,7 +82,7 @@ export default function FunctionButton() {
         <SelectTrigger>
           <div className="flex items-center gap-2">
             <FileChartColumnIcon className="w-6 h-6 text-primary" />
-            <SelectValue placeholder="신용분석" />
+            <span className="text-xs font-medium">PDF 다운로드</span>
           </div>
         </SelectTrigger>
 
