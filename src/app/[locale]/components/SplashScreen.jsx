@@ -24,7 +24,7 @@ export default function SplashScreen() {
   //   }, []);
 
   useEffect(() => {
-    if (!isClient) return; // sessionStorage는 클라이언트 환경에서만 접근
+    // if (!isClient) return; // sessionStorage는 클라이언트 환경에서만 접근
 
     const accessToken = sessionStorage.getItem("accessToken");
     if (accessToken) {
