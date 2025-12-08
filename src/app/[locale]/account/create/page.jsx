@@ -80,7 +80,7 @@ export default function AccountCreatePage() {
       <AppHeader
         title={t("title")}
         show={true}
-        showHamburger={true}
+        showHamburger={false}
         showBack={true}
       />
       <div className="flex flex-col flex-1">
@@ -98,7 +98,7 @@ export default function AccountCreatePage() {
         </div>
         <footer>
           <BottomBar
-            label="비밀번호 설정"
+            label={t("password_input")}
             isActive={accountName && accountType}
             onClick={createHandle}
           />
