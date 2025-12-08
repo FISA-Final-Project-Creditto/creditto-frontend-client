@@ -74,27 +74,22 @@ export default function FunctionButton() {
       </button>
 
       {/* Language Select */}
-      <Select
+      <button
+        className="w-full flex justify-center flex-row bg-card border border-border rounded-br-2xl p-2 flex flex-col items-center gap-2 hover:bg-muted transition mb-4"
+        onClick={() => router.push("/report")}
+      >
+        <FileChartColumnIcon className="w-6 h-6 text-primary" />
+        <span className="text-xs font-medium">레포트 다운로드</span>
+      </button>
+      {/* <Select
         className="w-full flex justify-center flex-row border border-border rounded-br-2xl p-2 flex flex-col items-start gap-2 hover:bg-muted transition mb-4"
-        aria-label="신용분석 리포트 언어 선택"
+        aria-label="신용분석 리포트 언어"
         onSelectionChange={(key) => setLang(String(key))}
       >
         <SelectTrigger>
           <div className="flex items-center gap-2">
             <FileChartColumnIcon className="w-6 h-6 text-primary" />
-            {/* 실제로 placeholder를 prop으로 사용하지 않음 */}
-            {/* 아무 것도 선택 안 했을 때, "PDF 다운로드"가 placeholder처럼 보이게 구현 */}
-            <SelectValue>
-              {({ selectedItem }) =>
-                selectedItem ? (
-                  selectedItem.rendered
-                ) : (
-                  <span className="text-xs font-medium text-muted-foreground">
-                    PDF 다운로드
-                  </span>
-                )
-              }
-            </SelectValue>
+            <SelectValue placeholder="보고서 다운로드" />
           </div>
         </SelectTrigger>
 
@@ -108,7 +103,7 @@ export default function FunctionButton() {
             </SelectItem>
           </SelectListBox>
         </SelectPopover>
-      </Select>
+      </Select> */}
     </div>
   );
 }
