@@ -59,7 +59,9 @@ export default function Credit({ historyScore }) {
     <div className="w-full mt-5 bg-gradient-to-br from-[#1A3668] via-[#1A3668] to-[#1A3668]/80 rounded-3xl p-6 text-primary-foreground shadow-lg ">
       <div className="flex justify-between items-start mb-5 text-left">
         <div>
-          <p className="text-xs font-medium opacity-80 mb-1">{t("credit.creditto_score")}</p>
+          <p className="text-xs font-medium opacity-80 mb-1">
+            {t("credit.creditto_score")}
+          </p>
           <h3 className="text-3xl font-bold">
             {score === null ? (
               <button type="button" onClick={goToCreditFirst}>
@@ -67,14 +69,20 @@ export default function Credit({ historyScore }) {
               </button>
             ) : (
               <>
-                {score} <span className="text-2xl">{t("credit.point_unit")}</span>
+                {score}{" "}
+                <span className="text-2xl">{t("credit.point_unit")}</span>
               </>
             )}
           </h3>
-          <p className="text-xs opacity-70 mt-1">{t("credit.max_score_prefix")} {maxScore}{t("credit.point_unit")}</p>
+          <p className="text-xs opacity-70 mt-1">
+            {t("credit.max_score_prefix")} {maxScore}
+            {t("credit.point_unit")}
+          </p>
         </div>
         <div className="text-right">
-          <p className="text-xs opacity-80 text-center mb-2">{t("credit.grade_label")}</p>
+          <p className="text-xs opacity-80 text-center mb-2">
+            {t("credit.grade_label")}
+          </p>
           <div className="bg-white/20 backdrop-blur px-3 py-1 rounded-full text-sm font-semibold">
             {renderTier()}
           </div>
@@ -86,7 +94,9 @@ export default function Credit({ historyScore }) {
         {score !== null && (
           <>
             <div className="flex justify-between items-center mb-2">
-              <span className="text-xs opacity-80">{t("credit.credit_evaluation")}</span>
+              <span className="text-xs opacity-80">
+                {t("credit.credit_evaluation")}
+              </span>
               <span className="text-xs font-medium">
                 {Math.round(scorePercentage)}%
               </span>

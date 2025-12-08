@@ -9,7 +9,6 @@ import {
   SelectListBox,
   SelectPopover,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { credittoApi } from "@/src/app/api/axios";
 
@@ -82,7 +81,8 @@ export default function FunctionButton() {
         <SelectTrigger>
           <div className="flex items-center gap-2">
             <FileChartColumnIcon className="w-6 h-6 text-primary" />
-            <SelectValue placeholder={t("credit_analysis_placeholder")} />
+
+            <span className="text-xs font-medium">{t("pdf_download")}</span>
           </div>
         </SelectTrigger>
 

@@ -1,20 +1,19 @@
-'use client'
+"use client";
 import React, { useEffect, useState } from "react";
 import { CreditCard as CreditCardIcon, Home, MapPin } from "lucide-react";
 import Credit from "../../maine/components/Credit/Credit";
-import { CreditCard } from "@/components/ui/credit-card"
+import { CreditCard } from "@/components/ui/credit-card";
 import CreditChart from "../../maine/components/Chart/CreditChart";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import NaverMap from "./FunctionButton/NaverMap/Navermap";
 import { credittoApi } from "@/src/app/api/axios";
 
-export default function RoundedIconTabs({accountState}) {
+export default function RoundedIconTabs({ accountState }) {
   const [activeTab, setActiveTab] = useState("home");
   const router = useRouter();
   const t = useTranslations("main.tabs");
 
-  
   const [historyScore, setHistoryScore] = useState();
   useEffect(() => {
     const fetchCreditScore = async () => {
@@ -34,7 +33,7 @@ export default function RoundedIconTabs({accountState}) {
         );
 
         setHistoryScore(res.data.history);
-        console.log(t("account_history_log"), res.data.history)
+        console.log(t("account_history_log"), res.data.history);
         sessionStorage.setItem("historyScore", res.data.history);
         // setHistoryScore(r);
       } catch (error) {
@@ -81,31 +80,34 @@ export default function RoundedIconTabs({accountState}) {
         {activeTab === "home" && (
           <div className=" px-4 w-full flex justify-center flex-col items-center ">
             <Credit accountState={accountState} historyScore={historyScore} />
-            <CreditChart historyScore={historyScore}/>
+            <CreditChart historyScore={historyScore} />
           </div>
         )}
         {activeTab === "QR" && (
-          <div className="flex justify-center items-center flex-col px-5"
-          onClick={()=>{router.push("/account/connection")}}>
+          <div
+            className="flex justify-center items-center flex-col px-5"
+            onClick={() => {
+              router.push("/account/connection");
+            }}
+          >
             <div className="w-40 h-40 bg-gray-200 rounded-lg"></div>
             <div className="w-full h-full mt-6 ">
-                <CreditCard
+              <CreditCard
                 accountState={accountState}
-        variant="dark"
-        cardNumber=""
-        cardHolder={t("name")}
-        expiryDate="06/25"
-      />
+                variant="dark"
+                cardNumber=""
+                cardHolder={t("name")}
+                expiryDate="06/25"
+              />
             </div>
           </div>
         )}
         {activeTab === "location" && (
           <div className="w-[368px] h-[373px]">
-            <NaverMap/>
+            <NaverMap />
           </div>
         )}
       </div>
     </div>
   );
 }
-
