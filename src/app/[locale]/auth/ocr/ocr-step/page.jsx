@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import BottomBar from "../components/BottomBar";
 import Step from "./components/Step";
 import { useTranslations } from "next-intl";
-import AppHeader from "@/src/common/AppHeader/AppHeader";
 
 const INITIAL_CHECKS = {
   term1: false,
