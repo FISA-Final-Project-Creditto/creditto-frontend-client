@@ -109,7 +109,7 @@ export default function LoginPage() {
         <AppHeader
           title={t("auth.title")}
           show={true}
-          showHamburger={true}
+          showHamburger={false}
           showBack={true}
         />
         <form onSubmit={LoginHandle} className="flex flex-col flex-1">

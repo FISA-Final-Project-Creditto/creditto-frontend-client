@@ -1,58 +1,10 @@
-"use client";
+import SplashScreen from "./components/SplashScreen";
 
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { requireVerification } from "@/src/store/features/simplepw/simplepwSlice";
-import { useEffect } from "react";
-import { useTranslations } from "next-intl";
+export const metadata = {
+  title: "시작하기",
+  description: "Creditto 서비스를 시작하는 첫 화면입니다.",
+};
 
-export default function SplashPage({ hasSerial }) {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const t = useTranslations();
-
-  useEffect(() => {
-    const accessToken = sessionStorage.getItem("accessToken");
-    if (accessToken) {
-      router.replace("/main"); // 뒤로가기 시 다시 로그인 페이지로 오지 않도록 replace 사용
-    }
-  }, [router]);
-
-  const handleLogin = () => {
-    if (!hasSerial) {
-      router.push("/select-lang?next=/login");
-    } else {
-      // 비밀번호 확인을 요청하고, 성공 시 '/main'으로 이동하도록 설정
-      dispatch(requireVerification("/main"));
-      router.push("/select-lang?next=/auth/pw");
-    }
-  };
-
-  return (
-    <div className="flex flex-col h-screen">
-      <div className="relative flex-grow">
-        <Image src="/접속로딩1.svg" alt="logo" fill style={{ objectFit: "contain" }} loading="eager"/>
-      </div>
-
-      <div className="flex-shrink-0">
-        <div
-          className="w-full h-[60px] cursor-pointer flex justify-center items-center text-gray-500 underline text-base"
-          onClick={(e) => {
-            e.stopPropagation();
-            router.push("/select-lang?next=/signup/permission");
-          }}
-        >
-          {t("signUp")} 
-        </div>
-
-        <div
-          className="cursor-pointer w-full h-[90px] bg-[#1A3668] text-white text-[22px] font-medium flex justify-center items-center"
-          onClick={handleLogin}
-        >
-          {t("logIn")}
-        </div>
-      </div>
-    </div>
-  );
+export default function Page() {
+  return <SplashScreen />;
 }
