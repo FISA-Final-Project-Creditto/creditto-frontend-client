@@ -56,7 +56,7 @@ export default function CreditFirst() {
 
         <div className="w-full flex flex-col justify-center mt-auto mb-14 px-4">
           <div
-            className="w-full h-20 cursor-pointer flex justify-center items-center text-[#86909C] underline text-lg"
+            className="cursor-pointer w-full max-w-[440px] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white"
             onClick={async (e) => {
               e.stopPropagation();
               try {
@@ -90,14 +90,14 @@ export default function CreditFirst() {
               }
             }}
           >
-            연동없이 바로 조회하기
+           신용점수 조회하기
           </div>
-          <div
+          {/* <div
             className="cursor-pointer w-full max-w-[440px] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white"
             onClick={() => router.push("/credit/consent")}
           >
             해외계좌 조회하기
-          </div>
+          </div> */}
         </div>
 
         <BottomSheet
