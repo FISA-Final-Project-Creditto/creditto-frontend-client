@@ -1,41 +1,27 @@
-"use client";
-import React, { useEffect } from "react";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import RedirectAfterDelay from "./RedirectAfterDelay";
+import LottieClient from "./LottieClient";
+import { getTranslations } from "next-intl/server";
 
-export default function LoadingPage() {
-  const t = useTranslations("auth.loading");
-  const router = useRouter();
-
-  useEffect(() => {
-    const t = setTimeout(() => router.push("/auth/success"), 3000);
-    return () => clearTimeout(t);
-  }, [router]);
+export default async function LoadingPage() {
+  // const t = await getTranslations("auth.loading");
 
   return (
-    // min-h-dvh는 나중에 설정
     <main className="flex justify-center items-center py-20 bg-white">
+      <RedirectAfterDelay />
       <div className="w-full max-w-[440px] mx-auto flex flex-col">
         <div className="flex flex-col items-center">
           <div className="w-full p-8">
             <p className="text-2xl font-semibold leading-relaxed text-black text-left">
-              {t("title")}
+              정보를 확인 중입니다
             </p>
+
             <div className="text-lg font-normal text-[#4E5969] mb-[2.5rem] text-left">
-              {t("description")}
+              잠시만 기다려주세요
             </div>
           </div>
 
-          {/* Lottie 컨테이너 크기 고정 */}
-          <div className="w-[200px] h-[200px] mt-6">
-            <DotLottieReact
-              src="https://lottie.host/5e3d00b3-79ca-4abd-9808-99013190e330/8EXayNOkme.lottie"
-              loop
-              autoplay
-              style={{ width: "100%", height: "100%" }} // ← 이게 중요
-            />
-          </div>
+          {/* Lottie dynamic + fallback skeleton */}
+          <LottieClient />
         </div>
       </div>
     </main>
