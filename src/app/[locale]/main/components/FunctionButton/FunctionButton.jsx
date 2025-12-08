@@ -82,7 +82,19 @@ export default function FunctionButton() {
         <SelectTrigger>
           <div className="flex items-center gap-2">
             <FileChartColumnIcon className="w-6 h-6 text-primary" />
-            <span className="text-xs font-medium">PDF 다운로드</span>
+            {/* 실제로 placeholder를 prop으로 사용하지 않음 */}
+            {/* 아무 것도 선택 안 했을 때, "PDF 다운로드"가 placeholder처럼 보이게 구현 */}
+            <SelectValue>
+              {({ selectedItem }) =>
+                selectedItem ? (
+                  selectedItem.rendered
+                ) : (
+                  <span className="text-xs font-medium text-muted-foreground">
+                    PDF 다운로드
+                  </span>
+                )
+              }
+            </SelectValue>
           </div>
         </SelectTrigger>
 
