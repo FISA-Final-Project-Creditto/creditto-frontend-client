@@ -56,8 +56,8 @@ export default function AccountConfirm() {
         showBack={true}
       />
 
-      <div className="flex flex-col min-h-dvh px-8 py-10 max-w-lg mx-auto">
-        <div className="mb-8">
+      <div className="flex flex-col min-h-dvh py-10 max-w-lg mx-auto text-left">
+        <div className="mb-8 px-8">
           <h2 className="text-2xl font-bold mb-2 text-black">
             {t("check_account_information")}
           </h2>
@@ -65,8 +65,8 @@ export default function AccountConfirm() {
         </div>
 
         {/* 생성할 계좌 정보 */}
-        <section className="flex-1">
-          <div className="border-rounded-xl px-6">
+        <section className="flex-1 px-8">
+          <div className="border-rounded-xl">
             {/* 계좌명 */}
             <div className="flex items-center justify-between py-8 border-b border-border">
               <div className="text-sm text-[#86909C]">{t("account_name")}</div>
@@ -86,7 +86,7 @@ export default function AccountConfirm() {
         </section>
 
         {/* 생성 버튼 */}
-        <footer className="flex flex-co">
+        <footer className="flex">
           <BottomBar
             label={t("goToCreate")}
             isActive={true}
