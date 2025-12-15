@@ -409,7 +409,7 @@ export default function TypePage() {
     <main>
       {/* 상단 바 */}
       <AppHeader
-        title={t("common.remittance")}
+        title={t("common.oneOff")}
         show={true}
         showHamburger={false}
         showBack={true}

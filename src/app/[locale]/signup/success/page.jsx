@@ -44,7 +44,7 @@ export default function SuccessPage() {
         </div>
         <footer>
           <BottomBar
-            label="인증서 발급하기"
+            label={t("issueCertificate")}
             onClick={() => {
               router.push("/auth/ocr/ocr-step");
             }}
