@@ -38,7 +38,14 @@
     "loginRequired": "로그인이 필요합니다.",
     "functionButton": {
       "loan": "대출",
-      "creditScore": "신용 점수"
+      "creditScore": "신용 점수",
+      "foreign_credit_info": "해외 신용정보",
+      "report_language_select_aria_label": "신용분석 리포트 언어 선택",
+      "credit_analysis_placeholder": "신용분석",
+      "korean": "한국어",
+      "english": "영어",
+      "pdf_download_error": "PDF 다운로드 오류:",
+      "pdf_download": "PDF 다운로드"
     },
     "loanButton": {
       "title": "대출 상품 추천",
@@ -47,7 +54,8 @@
     "mainCarousel": {
       "creditScoreLink": "신용 점수",
       "credittoScore": "Creditto 점수",
-      "accountConnectionLink": "계좌 연결"
+      "accountConnectionLink": "계좌 연결",
+      "complete_alt": "완료"
     },
     "goExchangeButton": {
       "title": "환율 그래프",
@@ -57,59 +65,88 @@
       "title": "환전"
     },
     "realTimeExchange": {
-      "exchangeRateAPI": "환율 API 연동 예정"
+      "exchangeRateAPI": "환율 API 연동 예정",
+      "title": "실시간 환율",
+      "log_success": "환율 조회 데이터: ",
+      "log_fail": "환율 데이터 조회 실패:",
+      "krw": "원"
     },
     "tabs": {
       "home": "홈",
       "simplePayment": "간편 결제",
       "location": "위치",
       "name": "이름",
-      "naverMapAPI": "네이버 지도 연동 예정"
+      "naverMapAPI": "네이버 지도 연동 예정",
+      "map_loading_alert": "지도 서비스가 아직 로딩 중입니다. 잠시 후 다시 시도해주세요.",
+      "find_woori_bank": "외국인 특화 우리은행 찾기",
+      "account_history_log": "계좌 히스토리 : ",
+      "credit_score_inquiry_failed": "신용점수 조회 실패:"
+    },
+    "remittance": {
+      "title": "송금",
+      "subtitle": "해외로 돈을 보내세요"
+    },
+    "header": {
+      "korean": "한국어",
+      "english": "영어",
+      "japanese": "일본어",
+      "settings": "설정",
+      "logout": "로그아웃"
     }
   },
   "maine": {
-    "greeting": "안녕하세요",
-    "userName": "정용준님",
-    "monthlyUsage": "월 이용액",
-    "thisMonth": "이번 달",
-    "usageCount": "건 사용",
+    "greeting": "안녕하세요, ",
+    "userName": "크레디토",
+    "monthlyUsage": "이번달 사용량",
+    "monthly_usage_amount": "₩1,240,000",
+    "thisMonth": "이번달 ",
+    "usageCount": "회 사용",
     "send": "송금",
     "loan": "대출",
     "invest": "투자",
     "recommendedProducts": "추천 상품",
     "seeMore": "더보기",
-    "mediumInterestCreditLoan": "중금리 신용대출",
-    "loanInterestRate": "연 4.5% ~ 8.9%",
-    "savingsProduct": "적금 상품",
-    "savingsInterestRate": "연 4.2% 이율",
+    "mediumInterestCreditLoan": "외국인 중금리 신용대출",
+    "loanInterestRate": "최저 연 4.42%~",
+    "savingsProduct": "고금리 예적금 상품",
+    "savingsInterestRate": "최고 연 5.5%",
     "exchangeRate": "환율",
-    "refresh": "새로고침",
-    "usdTrend": "USD 추이",
-    "money": {
-      "loading": "잔액 조회 중...",
-      "noAccount": "연동된 계좌가 없습니다.",
-      "cantLoad": "잔액을 불러올 수 없습니다.",
-      "balance": "계좌잔액"
+    "usdTrend": "미국 USD 환율 동향",
+    "sendButton": {
+      "label": "송금하기"
     },
     "creditChart": {
-      "score": "점",
       "month": "{month}월"
     },
-    "credit": {
-      "credittoScore": "Creditto 점수",
-      "maxScore": "최고 {maxScore}점",
-      "grade": "등급",
-      "excellent": "우수",
-      "creditRating": "신용도 평가",
-      "comparison": "지난달 대비 +20점 상승"
+    "money": {
+      "loading": "로딩 중...",
+      "noAccount": "연결된 계좌가 없습니다.",
+      "cantLoad": "잔액을 불러올 수 없습니다.",
+      "balance": "잔액",
+      "masked_balance": "●●●●●"
     },
-    "sendButton": {
-      "label": "해외 송금하기"
+    "korean_won_symbol": "₩",
+    "credit": {
+      "new_status": "신규",
+      "point_unit": " 점",
+      "credit_evaluation": "신용도 평가",
+      "max_score_prefix": "최고",
+      "grade_label": "등급",
+      "score_change": "지난달 대비 {sign}{diff}점 {label}",
+      "up": "상승",
+      "down": "하락",
+      "no_change": "변동없음",
+      "creditto_score": "신용 점수",
+      "lookup_button": "조회하기"
+    },
+    "chart": {
+      "month_unit": "월"
     }
   },
   "send": {
     "common": {
-      "remittance": "해외 송금",
+      "remittance": "해외 정기 송금",
+      "oneOff": "해외 일회성 송금",
       "next": "다음",
       "name": "이름",
       "country": "국가",
@@ -139,7 +176,12 @@
       "yes": "예",
       "no": "아니요",
       "notice": "유의사항",
-      "noticeContent": "해외 SWIFT 송금시 입력하신 정보가 콜팬던트 정을 경우 해외 송금이 정상적으로 처리되지 않을 수 있습니다. 이때에는 착오 고객에게 있으며 착오사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관"
+      "noticeContent": "해외 SWIFT 송금시 입력하신 정보가 콜팬던트 정을 경우 해외 송금이 정상적으로 처리되지 않을 수 있습니다. 이때에는 착오 고객에게 있으며 착오사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관사항을 약관",
+      "no_linked_account_alert": "연동된 계좌가 없습니다",
+      "balance_inquiry_error": "계좌 잔액 합산 조회 오류:",
+      "header": {
+        "edit_button": "수정"
+      }
     },
     "main": {
       "regularTitle": "정기 해외 송금",
@@ -157,18 +199,6 @@
       "sendNowSubtitle": "기다리지 않고\n지금 즉시 보내요",
       "historyOneOffTitle": "송금 내역 조회",
       "historyOneOffSubtitle": "지금까지 보낸\n기록을 모아봐요"
-    },
-    "chooseCountry": {
-      "title": "송금할 국가를 선택해주세요",
-      "subtitle": "송금하실 국가의 통화를 선택해주세요",
-      "usa": "미국 USD",
-      "dollar": "달러",
-      "china": "중국 CNY",
-      "yuan": "위안",
-      "japan": "일본 JPY",
-      "yen": "엔",
-      "select": "선택",
-      "selectBank": "은행 선택"
     },
     "regular": {
       "result": {
@@ -190,6 +220,20 @@
       "loading": {
         "title": "신청 내용을 확인하고 있어요"
       },
+      "chooseCountry": {
+        "title": "송금할 국가를 선택해주세요",
+        "subtitle": "송금하실 국가의 통화를 선택해주세요",
+        "usa": "미국 USD",
+        "dollar": "달러",
+        "japan": "일본 JPY",
+        "yen": "엔",
+        "malaysia": "말레이시아 MYR",
+        "ringgit": "링깃",
+        "thailand": "태국 THB",
+        "baht": "바트",
+        "select": "선택",
+        "selectBank": "은행 선택"
+      },
       "information": {
         "title": "해외 송금 기본 정보를 입력해주세요",
         "type": "송금 유형",
@@ -199,6 +243,7 @@
         "receiveCurrencyPlaceholder": "수취 통화 코드를 입력하세요(USD, CNY, JPY)",
         "amount": "외화 거래 금액({currency})",
         "amountPlaceholder": "송금할 금액을 입력하세요",
+        "balance": "잔액",
         "cycle": "송금 주기",
         "cyclePlaceholder": "송금 주기를 선택하세요 (매월 / 매주)",
         "monthly": "매월",
@@ -229,7 +274,15 @@
         "bankCode": "은행 코드",
         "accountNumberPlaceholder": "계좌번호를 입력하세요",
         "modalTitle": "해외 자동 송금",
-        "modalMessage": "해외 자동 송금 서비스를 신청하시겠습니까?\n‘예'를 클릭하실 경우 앞서 산출한 우대환율이 \n적용됩니다."
+        "modalMessage": "해외 자동 송금 서비스를 신청하시겠습니까?\n‘예'를 클릭하실 경우 앞서 산출한 우대환율이 \n적용됩니다.",
+        "log_receive_currency": "수취 통화 코드: ",
+        "log_form_data": "작성된 폼",
+        "log_all_fields_required": "모든 입력 칸이 채워져야 됩니다",
+        "log_access_token": "accessToken: ",
+        "error_no_access_token": "Access Token이 없습니다.",
+        "error_scheduled_remittance_fail": "정기 해외 송금 신청 실패: ",
+        "insufficient_balance_alert": "잔액이 부족합니다.",
+        "preferential_rate_label": "우대율:"
       },
       "history": {
         "title": "정기 송금 내역",
@@ -257,19 +310,83 @@
         "recurringTitle": "해외 정기 송금 내역",
         "recipient": "수취인",
         "recipientAccount": "수취인 계좌번호",
+        "bankNames": {
+          "JP모건 체이스": "JP모건 체이스",
+          "뱅크 오브 아메리카": "뱅크 오브 아메리카",
+          "웰스 파고": "웰스 파고",
+
+          "미쓰비시UFJ은행": "미쓰비시UFJ은행",
+          "미쓰이스미토모은행": "미쓰이스미토모은행",
+          "미즈호은행": "미즈호은행",
+
+          "Maybank": "Maybank",
+          "CIMB": "CIMB",
+          "퍼블릭 뱅크": "퍼블릭 뱅크",
+
+          "방콕 은행": "방콕 은행",
+          "끄룽타이은행": "끄룽타이은행",
+          "시암 상업 은행": "시암 상업 은행"
+        },
+        "recipientBankName": "{recipientBankName}",
         "completed": "6개월 정기 송금 완료",
         "creditScoreUp": "신용도 점수 +50",
         "recurringDetailTitle": "송금 상세 정보",
         "remittanceAmount": "송금 금액",
         "fee": "수수료",
-        "status": "송금 처리 상태"
+        "status": "송금 처리 상태",
+        "alert_no_linked_account": "연동된 계좌가 없습니다",
+        "no_remittance_history": "아직 송금 내역이 없습니다.",
+        "year_unit": "년",
+        "krw_currency": "KRW",
+        "exchange_rate_label": "환율 ",
+        "won_unit": "원",
+        "6month_cycle_completed_pt1": "6개월 정기 송금 ",
+        "6month_cycle_completed_pt2": "회 완료",
+        "credit_score_benefit": "신용 점수를 높이는 데 도움이 됩니다",
+        "detail_title": "내역",
+        "transaction_amount_label": "거래 금액",
+        "balance_label": "잔액",
+        "total_fee_label": "총 수수료",
+        "recipient_bank_name_label": "수취 은행명",
+        "recipient_account_number_label": "수취 계좌번호",
+        "remittance_status_label": "송금 상태",
+        "page_title": "해외 정기 송금 내역"
       },
       "term": {
         "title": "약관 동의서 페이지"
+      },
+      "choose": {
+        "country_malaysia_code": "말레이시아 MYR",
+        "currency_ringgit": "링깃",
+        "country_thailand_code": "태국 THB",
+        "currency_baht": "밧"
+      },
+      "complete": {
+        "creditto_character_alt": "크레디토 캐릭터",
+        "no_credit_history": "아직 평가 이력이 없어요",
+        "6month_regular_remittance": "6개월 정기 송금시",
+        "12month_regular_remittance": "12개월 정기 송금시",
+        "18month_regular_remittance": "18개월 정기 송금시"
       }
+    },
+    "page": {
+      "title": "해외 송금",
+      "description": "정기 및 일회성 해외 송금 기능"
     },
     "oneOff": {
       "choose": {
+        "title": "송금할 국가를 선택해주세요",
+        "subtitle": "송금하실 국가의 통화를 선택해주세요",
+        "usa": "미국",
+        "dollar": "달러",
+        "japan": "일본",
+        "yen": "옌",
+        "malaysia": "말레이시아",
+        "ringgit": "링깃",
+        "thailand": "태국",
+        "baht": "바트",
+        "select": "선택",
+        "selectBank": "선택할 은행",
         "bankJPMorgan": "JP모건 체이스",
         "bankBOA": "뱅크 오브 아메리카",
         "bankWellsFargo": "웰스 파고",
@@ -279,9 +396,18 @@
         "bankMUFG": "미쓰비시UFJ은행",
         "bankSMBC": "미쓰이스미토모은행",
         "bankMizuho": "미즈호은행",
-        "countryUSA": "미국",
-        "countryChina": "중국",
-        "countryJapan": "일본"
+        "bank_jpmorgan_chase": "JP모건 체이스",
+        "bank_bank_of_america": "뱅크 오브 아메리카",
+        "bank_wells_fargo": "웰스 파고",
+        "bank_mitsubishi_ufj": "미쓰비시UFJ은행",
+        "bank_sumitomo_mitsui": "미쓰이스미토모은행",
+        "bank_mizuho": "미즈호은행",
+        "bank_maybank": "메이뱅크",
+        "bank_cimb": "CIMB",
+        "bank_public": "퍼블릭 뱅크",
+        "bank_bangkok": "방콕 은행",
+        "bank_krungthai": "끄룽타이은행",
+        "bank_siam_commercial": "시암 상업 은행"
       },
       "form": {
         "account": "송금 계좌",
@@ -306,7 +432,58 @@
         "countryCodeChina": "중국 (+86)",
         "countryCodeJapan": "일본 (+81)",
         "phonePlaceholder": "전화번호를 입력하세요",
-        "date": "송금날짜 입력"
+        "date": "송금날짜 입력",
+        "log_selected_country": "선택된 국가: ",
+        "log_preferential_rate": "res.data.data.preferentialRate :",
+        "log_exchange_rate_fail": "환율 정보 조회 실패:",
+        "sender_account_label": "송금 계좌",
+        "balance_label": "잔액: ",
+        "krw_unit": "원",
+        "base_exchange_rate": "기준 환율",
+        "preferential_rate": "우대율",
+        "applied_exchange_rate": "적용 환율",
+        "confirm_drawer_title": "입력하신 정보가 맞나요?",
+        "confirm_drawer_description": "입력하신 정보로 송금을 진행합니다.",
+        "confirm_drawer_sender_account": "보내는 계좌",
+        "confirm_drawer_recipient_name": "받는 분",
+        "confirm_drawer_recipient_account": "받는 분 계좌",
+        "confirm_drawer_send_date": "송금 날짜",
+        "confirm_drawer_send_amount": "송금 금액",
+        "confirm_drawer_krw_amount": "원화 환산 금액",
+        "confirm_drawer_expected_fee": "예상 수수료",
+        "confirm_drawer_approx": "(약 ",
+        "confirm_drawer_krw_unit": "원)",
+        "confirm_drawer_actual_receive_amount": "실제 수취 금액",
+        "confirm_drawer_total_withdrawal_amount": "총 출금 예상 금액:",
+        "confirm_drawer_submit_button": "송금하기",
+        "confirm_drawer_cancel_button": "아니요, 수정할게요",
+        "alert_insufficient_balance": "잔액이 부족합니다. 보낼 수 있는 최대 금액으로 자동 입력됩니다.",
+        "alert_account_info_not_found": "송금 계좌 정보를 찾을 수 없습니다. 다시 선택해주세요.",
+        "next_button": "다음"
+      },
+      "result": {
+        "title": "일회성 송금",
+        "page_title_pt1": "해외 일회성 송금",
+        "page_title_pt2": "신청결과",
+        "sender_info": "송금인 정보",
+        "sender_account_no": "송금인 계좌번호",
+        "foreign_currency_amount": "외화 거래 금액",
+        "remittance_start_date": "송금 시작일",
+        "recipient_info": "수취인 정보",
+        "name": "이름",
+        "nationality": "국적",
+        "account_no": "계좌번호",
+        "phone_no": "전화번호",
+        "bank": "은행",
+        "next_button": "다음"
+      },
+      "history": {
+        "title": "일회성 송금 내역",
+        "log_all_accounts_success": "모든 계좌 조회 성공: ",
+        "log_all_accounts_error": "모든 계좌 조회 중 오류 발생: ",
+        "log_one_off_history_success": "일회성 송금 설정 내역 조회 성공: ",
+        "log_one_off_history_fail": "사용자 일회성 송금 내역 조회 실패: ",
+        "to_prefix": "To. "
       }
     },
     "components": {
@@ -324,7 +501,31 @@
       },
       "addressModal": {
         "title": "주소 검색"
+      },
+      "drawer": {
+        "trigger_label": "열기",
+        "title": "정말 확실한가요?",
+        "description": "이 작업은 되돌릴 수 없습니다.",
+        "submit_button": "제출",
+        "cancel_button": "취소"
       }
+    },
+    "consent": {
+      "log_linked_account_exist": "연동된 계좌 있음",
+      "log_balance_inquiry_error": "계좌 잔액 합산 조회 by UserId 오류 발생: ",
+      "alert_no_linked_account": "연동된 계좌가 없습니다.",
+      "title": "약관 동의",
+      "consent1": "해외송금 거래정보 수집·이용 동의서",
+      "consent2": "해외송금 고객확인 및 자금세탁방지 동의서",
+      "consent3": "해외송금 제한 국가 관련 확인 동의서",
+      "agree_all": "약관 전체 동의",
+      "required": "(필수)",
+      "optional": "(선택)",
+      "next": "다음",
+      "log_send_mode": "송금방식: ",
+      "log_consent_detail_success": "특정 동의서 조회 성공: ",
+      "log_consent_detail_fail": "특정 동의서 조회 실패: ",
+      "agree_complete": "동의 완료"
     }
   },
   "account": {
@@ -348,7 +549,24 @@
       "investment": "투자 계좌",
       "instruction1": "계좌 생성을 위해",
       "instruction2": "정보를 입력해주세요",
-      "button": "계좌 생성하기"
+      "button": "계좌 생성하기",
+      "password_input": "계좌 비밀번호 입력",
+      "confirm": {
+        "confirm_account_create": "계정 생성 확인",
+        "check_account_information": "계정 정보를 확인해 주세요",
+        "below_account_information": "아래 정보로 계좌가 생성됩니다",
+        "account_name": "계좌 이름",
+        "account_type": "계좌 타입",
+        "goToCreate": "계좌 생성하기"
+      },
+      "pw": {
+        "headerTitle": "계좌 비밀번호 입력",
+        "setTitle": "계좌 생성을 위한\n4자리 비밀번호를 설정해주세요",
+        "againTitle": "비밀번호를\n한 번 더 입력해주세요",
+        "inputTitle": "4자리 계좌 비밀번호를\n입력해주세요",
+        "passwordsDoNotMatch": "비밀번호가 일치하지 않습니다... 다시 설정해주세요",
+        "confirmInput": "확인을 위해 다시 입력해주세요"
+      }
     },
     "myAccount": {
       "title": "내 계좌",
@@ -471,6 +689,16 @@
       "idCardExample": "신분증 예시",
       "importAlienRegistrationCard": "외국인등록증 가져오기"
     },
+    "ocrConsent": {
+      "title": "인증서 발급 동의",
+      "agreeAll": "모든 약관 동의",
+      "required": "(필수)",
+      "terms7": "본인 확인 서비스 약관 및 동의사항",
+      "terms8": "크레디토 전자인증서비스 약관",
+      "terms9": "개인정보 수집·이용 동의(크레디토인증서)",
+      "terms10": "고유식별정보 처리 동의",
+      "next": "다음"
+    },
     "ocrStep": {
       "title": "인증서 발급은 아래 순서로 진행돼요",
       "step1Title": "비대면 실명확인",
@@ -479,10 +707,6 @@
       "step2Subtitle": "6자리 간편 비밀번호를 설정합니다.",
       "issueCertificate": "인증서 발급하기",
       "dialogDescription": "한 번 만들면 n년동안 쓸 수 있어요",
-      "terms1": "[필수] 본인 확인 서비스 약관 및 동의사항",
-      "terms2": "[필수] 크레디토 전자인증서비스 약관",
-      "terms3": "[필수] 개인정보 수집·이용 동의(크레디토인증서)",
-      "terms4": "[필수] 고유식별정보 처리 동의",
       "issueLater": "다음에 발급하기"
     },
     "scan": {
@@ -519,7 +743,15 @@
       "passwordsDoNotMatch": "비밀번호가 일치하지 않습니다. 다시 설정해주세요.",
       "certificateNotFound": "인증서 정보를 찾을 수 없습니다.",
       "certificateIssueError": "인증서 발급 중 오류가 발생했습니다. 다시 시도해주세요.",
-      "passwordIncorrectOrError": "비밀번호가 올바르지 않습니다."
+      "passwordIncorrectOrError": "비밀번호가 올바르지 않습니다.",
+      "create_pin_title_1": "계좌 생성을 위한\n비밀번호 4자리를 설정합니다",
+      "create_pin_title_2": "비밀번호를\n한 번 더 입력해주세요",
+      "enter_pin_title": "계좌 비밀번호 4자리를\n입력해주세요",
+      "enter_again_for_confirmation": "확인을 위해 다시 입력해주세요.",
+      "pin_digits_aria_label": "비밀번호 자리수",
+      "no_account_info": "계좌 정보가 없습니다. 다시 시도해주세요.",
+      "password_mismatch": "비밀번호가 일치하지 않습니다.",
+      "try_again_later": "잠시 후 다시 시도해주세요."
     },
     "securePinKeyboard": {
       "clearAll": "전체삭제",
@@ -530,7 +762,47 @@
       "title": "인증서가 발급되었어요",
       "description": "이제부터 모든 서비스를 이용할 수 있어요",
       "idCardExample": "신분증 예시",
-      "start": "시작하기"
+      "start": "시작하기",
+      "certificate1": "전자서명에 따른",
+      "certificate2": "안전한 인증서"
     }
+  },
+  "creditForeginAccount": {
+    "title": "외국인 계좌 조회",
+    "question": "어느나라의 계좌를 사용하시겠습니까?",
+    "passportCountryGrid": {
+      "passport_placeholder": "여권번호를 입력하세요",
+      "passport_aria_label": "여권번호 입력",
+      "inquiry_button": "해외계좌 조회하기"
+    }
+  },
+  "creditFirst": {
+    "title": "신용 평가",
+    "whats_good_pt1": "신용평가",
+    "whats_good_pt2": "하면",
+    "whats_good_pt3": "좋은 점이 무엇일까요?",
+    "merit1_pt1": "해외에서 사용하던 신용점수",
+    "merit1_pt2": "이제 한국에서도 그대로 쓸 수 있어요",
+    "merit2_pt1": "송금 수수료 우대, 금리 인하 등",
+    "merit2_pt2": "다양한 혜택을 느낄 수 있어요",
+    "inquiry_no_link": "연동없이 바로 조회하기",
+    "inquiry_foreign_account": "해외계좌 조회하기",
+    "bottom_sheet_title": "신용도 확인 및 활용 동의",
+    "consent1": "[필수] 해외·국내 금융거래 정보 수집 및 이용 동의",
+    "consent2": "[필수] 신용도 평가를 위한 개인(신용)정보 제공 동의",
+    "consent3": "[필수] 신용도 평가 결과 보고서 생성 및 제공 동의",
+    "consent4": "[필수] 신용도 평가 서비스 이용 약관 동의",
+    "agree_button": "동의하기",
+    "close_button": "닫기"
+  },
+  "creditConsent": {
+    "title": "약관 동의",
+    "consent1": "개인(신용)정보 수집·이용 동의서(신용평가 목적)",
+    "consent2": "신용정보조회(CB사) 동의서",
+    "consent3": "거래내역 기반 신용평가 모델 활용 동의서",
+    "agree_all": "약관 전체 동의",
+    "required": "(필수)",
+    "optional": "(선택)",
+    "next": "다음"
   }
 }
