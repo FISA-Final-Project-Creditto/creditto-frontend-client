@@ -4,11 +4,14 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { credittoApi } from "@/src/app/api/axios";
 
+import { useTranslations } from "next-intl";
+
 export default function Credit({ historyScore }) {
   const userId = sessionStorage.getItem("userId");
   const router = useRouter();
   const goToCreditFirst = () => router.push("/credit/first");
   const maxScore = 950;
+  const t = useTranslations("maine");
 
   const [score, setScore] = useState(null); // 0도 유효한 점수일 수 있으므로 null로 초기화
   const scorePercentage = score !== null ? (score / maxScore) * 100 : 0;
@@ -35,7 +38,7 @@ export default function Credit({ historyScore }) {
 
   const renderTier = () => {
     // TODO: 점수에 따른 등급 로직 구현 필요
-    if (score === null) return "신규";
+    if (score === null) return t("credit.new_status");
     return score; // 현재는 임시로 점수 표시
   };
 
@@ -43,30 +46,43 @@ export default function Credit({ historyScore }) {
   const scoreDiffText = React.useMemo(() => {
     const diff = getScoreDiff(historyScore);
     const sign = diff > 0 ? "+" : "";
-    const label = diff > 0 ? "상승" : diff < 0 ? "하락" : "변동없음";
-    return `지난달 대비 ${sign}${diff}점 ${label}`;
-  }, [historyScore]);
+    const label =
+      diff > 0
+        ? t("credit.up")
+        : diff < 0
+        ? t("credit.down")
+        : t("credit.no_change");
+    return t("credit.score_change", { sign: sign, diff: diff, label: label });
+  }, [historyScore, t]);
 
   return (
     <div className="w-full mt-5 bg-gradient-to-br from-[#1A3668] via-[#1A3668] to-[#1A3668]/80 rounded-3xl p-6 text-primary-foreground shadow-lg ">
       <div className="flex justify-between items-start mb-5 text-left">
         <div>
-          <p className="text-xs font-medium opacity-80 mb-1">Creditto 점수</p>
+          <p className="text-xs font-medium opacity-80 mb-1">
+            {t("credit.creditto_score")}
+          </p>
           <h3 className="text-3xl font-bold">
             {score === null ? (
               <button type="button" onClick={goToCreditFirst}>
-                조회하기
+                {t("credit.lookup_button")}
               </button>
             ) : (
               <>
-                {score} <span className="text-2xl">점</span>
+                {score}{" "}
+                <span className="text-2xl">{t("credit.point_unit")}</span>
               </>
             )}
           </h3>
-          <p className="text-xs opacity-70 mt-1">최고 {maxScore}점</p>
+          <p className="text-xs opacity-70 mt-1">
+            {t("credit.max_score_prefix")} {maxScore}
+            {t("credit.point_unit")}
+          </p>
         </div>
         <div className="text-right">
-          <p className="text-xs opacity-80 text-center mb-2">등급</p>
+          <p className="text-xs opacity-80 text-center mb-2">
+            {t("credit.grade_label")}
+          </p>
           <div className="bg-white/20 backdrop-blur px-3 py-1 rounded-full text-sm font-semibold">
             {renderTier()}
           </div>
@@ -78,7 +94,9 @@ export default function Credit({ historyScore }) {
         {score !== null && (
           <>
             <div className="flex justify-between items-center mb-2">
-              <span className="text-xs opacity-80">신용도 평가</span>
+              <span className="text-xs opacity-80">
+                {t("credit.credit_evaluation")}
+              </span>
               <span className="text-xs font-medium">
                 {Math.round(scorePercentage)}%
               </span>

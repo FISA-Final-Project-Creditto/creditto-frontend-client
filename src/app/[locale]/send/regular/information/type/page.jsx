@@ -252,7 +252,9 @@ export default function TypePage() {
                   </label>
                   {formData.accountNo && (
                     <p className="text-[0.875rem] text-[#4E5969] text-left">
-                      {`잔액: ${new Intl.NumberFormat("ko-KR").format(
+                      {`${t(
+                        "regular.information.balance"
+                      )}: ${new Intl.NumberFormat("ko-KR").format(
                         Number(balance)
                       )}원`}
                     </p>
@@ -338,7 +340,7 @@ export default function TypePage() {
                   />
                 </div>
                 {/* ✅ TODO: 나중에 필요하다고 하면 구현 */}
-                {/* {formData.accountNo &&
+                {formData.accountNo &&
                   Number(formData.sendAmount) > 0 &&
                   Number(balance) < Number(formData.sendAmount) &&
                   (() => {
@@ -348,22 +350,22 @@ export default function TypePage() {
                     const sendAmountNum = Number(
                       String(formData.sendAmount).replace(/,/g, "")
                     );
-
                     return (
                       formData.accountNo &&
                       sendAmountNum > 0 &&
                       balanceNum < sendAmountNum && (
                         <p className="text-red-500 text-sm mt-1">
-                          잔액이 부족합니다.
+                          {t("regular.information.insufficient_balance_alert")}
                         </p>
                       )
                     );
-                  })()} */}
+                  })()}
 
                 {/* 우대율 */}
                 {preferentialRate > 0 && (
                   <p className="text-sm text-[#334D79] text-left font-semibold">
-                    우대율: {preferentialRate}%
+                    {t("regular.information.preferential_rate_label")}{" "}
+                    {preferentialRate}%
                   </p>
                 )}
               </section>

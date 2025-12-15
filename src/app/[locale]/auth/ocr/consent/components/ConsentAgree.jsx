@@ -6,13 +6,15 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setConsentChecked } from "@/src/store/features/consent/consentSlice";
 import { clearModeData } from "@/src/store/features/send/sendModeSlice";
+import { useTranslations } from "next-intl";
 
 export default function ConsentAgree({
-  title = "약관 동의",
+  title, // title prop은 이제 useTranslations 훅에서 가져온 값을 사용하므로 기본값을 제거합니다.
   consents = [], // 약관 동의서 리스트
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
+  const t = useTranslations("auth.ocrConsent");
   const consentChecked = useSelector((state) => state.consent.checked);
 
   // 체크 상태: { all: false, consent1: false, consent2: false, ... }
@@ -123,7 +125,7 @@ export default function ConsentAgree({
 
   return (
     <>
-      <AppHeader title={title} show={true} showHamburger={false} />
+      <AppHeader title={t("title")} show={true} showHamburger={false} />
 
       <div className="flex-1 px-8 pt-16 pb-10 text-left">
         {/* 전체 동의 */}
@@ -155,7 +157,7 @@ export default function ConsentAgree({
             )}
           </span>
           <h1 className="text-[20px] font-bold text-[#4E5969]">
-            약관 전체 동의
+            {t("agreeAll")}
           </h1>
         </label>
 
@@ -193,12 +195,7 @@ export default function ConsentAgree({
                 </span>
 
                 <p className="text-[15px] text-[#4E5969] leading-relaxed">
-                  {required && (
-                    <span className="text-[#4E5969] mr-1">(필수)</span>
-                  )}
-                  {!required && (
-                    <span className="text-[#C9CDD4] mr-1">(선택)</span>
-                  )}
+                  <span className="text-[#4E5969] mr-1">{t("required")}</span>
                   {label}
                 </p>
               </label>
@@ -218,7 +215,7 @@ export default function ConsentAgree({
             }`}
           onClick={handleNext}
         >
-          다음
+          {t("next")}
         </button>
       </div>
     </>

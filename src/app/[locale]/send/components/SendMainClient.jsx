@@ -29,11 +29,11 @@ export default function SendMainClient() {
         });
 
         if (res.data.data.accountCount === 0) {
-          alert("연동된 계좌가 없습니다");
+          alert(t("no_linked_account_alert"));
           router.replace("/");
         }
       } catch (error) {
-        console.error("계좌 잔액 합산 조회 오류:", error);
+        console.error(t("balance_inquiry_error"), error);
       }
     }
 

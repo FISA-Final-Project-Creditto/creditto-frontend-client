@@ -29,7 +29,7 @@ export default function HistoryPage() {
       if (accountsExist) {
         await fetchRemittanceHistory(); // 계좌 있으면 내역 조회
       } else {
-        alert("연동된 계좌가 없습니다");
+        alert(t("regular.history.alert_no_linked_account"));
         router.push("/main");
       }
     };

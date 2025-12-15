@@ -3,9 +3,11 @@
 import React from 'react';
 import { X, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 export default function SettingsSidebar({ isOpen, onClose }) {
   const router = useRouter();
+  const t = useTranslations('main.header');
 
   const handleLogout = () => {
     // 세션 스토리지에서 사용자 정보 제거
@@ -38,7 +40,7 @@ export default function SettingsSidebar({ isOpen, onClose }) {
       >
         <div className="p-4 flex justify-between items-center border-b">
           <h2 id="sidebar-title" className="text-lg font-semibold">
-            설정
+            {t('settings')}
           </h2>
           <button onClick={onClose} className="p-2 hover:bg-muted rounded-full">
             <X className="w-5 h-5" />
@@ -47,7 +49,7 @@ export default function SettingsSidebar({ isOpen, onClose }) {
         <div className="p-4">
           <button onClick={handleLogout} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-left">
             <LogOut className="w-5 h-5 text-muted-foreground" />
-            <span className="font-medium">로그아웃</span>
+            <span className="font-medium">{t('logout')}</span>
           </button>
         </div>
       </div>

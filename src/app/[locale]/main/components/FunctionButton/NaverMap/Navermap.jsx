@@ -3,12 +3,14 @@
 
 import { useRef, useState } from "react";
 import Script from "next/script";
+import { useTranslations } from "next-intl";
 
 const NaverMap = () => {
   const mapElement = useRef(null);
   const mapInstance = useRef(null);
   const infoWindow = useRef(null);
   const [markers, setMarkers] = useState([]);
+  const t = useTranslations("main.tabs");
 
   /**
    * 지도 초기화
@@ -40,7 +42,7 @@ const NaverMap = () => {
    */
   const searchAndMarkBanks = () => {
     if (!mapInstance.current || !window.naver) {
-      alert("지도 서비스가 아직 로딩 중입니다. 잠시 후 다시 시도해주세요.");
+      alert(t("map_loading_alert"));
       return;
     }
 
@@ -133,7 +135,7 @@ const NaverMap = () => {
             background: "#fff",
           }}
         >
-          외국인 특화 우리은행 찾기 
+          {t("find_woori_bank")}
         </button>
       </div>
 
