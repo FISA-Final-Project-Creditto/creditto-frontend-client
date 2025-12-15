@@ -23,7 +23,7 @@ const SecurePinKeyboard = dynamic(
 export default function SecurePage({ length = 4 }) {
   const dispatch = useDispatch();
   const router = useRouter();
-  const t = useTranslations("auth.password");
+  const t = useTranslations("account.create.pw");
 
   // selector로 데이터 가져오기(send 모드에서 사용)
   const sendInfo = useSelector(selectSendInfo);
@@ -212,7 +212,7 @@ export default function SecurePage({ length = 4 }) {
   return (
     <>
       <AppHeader
-        title="계좌 비밀번호 입력"
+        title={t("headerTitle")}
         show={true}
         showBack={true}
         showHamburger={false}
@@ -236,9 +236,9 @@ export default function SecurePage({ length = 4 }) {
           <h1 className="text-[1.375rem] font-medium text-black leading-snug mb-[1.875rem] whitespace-pre-line text-center">
             {isCreateMode
               ? step === 1
-                ? "계좌 생성을 위한\n비밀번호 4자리를 설정합니다"
-                : "비밀번호를\n한 번 더 입력해주세요"
-              : "계좌 비밀번호 4자리를\n입력해주세요"}
+                ? t("setTitle")
+                : t("againTitle")
+              : t("inputTitle")}
           </h1>
 
           <div className="flex flex-col items-center ">
@@ -246,9 +246,7 @@ export default function SecurePage({ length = 4 }) {
               <p className="text-[#F53F3F] text-sm mt-1">{errorMessage}</p>
             ) : (
               <p className="text-[#4E5969] text-sm mt-1 h-5">
-                {isCreateMode && step === 2
-                  ? "확인을 위해 다시 입력해주세요."
-                  : ""}
+                {isCreateMode && step === 2 ? t("confirmInput") : ""}
               </p>
             )}
 

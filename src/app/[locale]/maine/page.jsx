@@ -75,7 +75,7 @@ export default function Dashboard() {
               {t("monthlyUsage")}
             </p>
             <h4 className="text-3xl font-bold text-foreground mb-4">
-              ₩1,240,000
+              {t("monthly_usage_amount")}
             </h4>
             <div className="text-xs text-muted-foreground">
               {t("thisMonth")} {3}
@@ -149,7 +149,7 @@ export default function Dashboard() {
               {t("exchangeRate")}
             </h3>
             <button className="text-xs text-primary hover:underline">
-              {t("refresh")}
+              {t("seeMore")}
             </button>
           </div>
 
@@ -186,7 +186,7 @@ export default function Dashboard() {
                 </p>
                 <div className="flex items-end justify-between">
                   <div>
-                    <p className="text-xl font-bold">₩{item.rate}</p>
+                    <p className="text-xl font-bold">{t("korean_won_symbol")}{item.rate}</p>
                   </div>
                   <div
                     className={`text-xs font-semibold flex items-center gap-0.5 ${

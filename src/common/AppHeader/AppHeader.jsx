@@ -3,6 +3,7 @@ import Hambuger from "@/src/app/[locale]/main/components/Hambuger";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 export default function AppHeader({
   title,
@@ -16,6 +17,8 @@ export default function AppHeader({
   edit,
   handleEdit,
 }) {
+  const t = useTranslations("send");
+
   const router = useRouter();
   if (!show) return null;
 
@@ -47,7 +50,7 @@ export default function AppHeader({
             onClick={handleEdit}
             className="text-sm font-semibold text-[#4D6389]"
           >
-            수정
+            {t("common.header.edit_button")}
           </button>
         )}
       </div>

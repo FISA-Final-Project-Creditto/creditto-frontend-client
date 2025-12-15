@@ -13,20 +13,22 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { useTranslations } from "next-intl";
 
 export function DrawerDemo() {
+  const t = useTranslations("send.oneOff.drawer");
   return (
     <Drawer>
-      <DrawerTrigger>Open</DrawerTrigger>
+      <DrawerTrigger>{t("trigger_label")}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-          <DrawerDescription>This action cannot be undone.</DrawerDescription>
+          <DrawerTitle>{t("title")}</DrawerTitle>
+          <DrawerDescription>{t("description")}</DrawerDescription>
         </DrawerHeader>
         <DrawerFooter>
-          <Button>Submit</Button>
+          <Button>{t("submit_button")}</Button>
           <DrawerClose>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline">{t("cancel_button")}</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

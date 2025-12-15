@@ -135,11 +135,11 @@ export default function RecipientPage() {
       };
 
       dispatch(setRecipientData(submissionData));
-      console.log("작성된 폼", submissionData);
+      console.log(t("regular.information.log_form_data"), submissionData);
 
       router.push("/send/regular/information/bank"); // 수취 은행 페이지로 이동
     } else {
-      console.log("모든 입력 칸이 채워져야 됩니다");
+      console.log(t("regular.information.log_all_fields_required"));
     }
   };
 
@@ -210,8 +210,9 @@ export default function RecipientPage() {
                         disabled={true}
                         value={recipientCountry}
                         readOnly
-                        className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none focus:outline-none
-    ${formData.country === "" ? "text-[#86909C]" : "text-black"}`}
+                        className={`w-full px-4 py-3 bg-[#F7F8FA] border-0 rounded-none appearance-none text-black ${
+                          recipientCountry === "" ? "text-[#86909C]" : "text-black"
+                        }`}
                       ></input>
                     </div>
                   </div>

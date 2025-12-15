@@ -2,18 +2,20 @@
 
 import { Button } from "@/components/ui/button";
 import { credittoApi } from "@/src/app/api/axios";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, X } from "lucide-react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { setConsentChecked } from "@/src/store/features/consent/consentSlice";
 import { useDispatch } from "react-redux";
 import BottomSheet from "@/src/common/UI/BottomSheet/BottomSheet";
+import { useTranslations } from "next-intl";
 
 export default function ConsentDetailPage() {
   const { id } = useParams(); // 동의서 ID
   const searchParam = useSearchParams();
   const router = useRouter();
   const dispatch = useDispatch();
+  const t = useTranslations("send.consent");
 
   const [term, setTerm] = useState({
     consentCategory: "",
@@ -94,16 +96,16 @@ export default function ConsentDetailPage() {
 
         const { code, data } = res.data;
         if (code === 200) {
-          console.log("특정 동의서 조회 성공: ", data);
+          console.log(t("log_consent_detail_success"), data);
           setTerm(data);
         }
       } catch (error) {
-        console.error("특정 동의서 조회 실패: ", error);
+        console.error(t("log_consent_detail_fail"), error);
       }
     };
 
     fetchConsent();
-  }, [id]);
+  }, [id, t]);
 
   return (
     <BottomSheet
@@ -135,7 +137,7 @@ export default function ConsentDetailPage() {
         >
           <span className="flex items-center gap-2">
             <CheckCircle2 className="h-5 w-5" />
-            동의 완료
+            {t("agree_complete")}
           </span>
         </Button>
       </div>

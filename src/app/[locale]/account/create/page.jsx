@@ -98,7 +98,7 @@ export default function AccountCreatePage() {
         </div>
         <footer>
           <BottomBar
-            label="비밀번호 설정"
+            label={t("password_input")}
             isActive={accountName && accountType}
             onClick={createHandle}
           />

@@ -38,7 +38,14 @@
     "loginRequired": "Login required.",
     "functionButton": {
       "loan": "Loan",
-      "creditScore": "Credit Score"
+      "creditScore": "Credit Score",
+      "foreign_credit_info": "Foreign Credit Information",
+      "report_language_select_aria_label": "Select language for credit analysis report",
+      "credit_analysis_placeholder": "Credit Analysis",
+      "korean": "Korean",
+      "english": "English",
+      "pdf_download_error": "PDF download error:",
+      "pdf_download": "PDF Download"
     },
     "loanButton": {
       "title": "Loan Recommendation",
@@ -47,7 +54,8 @@
     "mainCarousel": {
       "creditScoreLink": "Credit Score",
       "credittoScore": "Creditto Score",
-      "accountConnectionLink": "Link Account"
+      "accountConnectionLink": "Link Account",
+      "complete_alt": "Complete"
     },
     "goExchangeButton": {
       "title": "Exchange Rate Graph",
@@ -57,20 +65,40 @@
       "title": "Exchange"
     },
     "realTimeExchange": {
-      "exchangeRateAPI": "Exchange rate API integration scheduled"
+      "exchangeRateAPI": "Exchange rate API integration scheduled",
+      "title": "Real-time Exchange",
+      "log_success": "Exchange rate data: ",
+      "log_fail": "Failed to fetch exchange rate data:",
+      "krw": "KRW"
     },
     "tabs": {
       "home": "Home",
       "simplePayment": "e-wallet",
       "location": "Location",
       "name": "Name",
-      "naverMapAPI": "Naver Map API integration scheduled"
+      "naverMapAPI": "Naver Map API integration scheduled",
+      "map_loading_alert": "Map service is still loading. Please try again later.",
+      "find_woori_bank": "Find Woori Bank for Foreigners",
+      "account_history_log": "Account History : ",
+      "credit_score_inquiry_failed": "Failed to inquire credit score:"
+    },
+    "remittance": {
+      "title": "Remittance",
+      "subtitle": "Send money abroad"
+    },
+    "header": {
+      "korean": "Korean",
+      "english": "English",
+      "japanese": "Japanese",
+      "settings": "Settings",
+      "logout": "Logout"
     }
   },
   "maine": {
-    "greeting": "Hello",
-    "userName": "Yongjun Jeong",
+    "greeting": "Hello, ",
+    "userName": "Creditto!",
     "monthlyUsage": "Monthly Usage",
+    "monthly_usage_amount": "₩1,240,000",
     "thisMonth": "This month",
     "usageCount": "transactions",
     "send": "Send",
@@ -78,45 +106,54 @@
     "invest": "Invest",
     "recommendedProducts": "Recommended Products",
     "seeMore": "See More",
-    "mediumInterestCreditLoan": "Mid-interest Credit Loan",
-    "loanInterestRate": "Annual 4.5% ~ 8.9%",
-    "savingsProduct": "Savings Product",
-    "savingsInterestRate": "Annual 4.2% interest",
+    "mediumInterestCreditLoan": "Medium-interest Credit Loan for Foreigners",
+    "loanInterestRate": "Interest rate from 4.42%",
+    "savingsProduct": "High-yield Savings Product",
+    "savingsInterestRate": "Interest rate up to 5.5%",
     "exchangeRate": "Exchange Rate",
-    "refresh": "Refresh",
-    "usdTrend": "USD Trend",
-    "money": {
-      "loading": "Loading balance...",
-      "noAccount": "No linked accounts.",
-      "cantLoad": "Could not load balance.",
-      "balance": "Balance"
+    "usdTrend": "USD Exchange Rate Trend",
+    "sendButton": {
+      "label": "Send Money"
     },
     "creditChart": {
-      "score": "Score",
-      "month": "{month}"
+      "month": "{month} Month"
     },
+    "money": {
+      "loading": "Loading...",
+      "noAccount": "No linked account",
+      "cantLoad": "Failed to load balance",
+      "balance": "Balance",
+      "masked_balance": "●●●●●"
+    },
+    "korean_won_symbol": "₩",
     "credit": {
-      "credittoScore": "Creditto Score",
-      "maxScore": "Max {maxScore}",
-      "grade": "Grade",
-      "excellent": "Excellent",
-      "creditRating": "Credit Rating",
-      "comparison": "+20 points up from last month"
+      "new_status": "New",
+      "point_unit": " Points",
+      "credit_evaluation": "Credit Evaluation",
+      "max_score_prefix": "Max",
+      "grade_label": "Grade",
+      "score_change": "Compared to last month, {sign}{diff} points {label}",
+      "up": "Up",
+      "down": "Down",
+      "no_change": "No Change",
+      "creditto_score": "Creditto Score",
+      "lookup_button": "lookup"
     },
-    "sendButton": {
-      "label": "Send Money Abroad"
+    "chart": {
+      "month_unit": "Month"
     }
   },
   "send": {
     "common": {
       "remittance": "Regular Remittance",
+      "oneOff": "One-off remittance",
       "next": "Next",
       "name": "Name",
       "country": "Country",
       "address": "Address",
       "phoneNumber": "Phone Number",
       "accountNumber": "Account Number",
-      "day": "",
+      "day": "Day",
       "dayOfWeek": {
         "MONDAY": "Monday",
         "TUESDAY": "Tuesday",
@@ -139,7 +176,12 @@
       "yes": "Yes",
       "no": "No",
       "notice": "Notice",
-      "noticeContent": "When sending money via SWIFT, if the information you entered is incorrect, the overseas remittance may not be processed normally. In this case, the mistake is on the customer's side, and the error will be handled according to the terms and conditions."
+      "noticeContent": "When sending money via SWIFT, if the information you entered is incorrect, the overseas remittance may not be processed normally. In this case, the mistake is on the customer's side, and the error will be handled according to the terms and conditions.",
+      "no_linked_account_alert": "No linked accounts.",
+      "balance_inquiry_error": "Error fetching account balance:",
+      "header": {
+        "edit_button": "Edit"
+      }
     },
     "main": {
       "regularTitle": "Recurring Remittances",
@@ -157,18 +199,6 @@
       "sendNowSubtitle": "Send instantly without waiting",
       "historyOneOffTitle": "View History",
       "historyOneOffSubtitle": "See all your past remittance records"
-    },
-    "chooseCountry": {
-      "title": "Please select a country for remittance",
-      "subtitle": "Please select the currency of the country",
-      "usa": "USA USD",
-      "dollar": "Dollar",
-      "china": "China CNY",
-      "yuan": "Yuan",
-      "japan": "Japan JPY",
-      "yen": "Yen",
-      "select": "Select",
-      "selectBank": "Select Bank"
     },
     "regular": {
       "result": {
@@ -190,6 +220,18 @@
       "loading": {
         "title": "We are checking your application details"
       },
+      "chooseCountry": {
+        "title": "Please select a country",
+        "subtitle": "Please select the currency of the country",
+        "usa": "USA USD",
+        "dollar": "Dollar",
+        "japan": "JAPAN JPY",
+        "yen": "Yen",
+        "malaysia": "MALAYSIA MYR",
+        "ringgit": "Ringgit",
+        "thailand": "THAILAND THB",
+        "baht": "Baht"
+      },
       "information": {
         "title": "Please enter the basic information for remittance",
         "type": "Remittance Type",
@@ -199,6 +241,7 @@
         "receiveCurrencyPlaceholder": "Enter receiving currency code (USD, CNY, JPY)",
         "amount": "Foreign Currency Amount ({currency})",
         "amountPlaceholder": "Enter the amount to send",
+        "balance": "Balance",
         "cycle": "Remittance Cycle",
         "cyclePlaceholder": "Select remittance cycle (Monthly / Weekly)",
         "monthly": "Monthly",
@@ -229,7 +272,15 @@
         "bankCode": "Bank Code",
         "accountNumberPlaceholder": "Enter account number",
         "modalTitle": "Scheduled Overseas Remittance",
-        "modalMessage": "Would you like to apply for the scheduled overseas remittance service?\nIf you click 'Yes', the preferential exchange rate calculated earlier will be applied."
+        "modalMessage": "Would you like to apply for the scheduled overseas remittance service?\nIf you click 'Yes', the preferential exchange rate calculated earlier will be applied.",
+        "log_receive_currency": "Receiving Currency Code: ",
+        "log_form_data": "Form Data: ",
+        "log_all_fields_required": "All input fields must be filled",
+        "log_access_token": "Access Token: ",
+        "error_no_access_token": "Access Token is missing.",
+        "error_scheduled_remittance_fail": "Scheduled overseas remittance application failed: ",
+        "insufficient_balance_alert": "Insufficient balance.",
+        "preferential_rate_label": "Preferential Rate:"
       },
       "history": {
         "title": "Scheduled Remittance History",
@@ -255,21 +306,86 @@
         "noRemittanceHistory": "No remittance history yet.",
         "exchangeRate": "Exchange Rate {rate} KRW",
         "recurringTitle": "Scheduled Overseas Remittance History",
+
         "recipient": "Recipient",
         "recipientAccount": "Recipient Account Number",
+        "bankNames": {
+          "JP모건 체이스": "J.P. Morgan Chase",
+          "뱅크 오브 아메리카": "Bank of America",
+          "웰스 파고": "Wells Fargo",
+
+          "미쓰비시UFJ은행": "Mitsubishi UFJ Bank",
+          "미쓰이스미토모은행": "Sumitomo Mitsui Banking Corporation",
+          "미즈호은행": "Mizuho Bank",
+
+          "Maybank": "MayBank",
+          "CIMB": "CIMB",
+          "퍼블릭 뱅크": "Public Bank",
+
+          "방콕 은행": "BangKok Bank",
+          "끄룽타이은행": "Krung Thai Bank",
+          "시암 상업 은행": "Siam Commercial Bank"
+        },
+        "recipientBankName": "{recipientBankName}",
         "completed": "6-month scheduled remittance completed",
         "creditScoreUp": "Credit Score +50",
         "recurringDetailTitle": "Remittance Details",
         "remittanceAmount": "Remittance Amount",
         "fee": "Fee",
-        "status": "Remittance Status"
+        "status": "Remittance Status",
+        "alert_no_linked_account": "No linked accounts.",
+        "no_remittance_history": "No remittance history yet.",
+        "year_unit": "year",
+        "krw_currency": "KRW",
+        "exchange_rate_label": "Exchange Rate ",
+        "won_unit": "KRW",
+        "6month_cycle_completed_pt1": "6-month regular remittance ",
+        "6month_cycle_completed_pt2": " cycles completed",
+        "credit_score_benefit": "Helps improve credit score",
+        "detail_title": "Details",
+        "transaction_amount_label": "Transaction Amount",
+        "balance_label": "Balance",
+        "total_fee_label": "Total Fee",
+        "recipient_bank_name_label": "Recipient Bank Name",
+        "recipient_account_number_label": "Recipient Account Number",
+        "remittance_status_label": "Remittance Status",
+        "page_title": "Overseas Recurring Remittance History"
       },
       "term": {
         "title": "Terms and Conditions Page"
+      },
+      "choose": {
+        "country_malaysia_code": "Malaysia MYR",
+        "currency_ringgit": "Ringgit",
+        "country_thailand_code": "Thailand THB",
+        "currency_baht": "Baht"
+      },
+      "complete": {
+        "creditto_character_alt": "Creditto character",
+        "no_credit_history": "No evaluation history yet.",
+        "6month_regular_remittance": "For 6 months of regular remittance",
+        "12month_regular_remittance": "For 12 months of regular remittance",
+        "18month_regular_remittance": "For 18 months of regular remittance"
       }
+    },
+    "page": {
+      "title": "Overseas Remittance",
+      "description": "Regular and one-off overseas remittance feature"
     },
     "oneOff": {
       "choose": {
+        "title": "Please select a country",
+        "subtitle": "Please select the currency of the country",
+        "usa": "USA",
+        "dollar": "Dollar",
+        "japan": "JAPAN",
+        "yen": "Yen",
+        "malaysia": "MALAYSIA",
+        "ringgit": "Ringgit",
+        "thailand": "THAILAND",
+        "baht": "Baht",
+        "select": "Select",
+        "selectBank": "Select Bank",
         "bankJPMorgan": "JPMorgan Chase",
         "bankBOA": "Bank of America",
         "bankWellsFargo": "Wells Fargo",
@@ -279,9 +395,18 @@
         "bankMUFG": "MUFG Bank",
         "bankSMBC": "Sumitomo Mitsui Banking Corporation",
         "bankMizuho": "Mizuho Bank",
-        "countryUSA": "USA",
-        "countryChina": "China",
-        "countryJapan": "Japan"
+        "bank_jpmorgan_chase": "JPMorgan Chase",
+        "bank_bank_of_america": "Bank of America",
+        "bank_wells_fargo": "Wells Fargo",
+        "bank_mitsubishi_ufj": "MUFG Bank",
+        "bank_sumitomo_mitsui": "Sumitomo Mitsui Banking Corporation",
+        "bank_mizuho": "Mizuho Bank",
+        "bank_maybank": "Maybank",
+        "bank_cimb": "CIMB",
+        "bank_public": "Public Bank",
+        "bank_bangkok": "Bangkok Bank",
+        "bank_krungthai": "Krungthai Bank",
+        "bank_siam_commercial": "Siam Commercial Bank"
       },
       "form": {
         "account": "Withdrawal Account",
@@ -306,7 +431,58 @@
         "countryCodeChina": "China (+86)",
         "countryCodeJapan": "Japan (+81)",
         "phonePlaceholder": "Enter phone number",
-        "date": "Enter Remittance Date"
+        "date": "Enter Remittance Date",
+        "log_selected_country": "Selected Country: ",
+        "log_preferential_rate": "res.data.data.preferentialRate :",
+        "log_exchange_rate_fail": "Failed to fetch exchange rate information:",
+        "sender_account_label": "Sender Account",
+        "balance_label": "Balance: ",
+        "krw_unit": "KRW",
+        "base_exchange_rate": "Base Exchange Rate",
+        "preferential_rate": "Preferential Rate",
+        "applied_exchange_rate": "Applied Exchange Rate",
+        "confirm_drawer_title": "Is the entered information correct?",
+        "confirm_drawer_description": "Remittance will proceed with the entered information.",
+        "confirm_drawer_sender_account": "Sender Account",
+        "confirm_drawer_recipient_name": "Recipient Name",
+        "confirm_drawer_recipient_account": "Recipient Account",
+        "confirm_drawer_send_date": "Remittance Date",
+        "confirm_drawer_send_amount": "Remittance Amount",
+        "confirm_drawer_krw_amount": "Converted KRW Amount",
+        "confirm_drawer_expected_fee": "Estimated Fee",
+        "confirm_drawer_approx": "(approx. ",
+        "confirm_drawer_krw_unit": " KRW)",
+        "confirm_drawer_actual_receive_amount": "Actual Received Amount",
+        "confirm_drawer_total_withdrawal_amount": "Total estimated withdrawal amount:",
+        "confirm_drawer_submit_button": "Send Remittance",
+        "confirm_drawer_cancel_button": "No, I'll revise",
+        "alert_insufficient_balance": "Insufficient balance. Automatically entering maximum sendable amount.",
+        "alert_account_info_not_found": "Sender account information not found. Please re-select.",
+        "next_button": "Next"
+      },
+      "result": {
+        "title": "One-off Remittance",
+        "page_title_pt1": "Overseas One-off Remittance",
+        "page_title_pt2": "Application Result",
+        "sender_info": "Sender Information",
+        "sender_account_no": "Sender Account Number",
+        "foreign_currency_amount": "Foreign Currency Amount",
+        "remittance_start_date": "Remittance Start Date",
+        "recipient_info": "Recipient Information",
+        "name": "Name",
+        "nationality": "Nationality",
+        "account_no": "Account Number",
+        "phone_no": "Phone Number",
+        "bank": "Bank",
+        "next_button": "Next"
+      },
+      "history": {
+        "title": "One-off Remittance History",
+        "log_all_accounts_success": "Successfully fetched all accounts: ",
+        "log_all_accounts_error": "Error fetching all accounts: ",
+        "log_one_off_history_success": "Successfully fetched one-off remittance history: ",
+        "log_one_off_history_fail": "Failed to fetch user one-off remittance history: ",
+        "to_prefix": "To. "
       }
     },
     "components": {
@@ -325,6 +501,30 @@
       "addressModal": {
         "title": "Search Address"
       }
+    },
+    "drawer": {
+      "trigger_label": "Open",
+      "title": "Are you absolutely sure?",
+      "description": "This action cannot be undone.",
+      "submit_button": "Submit",
+      "cancel_button": "Cancel"
+    },
+    "consent": {
+      "log_linked_account_exist": "Linked account exists",
+      "log_balance_inquiry_error": "Error fetching account balance by UserId: ",
+      "alert_no_linked_account": "No linked accounts.",
+      "title": "Agree to Terms",
+      "consent1": "Consent to Collection and Use of Overseas Remittance Transaction Information",
+      "consent2": "Consent to Customer Verification and Anti-Money Laundering for Overseas Remittance",
+      "consent3": "Consent to Confirmation of Restricted Countries for Overseas Remittance",
+      "agree_all": "Agree to All Terms",
+      "required": "(Required)",
+      "optional": "(Optional)",
+      "next": "Next",
+      "log_send_mode": "Send mode: ",
+      "log_consent_detail_success": "Successfully fetched consent detail: ",
+      "log_consent_detail_fail": "Failed to fetch consent detail: ",
+      "agree_complete": "Consent Complete"
     }
   },
   "account": {
@@ -348,7 +548,24 @@
       "investment": "Investment Account",
       "instruction1": "Please enter the information",
       "instruction2": "to create an account",
-      "button": "Create Account"
+      "button": "Create Account",
+      "password_input": "Account Password Input",
+      "confirm": {
+        "confirm_account_create": "Account creation verification",
+        "check_account_information": "Please check your account information",
+        "below_account_information": "An account will be created with the information below",
+        "account_name": "Account Name",
+        "account_type": "Account Type",
+        "goToCreate": "Go to create an account"
+      },
+      "pw": {
+        "headerTitle": "Enter account password",
+        "setTitle": "Set a password of 4 digits\nFor account creation",
+        "againTitle": "The password\nPlease input it one more time",
+        "inputTitle": "Four digits of the account password\nPlease input it",
+        "passwordsDoNotMatch": "Passwords do not match... Please set again",
+        "confirmInput": "Please re-enter for confirmation"
+      }
     },
     "myAccount": {
       "title": "My Account",
@@ -471,6 +688,16 @@
       "idCardExample": "ID card example",
       "importAlienRegistrationCard": "Import Alien Registration Card"
     },
+    "ocrConsent": {
+      "title": "Issue Certificate Agreement",
+      "agreeAll": "Agree to all terms",
+      "required": "(Required)",
+      "terms1": "Identity Verification Service Terms and Conditions",
+      "terms2": "Creditto Electronic Certification Service Terms",
+      "terms3": "Agreement to Collect and Use Personal Information (Creditto Certificate)",
+      "terms4": "Agreement to Process Unique Identification Information",
+      "next": "Next"
+    },
     "ocrStep": {
       "title": "Certificate issuance proceeds in the following order",
       "step1Title": "Non-face-to-face Real Name Verification",
@@ -479,10 +706,6 @@
       "step2Subtitle": "Set a 6-digit simple password.",
       "issueCertificate": "Issue Certificate",
       "dialogDescription": "Once created, you can use it for n years",
-      "terms1": "[Required] Identity Verification Service Terms and Conditions",
-      "terms2": "[Required] Creditto Electronic Certification Service Terms",
-      "terms3": "[Required] Agreement to Collect and Use Personal Information (Creditto Certificate)",
-      "terms4": "[Required] Agreement to Process Unique Identification Information",
       "issueLater": "Issue Later"
     },
     "scan": {
@@ -519,7 +742,16 @@
       "passwordsDoNotMatch": "Passwords do not match. Please set again.",
       "certificateNotFound": "Certificate information not found.",
       "certificateIssueError": "An error occurred during certificate issuance. Please try again.",
-      "passwordIncorrectOrError": "Password is incorrect or an error occurred."
+      "passwordIncorrectOrError": "Password is incorrect or an error occurred.",
+      "create_pin_title_1": "Set a 4-digit password\nfor account creation",
+      "create_pin_title_2": "Please re-enter\nyour password",
+      "enter_pin_title": "Please enter your\n4-digit account password",
+      "enter_again_for_confirmation": "Please enter again for confirmation.",
+      "pin_digits_aria_label": "Password digits",
+      "no_account_info": "No account information. Please try again.",
+      "password_mismatch": "Passwords do not match.",
+      "try_again_later": "Please try again later.",
+      "certificate_issue_failure": "Certificate issuance failed:"
     },
     "securePinKeyboard": {
       "clearAll": "Clear All",
@@ -530,7 +762,47 @@
       "title": "Certificate has been issued",
       "description": "Now you can use all services",
       "idCardExample": "ID card example",
-      "start": "Start"
+      "start": "Start",
+      "certificate1": "according to the electronic signature",
+      "certificate2": "secure certificate"
     }
+  },
+  "creditForeginAccount": {
+    "title": "Foreign Account Inquiry",
+    "question": "Which country's account would you like to use?",
+    "passportCountryGrid": {
+      "passport_placeholder": "Enter your passport number",
+      "passport_aria_label": "Passport number input",
+      "inquiry_button": "Inquire Foreign Account"
+    }
+  },
+  "creditFirst": {
+    "title": "Credit Evaluation",
+    "whats_good_pt1": "Credit evaluation",
+    "whats_good_pt2": "benefits",
+    "whats_good_pt3": "What are the",
+    "merit1_pt1": "The credit score you used abroad",
+    "merit1_pt2": "can now be used in Korea as is.",
+    "merit2_pt1": "Preferential remittance fees, lower interest rates, etc.",
+    "merit2_pt2": "You can enjoy various benefits.",
+    "inquiry_no_link": "Inquire without linking",
+    "inquiry_foreign_account": "Inquire foreign account",
+    "bottom_sheet_title": "Consent to Credit Check and Utilization",
+    "consent1": "[Required] Consent to Collection and Use of Domestic and Foreign Financial Transaction Information",
+    "consent2": "[Required] Consent to Provide Personal (Credit) Information for Credit Evaluation",
+    "consent3": "[Required] Consent to Generate and Provide Credit Evaluation Result Report",
+    "consent4": "[Required] Consent to Credit Evaluation Service Terms of Use",
+    "agree_button": "Agree",
+    "close_button": "Close"
+  },
+  "creditConsent": {
+    "title": "Agree to Terms",
+    "consent1": "Consent to Collection and Use of Personal (Credit) Information (for Credit Evaluation)",
+    "consent2": "Consent to Credit Information Inquiry (CB Company)",
+    "consent3": "Consent to Use Transaction-Based Credit Evaluation Model",
+    "agree_all": "Agree to All Terms",
+    "required": "(Required)",
+    "optional": "(Optional)",
+    "next": "Next"
   }
 }

@@ -152,7 +152,7 @@ export default function CompletePage() {
           {!hasCreditHistory ? (
             // 조회 이력 없음
             <p className="text-left text-xl font-bold text-black">
-              아직 평가 이력이 없어요
+              {t("regular.complete.no_credit_history")}
             </p>
           ) : (
             // 조회 이력 O → 현재 점수 + 예측 점수
@@ -164,13 +164,13 @@ export default function CompletePage() {
               </p>
 
               <section className="flex flex-col gap-4">
-                <CreditScoreBanner label="6개월 정기 송금시" point={sixScore} />
+                <CreditScoreBanner label={t("regular.complete.6month_regular_remittance")} point={sixScore} />
                 <CreditScoreBanner
-                  label="12개월 정기 송금시"
+                  label={t("regular.complete.12month_regular_remittance")}
                   point={twelveScore}
                 />
                 <CreditScoreBanner
-                  label="18개월 정기 송금시"
+                  label={t("regular.complete.18month_regular_remittance")}
                   point={eighteenScore}
                 />
               </section>

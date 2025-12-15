@@ -29,7 +29,7 @@ export default function MyAccountPage() {
 
       {/* 하단 바 */}
       <BottomBar
-        label="계좌 생성하기"
+        label={t("goToCreate")}
         onClick={() => router.push("/account/create")}
         isActive={true}
       />

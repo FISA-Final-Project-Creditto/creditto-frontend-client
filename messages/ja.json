@@ -249,7 +249,7 @@
         "more": "もっと見る",
         "viewDetails": "詳細を見る",
         "cancelRemittance": "解約する",
-        "to": "To. {name}",
+        "to": "宛先. {name}",
         "cancelModalTitle": "定期海外送金の解約",
         "cancelModalMessage": "送金を解約しますか？\n解約後は復旧できませんので、慎重に選択してください。",
         "noRemittanceHistory": "まだ送金履歴がありません。",
@@ -257,6 +257,24 @@
         "recurringTitle": "定期海外送金履歴",
         "recipient": "受取人",
         "recipientAccount": "受取人口座番号",
+        "bankNames": {
+          "JP모건 체이스": "JPモルガン・チェース",
+          "뱅크 오브 아메리카": "バンク·オブ·アメリカ",
+          "웰스 파고": "ウェルズ·ファーゴ",
+
+          "미쓰비시UFJ은행": "三菱UFJ銀行",
+          "미쓰이스미토모은행": "三井住友銀行",
+          "미즈호은행": "みずほ銀行",
+
+          "Maybank": "メイバンク",
+          "CIMB": "シンブ",
+          "퍼블릭 뱅크": "パブリック·バンク",
+
+          "방콕 은행": "バンコク銀行",
+          "끄룽타이은행": "クルンタイ銀行",
+          "시암 상업 은행": "サイアム商業銀行"
+        },
+        "recipientBankName": "{recipientBankName}",
         "completed": "6ヶ月の定期送金完了",
         "creditScoreUp": "信用度スコア +50",
         "recurringDetailTitle": "送金詳細情報",

@@ -40,7 +40,7 @@ export default function CreditChart({historyScore}) {
       <div className="relative transform -translate-y-2">
         <div className="bg-white/85 backdrop-blur-xl px-3 py-2 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.12)] border border-white/40 flex flex-col">
           <span className="text-[11px] font-medium text-gray-600 tracking-tight">
-            {label}월
+            {label}{t("chart.month_unit")}
           </span>
           <span className="text-lg font-bold text-[#1A3668] leading-tight mt-0.5">
             {payload[0].value}
@@ -73,7 +73,7 @@ export default function CreditChart({historyScore}) {
               dataKey="month"
               stroke="rgba(255,255,255,0.6)"
               style={{ fontSize: "10px" }}
-              tickFormatter={(v) => `${v}월`}
+              tickFormatter={(v) => `${v}${t("chart.month_unit")}`}
             />
             <YAxis
               stroke="rgba(255,255,255,0.6)"

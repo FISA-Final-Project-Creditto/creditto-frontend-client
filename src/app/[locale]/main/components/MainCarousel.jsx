@@ -60,7 +60,7 @@ function CarouselDemo() {
               <CardContent className="flex flex-col w-full max-h-[203px]  items-center justify-center">
                 <img
                   src="/icon/card.png"
-                  alt="완료"
+                  alt={t("complete_alt")}
                   className="w-[220px] h-full  mt-4"
                 />
               </CardContent>

@@ -1,6 +1,7 @@
 "use client";
 
 import { CN, JP, US, MA, TH } from "country-flag-icons/react/3x2";
+import { useTranslations } from "next-intl";
 
 // 수취 통화 코드에 맞게 국기로 전환
 const CurrencyFlag = {
@@ -12,6 +13,7 @@ const CurrencyFlag = {
 
 export default function HistoryCard({ history, onClick }) {
   const FlagComponent = CurrencyFlag[history.receiveCurrency]; // 해당 국기 컴포넌트
+  const t = useTranslations("send.oneOff.history");
 
   return (
     <div
@@ -41,7 +43,7 @@ export default function HistoryCard({ history, onClick }) {
         {/* 송금인 & 송금 은행 */}
         <div className="flex flex-col items-start">
           <div className="text-sm text-black font-semibold mb-1">
-            {`To. ${history.recipientName}`}
+            {`${t("to_prefix")}${history.recipientName}`}
           </div>
         </div>
 

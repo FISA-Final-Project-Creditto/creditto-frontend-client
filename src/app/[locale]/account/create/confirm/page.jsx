@@ -6,12 +6,14 @@ import BottomBar from "../../../send/components/BottomBar";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
 import { useSelector } from "react-redux";
 import { credittoApi } from "@/src/app/api/axios";
+import { useTranslations } from "next-intl";
 
 export default function AccountConfirm() {
   const router = useRouter();
   const { accountName, accountType, password } = useSelector(
     (state) => state.account
   );
+  const t = useTranslations("account.create.confirm");
 
   // 새 계좌 개설 API 요청 후 성공 페이지로 이동
   const handleCreate = async () => {
@@ -48,26 +50,26 @@ export default function AccountConfirm() {
     <div className="bg-background">
       {/* Header */}
       <AppHeader
-        title="계좌 생성 확인"
+        title={t("confirm_account_create")}
         show={true}
         showHamburger={false}
         showBack={true}
       />
 
-      <div className="flex flex-col min-h-dvh px-8 py-10 max-w-lg mx-auto">
-        <div className="mb-8">
+      <div className="flex flex-col min-h-dvh py-10 max-w-lg mx-auto text-left">
+        <div className="mb-8 px-8">
           <h2 className="text-2xl font-bold mb-2 text-black">
-            계좌 정보를 확인해주세요
+            {t("check_account_information")}
           </h2>
-          <p className="text-[#C9CDD4]">아래 정보로 계좌가 생성됩니다.</p>
+          <p className="text-[#C9CDD4]">{t("below_account_information")}</p>
         </div>
 
         {/* 생성할 계좌 정보 */}
-        <section className="flex-1">
-          <div className="border-rounded-xl px-6">
+        <section className="flex-1 px-8">
+          <div className="border-rounded-xl">
             {/* 계좌명 */}
             <div className="flex items-center justify-between py-8 border-b border-border">
-              <div className="text-sm text-[#86909C]">계좌 이름</div>
+              <div className="text-sm text-[#86909C]">{t("account_name")}</div>
               <div className="text-lg font-semibold text-black">
                 {accountName}
               </div>
@@ -75,7 +77,7 @@ export default function AccountConfirm() {
 
             {/* 계좌 종류 */}
             <div className="flex items-center justify-between py-8 border-b border-border">
-              <div className="text-sm text-[#86909C]">계좌 타입</div>
+              <div className="text-sm text-[#86909C]">{t("account_type")}</div>
               <div className="text-lg font-semibold text-black">
                 {accountType}
               </div>
@@ -84,8 +86,12 @@ export default function AccountConfirm() {
         </section>
 
         {/* 생성 버튼 */}
-        <footer className="flex flex-co">
-          <BottomBar label="계좌 생성" isActive={true} onClick={handleCreate} />
+        <footer className="flex">
+          <BottomBar
+            label={t("goToCreate")}
+            isActive={true}
+            onClick={handleCreate}
+          />
           {/* <button>다시 생성하기</button> */}
         </footer>
 

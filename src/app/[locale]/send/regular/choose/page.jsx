@@ -49,10 +49,10 @@ export default function ChooseCountryPage() {
         <section>
           <h1 className="text-left mt-[3.75rem] text-[1.563rem] font-bold whitespace-pre-line">
             {/* <span className="text-[#1A3668]">{t("common.remittance")}</span>{" "} */}
-            {t("chooseCountry.title")}
+            {t("regular.chooseCountry.title")}
           </h1>
           <p className="text-sm text-left text-[#86909C]">
-            {t("chooseCountry.subtitle")}
+            {t("regular.chooseCountry.subtitle")}
           </p>
         </section>
 
@@ -75,10 +75,10 @@ export default function ChooseCountryPage() {
               <US className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
               <div className="flex flex-col items-start justify-center">
                 <span className=" text-[18px] font-semibold text-[#1F2329]">
-                  {t("chooseCountry.usa")}
+                  {t("regular.chooseCountry.usa")}
                 </span>
                 <span className="text-sm font-medium text-[#86909C]">
-                  {t("chooseCountry.dollar")}
+                  {t("regular.chooseCountry.dollar")}
                 </span>
               </div>
             </div>
@@ -101,10 +101,10 @@ export default function ChooseCountryPage() {
               <JP className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
               <div className="flex flex-col items-start justify-center">
                 <span className=" text-[18px] font-semibold text-[#1F2329]">
-                  {t("chooseCountry.japan")}
+                  {t("regular.chooseCountry.japan")}
                 </span>
                 <span className="text-sm font-medium text-[#86909C]">
-                  {t("chooseCountry.yen")}
+                  {t("regular.chooseCountry.yen")}
                 </span>
               </div>
             </div>
@@ -127,9 +127,11 @@ export default function ChooseCountryPage() {
               <MY className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
               <div className="flex flex-col items-start justify-center">
                 <span className=" text-[18px] font-semibold text-[#1F2329]">
-                  말레이시아 MYR
+                  {t("regular.chooseCountry.malaysia")}
                 </span>
-                <span className="text-sm font-medium text-[#86909C]">링깃</span>
+                <span className="text-sm font-medium text-[#86909C]">
+                  {t("regular.chooseCountry.ringgit")}
+                </span>
               </div>
             </div>
           </button>
@@ -151,9 +153,11 @@ export default function ChooseCountryPage() {
               <TH className="w-15 h-auto rounded-[0.375rem] overflow-hidden" />
               <div className="flex flex-col items-start justify-center">
                 <span className=" text-[18px] font-semibold text-[#1F2329]">
-                  태국 THB
+                  {t("regular.chooseCountry.thailand")}
                 </span>
-                <span className="text-sm font-medium text-[#86909C]">밧</span>
+                <span className="text-sm font-medium text-[#86909C]">
+                  {t("regular.chooseCountry.baht")}
+                </span>
               </div>
             </div>
           </button>
@@ -164,7 +168,7 @@ export default function ChooseCountryPage() {
       <footer className="pt-20">
         {localSelectedCountry !== "" && (
           <BottomBar
-            label={t("chooseCountry.select")}
+            label={t("regular.chooseCountry.select")}
             onClick={handleSelectButtonClick}
             isActive={true}
           />

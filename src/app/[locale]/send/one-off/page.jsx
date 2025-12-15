@@ -46,6 +46,7 @@ export default function TypePage() {
   const router = useRouter();
   const dispatch = useDispatch();
   const t = useTranslations("send");
+  const tOneOffPage = useTranslations("send.oneOff.page"); // send.oneOff.page 네임스페이스 추가
   const [personalFee, setPersonalFee] = useState();
 
   // 요일
@@ -58,7 +59,7 @@ export default function TypePage() {
   ];
 
   const selectedCountry = useSelector((state) => state.send.selectedCountry); // 선택된 국가 가져오기
-  console.log("선택된 국가: ", selectedCountry);
+  console.log(tOneOffPage("log_selected_country"), selectedCountry);
   const recipientBankInfo = useSelector((state) => state.send.recipientInfo); // 선택된 은행 정보 가져오기
 
   const [connectedAccounts, setConnectedAccounts] = useState([]);
@@ -117,7 +118,7 @@ export default function TypePage() {
             }
           );
           setPersonalFee(res.data.data.preferentialRate);
-          console.log("res.data.data.preferentialRate :", res.data);
+          console.log(tOneOffPage("log_preferential_rate"), res.data);
           setExchangeRate(response.data.data.exchangeRate);
 
           // 최종 적용 환율 계산 (우대율을 할인으로 적용)
@@ -127,13 +128,13 @@ export default function TypePage() {
           const finalRate = res.data.data.appliedRate;
           setAppliedExchangeRate(finalRate);
         } catch (error) {
-          console.error("환율 정보 조회 실패:", error);
+          console.error(tOneOffPage("log_exchange_rate_fail"), error);
           // 기본 환율 설정 또는 에러 처리
         }
       }
     };
     fetchExchangeRate();
-  }, [selectedCountry]);
+  }, [selectedCountry, tOneOffPage]);
 
   // 송금 유형 정보값 상태 관리
   const [formData, setFormData] = useState({
@@ -173,12 +174,12 @@ export default function TypePage() {
 
   // 선택된 계좌의 accountId
   const selectedAccountId = selectedAccountDetails?.accountId ?? null;
-  console.log("accountId: ", selectedAccountId);
+  console.log("accountId: ", selectedAccountId); // 이 부분도 나중에 국제화 필요
 
   const handleAmountChange = (e) => {
     setAmountError(""); // 입력 시작 시 에러 메시지 초기화
     const { value } = e.target;
-    const rawValue = value.replace(/[^0-9]/g, "");
+    const rawValue = value.replace(/[^0-9]/g, ""); // 숫자만 남기기
     if (rawValue === "" || Number(rawValue) === 0) {
       setFormData((prev) => ({ ...prev, targetAmount: "" }));
       setFee(0);
@@ -203,9 +204,7 @@ export default function TypePage() {
       totalKrwAmountWithFee >
         selectedAccountDetails.balance - calculatedFee * appliedExchangeRate // 원화 수수료까지 고려
     ) {
-      setAmountError(
-        "잔액이 부족합니다. 보낼 수 있는 최대 금액으로 자동 입력됩니다."
-      );
+      setAmountError(tOneOffPage("alert_insufficient_balance"));
 
       if (exchangeRate > 0) {
         // 보낼 수 있는 최대 외화 금액(수수료 제외)을 계산합니다.
@@ -350,7 +349,7 @@ export default function TypePage() {
 
       // 송금 계좌 선택 여부
       if (!selectedAccountDetails || !selectedAccountId) {
-        alert("송금 계좌 정보를 찾을 수 없습니다. 다시 선택해주세요.");
+        alert(tOneOffPage("alert_account_info_not_found"));
         return;
       }
 
@@ -382,6 +381,7 @@ export default function TypePage() {
       dispatch(setRecipientInfo(recipientData));
 
       console.log("[송금하기 버튼 클릭 시 Redux로 보낸 데이터]", {
+        // 이 부분도 나중에 국제화 필요
         receiveCurrency: formData.receiveCurrency,
         sendInfo: {
           ...submissionData,
@@ -396,7 +396,7 @@ export default function TypePage() {
       const mode = "send";
       router.push(`/account/create/pw?mode=${mode}`);
     } else {
-      console.log(t("oneOff.page.fillAllFields"));
+      console.log(t("oneOff.page.fillAllFields")); // 여기도 send.oneOff.page 네임스페이스로 변경
     }
   };
 
@@ -409,7 +409,7 @@ export default function TypePage() {
     <main>
       {/* 상단 바 */}
       <AppHeader
-        title={t("common.remittance")}
+        title={t("common.oneOff")}
         show={true}
         showHamburger={false}
         showBack={true}
@@ -431,14 +431,14 @@ export default function TypePage() {
             <div className="flex flex-col items-start ">
               <div className="flex items-center justify-between w-full">
                 <label className="block text-[0.875rem] font-semibold text-[#4E5969] mb-[6px]">
-                  송금 계좌
+                  {tOneOffPage("sender_account_label")}
                 </label>
                 <span className="text-[0.875rem] text-[#4E5969] mb-[6px]">
-                  잔액:{" "}
+                  {tOneOffPage("balance_label")}
                   {new Intl.NumberFormat("ko-KR").format(
                     selectedAccountDetails ? selectedAccountDetails.balance : 0
                   )}
-                  원
+                  {tOneOffPage("krw_unit")}
                 </span>
               </div>
               <div className="relative w-full">
@@ -585,21 +585,22 @@ export default function TypePage() {
               {formData.targetAmount && (
                 <div className="mt-2 w-full text-sm text-gray-500 space-y-1 border-t pt-2">
                   <div className="flex justify-between">
-                    <span>기준 환율:</span>
+                    <span>{tOneOffPage("base_exchange_rate")}:</span>
                     <span>
                       1 {formData.receiveCurrency} = {exchangeRate?.toFixed(2)}{" "}
-                      원
+                      {tOneOffPage("krw_unit")}
                     </span>
                   </div>
                   <div className="flex justify-between text-blue-600">
-                    <span>우대율:</span>
+                    <span>{tOneOffPage("preferential_rate")}:</span>
                     <span>{(personalFee * 100).toFixed(1)}%</span>
                   </div>
                   <div className="flex justify-between font-semibold text-black">
-                    <span>적용 환율:</span>
+                    <span>{tOneOffPage("applied_exchange_rate")}:</span>
                     <span>
                       1 {formData.receiveCurrency} ={" "}
-                      {appliedExchangeRate?.toFixed(2)} 원
+                      {appliedExchangeRate?.toFixed(2)}{" "}
+                      {tOneOffPage("krw_unit")}
                     </span>
                   </div>
                 </div>
@@ -607,21 +608,23 @@ export default function TypePage() {
               {formData.targetAmount && (
                 <div className="mt-2 w-full text-sm text-gray-600 space-y-1">
                   <div className="flex justify-between">
-                    <span>예상 수수료:</span>
+                    <span>{tOneOffPage("confirm_drawer_expected_fee")}:</span>
                     <span>
                       {new Intl.NumberFormat().format(fee.toFixed(2))}{" "}
                       {formData.receiveCurrency}
                     </span>
                     <span className="text-gray-500 ml-1">
-                      (약{" "}
+                      {tOneOffPage("confirm_drawer_approx")}
                       {new Intl.NumberFormat("ko-KR").format(
                         feeInKrw.toFixed(0)
                       )}
-                      원)
+                      {tOneOffPage("confirm_drawer_krw_unit")}
                     </span>
                   </div>
                   <div className="flex justify-between font-semibold">
-                    <span>실제 수취 금액:</span>
+                    <span>
+                      {tOneOffPage("confirm_drawer_actual_receive_amount")}:
+                    </span>
                     <span>
                       {new Intl.NumberFormat().format(
                         actualReceivedAmount.toFixed(2)
@@ -638,12 +641,14 @@ export default function TypePage() {
                       isBalanceInsufficient ? "text-red-500" : "text-gray-600"
                     }`}
                   >
-                    <span>총 출금 예상 금액:</span>
+                    <span>
+                      {tOneOffPage("confirm_drawer_total_withdrawal_amount")}
+                    </span>
                     <span className="font-semibold">
                       {new Intl.NumberFormat("ko-KR").format(
                         totalKrwAmount.toFixed(0)
                       )}{" "}
-                      원
+                      {tOneOffPage("krw_unit")}
                     </span>
                   </div>
                 </div>
@@ -655,66 +660,82 @@ export default function TypePage() {
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
         <DrawerTrigger asChild>
           <BottomBar
-            label="다음"
+            label={tOneOffPage("next_button")}
             onClick={handleSubmit} // isFormValidWithBalance를 사용하도록 수정할 수 있습니다.
             isActive={isFormValidWithBalance}
           />
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>입력하신 정보가 맞나요?</DrawerTitle>
+            <DrawerTitle>{tOneOffPage("confirm_drawer_title")}</DrawerTitle>
             <DrawerDescription>
-              입력하신 정보로 송금을 진행합니다.
+              {tOneOffPage("confirm_drawer_description")}
             </DrawerDescription>
             <div className="mt-4 space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-[#86909C]">보내는 계좌</span>
+                <span className="text-[#86909C]">
+                  {tOneOffPage("confirm_drawer_sender_account")}
+                </span>
                 <span className="font-medium">{formData.senderAccountNO}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#86909C]">받는 분</span>
+                <span className="text-[#86909C]">
+                  {tOneOffPage("confirm_drawer_recipient_name")}
+                </span>
                 <span className="font-medium">{formData.recipientName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#86909C]">받는 분 계좌</span>
+                <span className="text-[#86909C]">
+                  {tOneOffPage("confirm_drawer_recipient_account")}
+                </span>
                 <span className="font-medium">
                   {recipientBankInfo.bankName} {formData.recipientAccountNO}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#86909C]">송금 날짜</span>
+                <span className="text-[#86909C]">
+                  {tOneOffPage("confirm_drawer_send_date")}
+                </span>
                 <span className="font-medium">{formData.startDate}</span>
               </div>
               <hr className="my-2" />
               <div className="flex justify-between">
-                <span className="text-[#86909C]">송금 금액</span>
+                <span className="text-[#86909C]">
+                  {tOneOffPage("confirm_drawer_send_amount")}
+                </span>
                 <span className="font-medium">
                   {formData.targetAmount} {formData.receiveCurrency}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#86909C]">원화 환산 금액</span>
+                <span className="text-[#86909C]">
+                  {tOneOffPage("confirm_drawer_krw_amount")}
+                </span>
                 <span className="font-medium">
                   {new Intl.NumberFormat("ko-KR").format(
                     totalKrwAmount.toFixed(0)
                   )}{" "}
-                  원
+                  {tOneOffPage("krw_unit")}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#86909C]">예상 수수료</span>
+                <span className="text-[#86909C]">
+                  {tOneOffPage("confirm_drawer_expected_fee")}
+                </span>
                 <span className="font-medium">
                   {new Intl.NumberFormat().format(fee.toFixed(2))}{" "}
                   {formData.receiveCurrency}
                   <span className="text-gray-500 ml-1">
-                    (약{" "}
+                    {tOneOffPage("confirm_drawer_approx")}
                     {new Intl.NumberFormat("ko-KR").format(feeInKrw.toFixed(0))}
-                    원)
+                    {tOneOffPage("confirm_drawer_krw_unit")}
                   </span>
                 </span>
               </div>
               <div className="flex justify-between font-semibold">
-                <span className="text-gray-800">실제 수취 금액</span>
+                <span className="text-gray-800">
+                  {tOneOffPage("confirm_drawer_actual_receive_amount")}
+                </span>
                 <span className="text-lg text-black">
                   {new Intl.NumberFormat().format(
                     actualReceivedAmount.toFixed(2)
@@ -726,9 +747,13 @@ export default function TypePage() {
           </DrawerHeader>
 
           <DrawerFooter>
-            <Button onClick={handleFinalSubmit}>송금하기</Button>
+            <Button onClick={handleFinalSubmit}>
+              {tOneOffPage("confirm_drawer_submit_button")}
+            </Button>
             <DrawerClose asChild>
-              <Button variant="outline">아니요, 수정할게요</Button>
+              <Button variant="outline">
+                {tOneOffPage("confirm_drawer_cancel_button")}
+              </Button>
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
