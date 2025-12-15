@@ -1,27 +1,29 @@
 "use client";
 
 import ConsentAgree from "./components/ConsentAgree";
+import { useTranslations } from "next-intl";
 
 export default function ConsentPage() {
+  const t = useTranslations("auth.ocrConsent");
   // 약관 동의서
   const consents = [
     {
       id: 7,
-      label: "[필수] 본인 확인 서비스 약관 및 동의사항",
+      label: t("terms1"),
       required: true,
     },
     {
       id: 8,
-      label: "[필수] 크레디토 전자인증서비스 약관",
+      label: t("terms2"),
       required: true,
     },
     {
       id: 9,
-      label: "[필수] 개인정보 수집·이용 동의(크레디토인증서)",
+      label: t("terms3"),
       required: true,
     },
-    { id: 10, label: "[필수] 고유식별정보 처리 동의", required: true },
+    { id: 10, label: t("terms4"), required: true },
   ];
 
-  return <ConsentAgree title="인증서 발급 동의" consents={consents} />;
+  return <ConsentAgree title={t("title")} consents={consents} />;
 }

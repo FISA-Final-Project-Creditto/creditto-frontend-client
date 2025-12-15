@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const DEFAULT_COUNTRIES = [
   { code: "US", flag: "🇺🇸", name: "USA", currency: "($)" },
@@ -15,6 +16,7 @@ export default function PassportCountryGrid({ countries, columns = 3, onSelect, 
   const list = countries && countries.length ? countries : DEFAULT_COUNTRIES;
   const [selected, setSelected] = useState(null);
   const [passport, setPassport] = useState("");
+  const t = useTranslations("creditForeginAccount.passportCountryGrid");
 
   const colsClass = columns === 4 ? "grid-cols-4" : columns === 2 ? "grid-cols-2" : "grid-cols-3";
 
@@ -39,8 +41,8 @@ export default function PassportCountryGrid({ countries, columns = 3, onSelect, 
             if (onPassportChange) onPassportChange(v);
           }}
           maxLength={24}
-          placeholder="여권번호를 입력하세요"
-          aria-label="여권번호 입력"
+          placeholder={t("passport_placeholder")}
+          aria-label={t("passport_aria_label")}
           className="w-full px-3 py-3 border-b border-gray-200 bg-white placeholder-gray-400 text-gray-900"
         />
       </div>
@@ -80,7 +82,7 @@ export default function PassportCountryGrid({ countries, columns = 3, onSelect, 
           className={`w-full max-w-[440px] h-[60px] text-[22px] font-semibold flex items-center justify-center rounded-lg mx-auto transition-colors
             ${passport && selected ? "bg-[#1A3668] text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}
         >
-          해외계좌 조회하기
+          {t("inquiry_button")}
         </button>
       </div>
     </div>

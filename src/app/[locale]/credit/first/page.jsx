@@ -7,11 +7,13 @@ import { credittoApi } from "@/src/app/api/axios";
 import { useDispatch } from "react-redux";
 import { setConsentChecked } from "@/src/store/features/consent/consentSlice";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
+import { useTranslations } from "next-intl";
 
 export default function CreditFirst() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  const t = useTranslations("creditFirst");
 
   useEffect(() => {
     // 약관 ID 리스트 아이디 초기화
@@ -27,16 +29,16 @@ export default function CreditFirst() {
     <main className="h-dvh flex justify-center items-center bg-[#e5e5e5]">
       <div className="w-full max-w-[440px] min-h-dvh mx-auto justify-start flex flex-col bg-white">
         <AppHeader
-          title="신용 평가"
+          title={t("title")}
           showHamburger={false}
           showBack={true}
           show={true}
           onBackClick={() => router.replace("/main")} // 메인페이지로 이동하는 건 replace로
         />
         <div className="mt-8 text-2xl font-bold text-left ml-5 h-20">
-          <span className="text-[#0C72BA] font-bold text-[26px]">신용평가</span>{" "}
-          하면 <br />
-          <span>좋은 점이 무엇일까요?</span>
+          <span className="text-[#0C72BA] font-bold text-[26px]">{t("whats_good_pt1")}</span>{" "}
+          {t("whats_good_pt2")} <br />
+          <span>{t("whats_good_pt3")}</span>
         </div>
         <div className="w-full h-full flex justify-center items-center">
           <div className="w-[150px] h-[150px] ">
@@ -44,14 +46,14 @@ export default function CreditFirst() {
           </div>
         </div>
         <div className="mt-5 text-xl font-medium text-left ml-5 h-15">
-          <span>해외에서 사용하던 신용점수</span>
+          <span>{t("merit1_pt1")}</span>
           <br />
-          <span>이제 한국에서도 그대로 쓸 수 있어요</span>
+          <span>{t("merit1_pt2")}</span>
         </div>
         <div className="mt-5 text-xl font-medium text-left ml-5 h-15">
-          <span>송금 수수료 우대, 금리 인하 등</span>
+          <span>{t("merit2_pt1")}</span>
           <br />
-          <span>다양한 혜택을 느낄 수 있어요</span>
+          <span>{t("merit2_pt2")}</span>
         </div>
 
         <div className="w-full flex flex-col justify-center mt-auto mb-14 px-4">
@@ -90,20 +92,20 @@ export default function CreditFirst() {
               }
             }}
           >
-            연동없이 바로 조회하기
+            {t("inquiry_no_link")}
           </div>
           <div
             className="cursor-pointer w-full max-w-[440px] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white"
             onClick={() => router.push("/credit/consent")}
           >
-            해외계좌 조회하기
+            {t("inquiry_foreign_account")}
           </div>
         </div>
 
         <BottomSheet
           open={open}
           onOpenChange={setOpen}
-          title="신용도 확인 및 활용 동의"
+          title={t("bottom_sheet_title")}
         >
           <div className="px-3 pb-6 text-sm">
             {/* 체크 항목 */}
@@ -125,7 +127,7 @@ export default function CreditFirst() {
                   </svg>
                 </div>
                 <div className="text-gray-800">
-                  [필수] 해외·국내 금융거래 정보 수집 및 이용 동의
+                  {t("consent1")}
                 </div>
               </div>
 
@@ -146,7 +148,7 @@ export default function CreditFirst() {
                   </svg>
                 </div>
                 <div className="text-gray-800">
-                  [필수] 신용도 평가를 위한 개인(신용)정보 제공 동의
+                  {t("consent2")}
                 </div>
               </div>
 
@@ -167,7 +169,7 @@ export default function CreditFirst() {
                   </svg>
                 </div>
                 <div className="text-gray-800">
-                  [필수] 신용도 평가 결과 보고서 생성 및 제공 동의
+                  {t("consent3")}
                 </div>
               </div>
 
@@ -188,7 +190,7 @@ export default function CreditFirst() {
                   </svg>
                 </div>
                 <div className="text-gray-800">
-                  [필수] 신용도 평가 서비스 이용 약관 동의
+                  {t("consent4")}
                 </div>
               </div>
             </div>
@@ -201,7 +203,7 @@ export default function CreditFirst() {
                 router.push("/credit/foregin_account");
               }}
             >
-              동의하기
+              {t("agree_button")}
             </button>
 
             <div className="mt-3 text-center">
@@ -209,7 +211,7 @@ export default function CreditFirst() {
                 className="text-sm text-gray-500 underline"
                 onClick={() => setOpen(false)}
               >
-                닫기
+                {t("close_button")}
               </button>
             </div>
           </div>

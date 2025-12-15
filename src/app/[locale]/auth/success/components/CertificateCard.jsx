@@ -1,7 +1,9 @@
 import { CheckCircleIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 export default function CertificateCard({ name, expiryDate }) {
+  const t = useTranslations("auth.authSuccess");
   return (
     <div className="relative w-full max-w-sm mx-auto perspective-1000 animate-fade-in-up">
       <div className="relative bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 rounded-3xl p-6 shadow-2xl overflow-hidden transform transition-transform duration-300 hover:scale-105">
@@ -40,8 +42,8 @@ export default function CertificateCard({ name, expiryDate }) {
         <div className="flex items-center gap-2 mt-10">
           <CheckCircleIcon className="text-[#C9CDD4]" />
           <p className="text-xs text-[#C9CDD4] text-left">
-            전자서명에 따른 <br />
-            안전한 인증서
+            {t("certificate1")} <br />
+            {t("certificate2")}
           </p>
         </div>
 

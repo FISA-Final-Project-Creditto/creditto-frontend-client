@@ -1,9 +1,11 @@
+"use client";
+
 import RedirectAfterDelay from "./RedirectAfterDelay";
 import LottieClient from "./LottieClient";
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 
-export default async function LoadingPage() {
-  // const t = await getTranslations("auth.loading");
+export default function LoadingPage() {
+  const t = useTranslations("auth.loading");
 
   return (
     <main className="flex justify-center items-center py-20 bg-white">
@@ -12,11 +14,11 @@ export default async function LoadingPage() {
         <div className="flex flex-col items-center">
           <div className="w-full p-8">
             <p className="text-2xl font-semibold leading-relaxed text-black text-left">
-              정보를 확인 중입니다
+              {t("title")}
             </p>
 
             <div className="text-lg font-normal text-[#4E5969] mb-[2.5rem] text-left">
-              잠시만 기다려주세요
+              {t("description")}
             </div>
           </div>
 
