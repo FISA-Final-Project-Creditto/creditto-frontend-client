@@ -73,7 +73,14 @@ export default function FunctionButton() {
       </button>
 
       {/* Language Select */}
-      <Select
+      <button
+        className="w-full flex justify-center flex-row bg-card border border-border rounded-br-2xl p-2 flex flex-col items-center gap-2 hover:bg-muted transition mb-4"
+        onClick={() => router.push("/report")}
+      >
+        <FileChartColumnIcon className="w-6 h-6 text-primary" />
+        <span className="text-xs font-medium">레포트 다운로드</span>
+      </button>
+      {/* <Select
         className="w-full flex justify-center flex-row border border-border rounded-br-2xl p-2 flex flex-col items-start gap-2 hover:bg-muted transition mb-4"
         aria-label={t("report_language_select_aria_label")}
         onSelectionChange={(key) => setLang(String(key))}
@@ -96,7 +103,7 @@ export default function FunctionButton() {
             </SelectItem>
           </SelectListBox>
         </SelectPopover>
-      </Select>
+      </Select> */}
     </div>
   );
 }

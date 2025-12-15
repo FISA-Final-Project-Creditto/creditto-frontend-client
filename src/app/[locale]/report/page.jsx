@@ -1,19 +1,69 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Emoji from "../components/Emoji";
 import BottomSheet from "@/src/common/UI/BottomSheet/BottomSheet";
 import { credittoApi } from "@/src/app/api/axios";
 import { useDispatch } from "react-redux";
 import { setConsentChecked } from "@/src/store/features/consent/consentSlice";
 import AppHeader from "@/src/common/AppHeader/AppHeader";
-import { useTranslations } from "next-intl";
+import {
+  Select,
+  SelectItem,
+  SelectListBox,
+  SelectPopover,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import Emoji from "../credit/components/Emoji";
 
-export default function CreditFirst() {
+export default function ReportPage() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [lang, setLang] = useState("");
   const dispatch = useDispatch();
-  const t = useTranslations("creditFirst");
+
+  // 언어 선택 시 PDF 다운로드 (클라이언트에서만 동작)
+  useEffect(() => {
+    const fetchPDF = async () => {
+      if (!lang) return;
+
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const userId = sessionStorage.getItem("userId");
+        if (!accessToken || !userId) {
+          router.push("/signup/permission");
+          return;
+        }
+
+        const res = await credittoApi.get(
+          `/api/credit-score/report/${lang}/pdf/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              Accept: "application/pdf",
+            },
+            responseType: "blob",
+          }
+        );
+
+        const blob = new Blob([res.data], { type: "application/pdf" });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `credit-report-${userId}-${lang}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+        // 선택 초기화
+        setLang("");
+      } catch (err) {
+        console.log("PDF 다운로드 오류:", err);
+      }
+    };
+
+    fetchPDF();
+  }, [lang, router]);
 
   useEffect(() => {
     // 약관 ID 리스트 아이디 초기화
@@ -29,16 +79,16 @@ export default function CreditFirst() {
     <main className="h-dvh flex justify-center items-center bg-[#e5e5e5]">
       <div className="w-full max-w-[440px] min-h-dvh mx-auto justify-start flex flex-col bg-white">
         <AppHeader
-          title={t("title")}
+          title="레포트 다운로드"
           showHamburger={false}
           showBack={true}
           show={true}
           onBackClick={() => router.replace("/main")} // 메인페이지로 이동하는 건 replace로
         />
         <div className="mt-8 text-2xl font-bold text-left ml-5 h-20">
-          <span className="text-[#0C72BA] font-bold text-[26px]">{t("whats_good_pt1")}</span>{" "}
-          {t("whats_good_pt2")} <br />
-          <span>{t("whats_good_pt3")}</span>
+          <span className="text-[#0C72BA] font-bold text-[26px]">레포트 다운로드</span>
+          <br />
+          <span>내 신용 보고서를 PDF로 받아보세요</span>
         </div>
         <div className="w-full h-full flex justify-center items-center">
           <div className="w-[150px] h-[150px] ">
@@ -46,66 +96,50 @@ export default function CreditFirst() {
           </div>
         </div>
         <div className="mt-5 text-xl font-medium text-left ml-5 h-15">
-          <span>{t("merit1_pt1")}</span>
+          <span>PDF 형식의 신용 평가 리포트를 제공합니다.</span>
           <br />
-          <span>{t("merit1_pt2")}</span>
+          <span>언어 선택 후 바로 다운로드하세요.</span>
         </div>
         <div className="mt-5 text-xl font-medium text-left ml-5 h-15">
-          <span>{t("merit2_pt1")}</span>
+          <span>리포트에는 점수 이력과 간략 평가가 포함됩니다.</span>
           <br />
-          <span>{t("merit2_pt2")}</span>
+          <span>회사 제출용 또는 개인 보관용으로 사용하세요.</span>
         </div>
 
         <div className="w-full flex flex-col justify-center mt-auto mb-14 px-4">
-          <div
-            className="cursor-pointer w-full max-w-[440px] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white"
-            onClick={async (e) => {
-              e.stopPropagation();
-              try {
-                const accessToken = sessionStorage.getItem("accessToken");
-                const userId = sessionStorage.getItem("userId");
-                if (!accessToken || !userId) {
-                  router.push("/signup/permission");
-                  return;
-                }
+          {/* '연동없이 바로 조회하기' 텍스트 제거 */}
+          {/* 해외계좌 조회 버튼 위치에 언어 선택으로 대체 */}
+          <div className="w-full max-w-[440px]">
+            <Select
+              className="w-full border border-border rounded-lg p-2 hover:bg-muted transition"
+              aria-label="신용 리포트 언어 선택"
+              onSelectionChange={(key) => setLang(String(key))}
+            >
+              <SelectTrigger>
+                <div className="flex items-center gap-2 justify-center">
+                  <SelectValue placeholder="보고서 다운로드" />
+                </div>
+              </SelectTrigger>
 
-                const res = await credittoApi.get(
-                  `/api/credit-score/${userId}`,
-                  {
-                    headers: {
-                      Authorization: `Bearer ${accessToken}`,
-                    },
-                  }
-                );
-
-                // API 조회 성공 시, 점수를 localStorage에 저장합니다.
-                const newScore = res.data?.credit_score;
-                if (newScore !== undefined) {
-                  const userScoreKey = `creditScore_${userId}`;
-                  localStorage.setItem(userScoreKey, String(newScore));
-                }
-
-                router.push("/main");
-              } catch (error) {
-                // 실패 시 권한/설정 페이지로 이동
-                router.push("/signup/permission");
-              }
-            }}
-          >
-            {t("inquiry_no_link")}
+              <SelectPopover>
+                <SelectListBox>
+                  <SelectItem id="ko" value="ko">
+                    <span className="text-xs font-medium">한국어</span>
+                  </SelectItem>
+                  <SelectItem id="en" value="en">
+                    <span className="text-xs font-medium">영어</span>
+                  </SelectItem>
+                </SelectListBox>
+              </SelectPopover>
+            </Select>
           </div>
-          {/* <div
-            className="cursor-pointer w-full max-w-[440px] h-[60px] text-[22px] font-semibold flex justify-center items-center transition-colors rounded-lg bg-[#1A3668] text-white"
-            onClick={() => router.push("/credit/consent")}
-          >
-            해외계좌 조회하기
-          </div> */}
+          {/* 중복된 Select 블록 삭제 (해외계좌 버튼 자리로 이동됨) */}
         </div>
 
         <BottomSheet
           open={open}
           onOpenChange={setOpen}
-          title={t("bottom_sheet_title")}
+          title="신용도 확인 및 활용 동의"
         >
           <div className="px-3 pb-6 text-sm">
             {/* 체크 항목 */}
@@ -127,7 +161,7 @@ export default function CreditFirst() {
                   </svg>
                 </div>
                 <div className="text-gray-800">
-                  {t("consent1")}
+                  [필수] 해외·국내 금융거래 정보 수집 및 이용 동의
                 </div>
               </div>
 
@@ -148,7 +182,7 @@ export default function CreditFirst() {
                   </svg>
                 </div>
                 <div className="text-gray-800">
-                  {t("consent2")}
+                  [필수] 신용도 평가를 위한 개인(신용)정보 제공 동의
                 </div>
               </div>
 
@@ -169,7 +203,7 @@ export default function CreditFirst() {
                   </svg>
                 </div>
                 <div className="text-gray-800">
-                  {t("consent3")}
+                  [필수] 신용도 평가 결과 보고서 생성 및 제공 동의
                 </div>
               </div>
 
@@ -190,7 +224,7 @@ export default function CreditFirst() {
                   </svg>
                 </div>
                 <div className="text-gray-800">
-                  {t("consent4")}
+                  [필수] 신용도 평가 서비스 이용 약관 동의
                 </div>
               </div>
             </div>
@@ -203,7 +237,7 @@ export default function CreditFirst() {
                 router.push("/credit/foregin_account");
               }}
             >
-              {t("agree_button")}
+              동의하기
             </button>
 
             <div className="mt-3 text-center">
@@ -211,7 +245,7 @@ export default function CreditFirst() {
                 className="text-sm text-gray-500 underline"
                 onClick={() => setOpen(false)}
               >
-                {t("close_button")}
+                닫기
               </button>
             </div>
           </div>

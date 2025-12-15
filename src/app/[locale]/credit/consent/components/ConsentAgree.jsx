@@ -124,7 +124,7 @@ export default function ConsentAgree({
       <AppHeader
         title={title}
         show={true}
-        showHamburger={true}
+        showHamburger={false}
         onBackClick={onBackClick}
       />
 

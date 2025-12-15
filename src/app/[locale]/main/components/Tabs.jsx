@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import NaverMap from "./FunctionButton/NaverMap/Navermap";
 import { credittoApi } from "@/src/app/api/axios";
+import Image from "next/image";
 
 export default function RoundedIconTabs({ accountState }) {
   const [activeTab, setActiveTab] = useState("home");
@@ -84,13 +85,11 @@ export default function RoundedIconTabs({ accountState }) {
           </div>
         )}
         {activeTab === "QR" && (
-          <div
-            className="flex justify-center items-center flex-col px-5"
-            onClick={() => {
-              router.push("/account/connection");
-            }}
-          >
-            <div className="w-40 h-40 bg-gray-200 rounded-lg"></div>
+          <div className="flex justify-center items-center flex-col px-5"
+          onClick={()=>{router.push("/account/connection")}}>
+            <div className="w-40 h-40 rounded-lg overflow-hidden">
+              <Image src="/icon/QR.jpg" width={160} height={160} alt="QR Code" />
+            </div>
             <div className="w-full h-full mt-6 ">
               <CreditCard
                 accountState={accountState}
